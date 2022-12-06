@@ -1,9 +1,15 @@
+import React from 'react';
 import type { NextPage } from 'next';
 import Head from 'next/head';
 import Image from 'next/image';
 import styles from '../styles/Home.module.css';
+import { useSelector } from '../store/store';
+import { getAuthState } from '../store/slices/authSlice';
 
 const Home: NextPage = () => {
+  const authConfig = useSelector(getAuthState);
+  console.log(authConfig);
+
   return (
     <div className={styles.container}>
       <Head>

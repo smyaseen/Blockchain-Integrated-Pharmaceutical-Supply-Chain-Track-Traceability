@@ -26,7 +26,9 @@
     {
       "files": ["**/*.tsx"],
       "rules": {
-        "react/prop-types": "off"
+        "react/prop-types": "off",
+        "react/function-component-definition": "off",
+        "react/jsx-props-no-spreading": "off"
       }
     }
   ]
