@@ -93,16 +93,12 @@ const DashboardSidebar = (props: any) => {
     >
       <div>
         <Box sx={{ p: 3 }}>
-          {/* <NextLink href="/" passHref> */}
-          {/* <a href="#"> */}
           <Logo
             sx={{
               height: 42,
               width: 42,
             }}
           />
-          {/* </a> */}
-          {/* </NextLink> */}
         </Box>
         <Box sx={{ px: 2 }}>
           <Box
@@ -177,7 +173,6 @@ const DashboardSidebar = (props: any) => {
         >
           <img alt="Go to pro" src="/static/images/sidebar_pro.png" />
         </Box>
-        {/* <NextLink href="https://material-kit-pro-react.devias.io/" passHref> */}
         <Button
           color="secondary"
           component="a"
@@ -185,10 +180,12 @@ const DashboardSidebar = (props: any) => {
           fullWidth
           sx={{ mt: 2 }}
           variant="contained"
+          onClick={() => {
+            //
+          }}
         >
           Pro Live Preview
         </Button>
-        {/* </NextLink> */}
       </Box>
     </Box>
   );

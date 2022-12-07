@@ -9,6 +9,7 @@ import '@fontsource/roboto/500.css';
 import '@fontsource/roboto/700.css';
 
 import { Provider } from 'react-redux';
+import dynamic from 'next/dynamic';
 import createEmotionCache from '../utility/createEmotionCache';
 
 import '../styles/globals.css';
@@ -24,6 +25,8 @@ interface MyAppProps extends AppProps {
 }
 
 const clientSideEmotionCache = createEmotionCache();
+
+// const Layout = dynamic(() => import('../routes/Layout'), { ssr: false });
 
 const MyApp: React.FunctionComponent<MyAppProps> = (props) => {
   const { Component, emotionCache = clientSideEmotionCache, pageProps } = props;

@@ -20,11 +20,13 @@ const NavItem = (props: any) => {
       }}
       {...others}
     >
-      {/* <NextLink href={href} passHref> */}
       <Button
         component="a"
         startIcon={icon}
         disableRipple
+        onClick={() => {
+          //
+        }}
         //   sx={{
         //     backgroundColor: active && 'rgba(255,255,255, 0.08)',
         //     borderRadius: 1,
@@ -45,7 +47,6 @@ const NavItem = (props: any) => {
       >
         <Box sx={{ flexGrow: 1 }}>{title}</Box>
       </Button>
-      {/* </NextLink> */}
     </ListItem>
   );
 };

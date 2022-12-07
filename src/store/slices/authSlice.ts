@@ -10,8 +10,8 @@ export interface AuthState {
  * Default state object with initial values.
  */
 const initialState: AuthState = {
-  isLoggedIn: false,
-  role: '',
+  isLoggedIn: true,
+  role: 'manufacturer',
 } as const;
 
 /**
