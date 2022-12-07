@@ -3,6 +3,7 @@ import { createSlice, Draft, PayloadAction } from '@reduxjs/toolkit';
 
 export interface AuthState {
   isLoggedIn: boolean;
+  role: string;
 }
 
 /**
@@ -10,6 +11,7 @@ export interface AuthState {
  */
 const initialState: AuthState = {
   isLoggedIn: false,
+  role: '',
 } as const;
 
 /**
@@ -28,6 +30,12 @@ export const authSlice = createSlice({
     ) => {
       state.isLoggedIn = action.payload;
     },
+    setRole: (
+      state: Draft<typeof initialState>,
+      action: PayloadAction<typeof initialState.role>
+    ) => {
+      state.role = action.payload;
+    },
   },
 });
 
@@ -35,6 +43,6 @@ export const authSlice = createSlice({
 export const getAuthState = (state: { auth: AuthState }) => state.auth;
 
 // Exports all actions
-export const { setIsLoggedIn } = authSlice.actions;
+export const { setIsLoggedIn, setRole } = authSlice.actions;
 
 export default authSlice.reducer;
