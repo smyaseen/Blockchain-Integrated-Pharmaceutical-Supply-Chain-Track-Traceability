@@ -1,28 +1,31 @@
 import React from 'react';
-import { NextPage } from 'next';
 import Head from 'next/head';
+// import NextLink from 'next/link';
 import {
   Box,
-  Container,
   Button,
-  Grid,
-  // Link as MUILink,
+  //   Checkbox,
+  Container,
+  FormControl,
+  InputLabel,
+  MenuItem,
+  Select,
+  //   Link,
   TextField,
   Typography,
 } from '@mui/material';
-// import Link from 'next/link';
+import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import { useRouter } from 'next/router';
-// import withAuth from '../../routes/withAuth';
 import RouteNames from '../../routes/RouteNames';
+import Roles from '../../utility/roles';
 
-// eslint-disable-next-line arrow-body-style
-const Login: NextPage = () => {
+const Register = () => {
   const router = useRouter();
 
   return (
     <>
       <Head>
-        <title>Login</title>
+        <title>Register</title>
       </Head>
       <Box
         component="main"
@@ -41,15 +44,29 @@ const Login: NextPage = () => {
           >
             <Box sx={{ my: 3 }}>
               <Typography color="textPrimary" variant="h4">
-                Sign in
+                Create a new account
               </Typography>
               <Typography color="textSecondary" gutterBottom variant="body2">
-                Sign in on the internal platform
+                Use your email to create a new account
               </Typography>
             </Box>
+            <TextField
+              //   error={Boolean(
+              //     formik.touched.firstName && formik.errors.firstName
+              //   )}
+              fullWidth
+              //   helperText={formik.touched.firstName && formik.errors.firstName}
+              label="Name"
+              margin="normal"
+              name="name"
+              //   onBlur={formik.handleBlur}
+              //   onChange={formik.handleChange}
+              //   value={formik.values.firstName}
+              variant="outlined"
+            />
 
             <TextField
-              error={false}
+              //   error={Boolean(formik.touched.email && formik.errors.email)}
               fullWidth
               //   helperText={formik.touched.email && formik.errors.email}
               label="Email Address"
@@ -74,6 +91,23 @@ const Login: NextPage = () => {
               //   value={formik.values.password}
               variant="outlined"
             />
+            <FormControl margin="normal" fullWidth>
+              <InputLabel id="role-select-label">Role</InputLabel>
+              <Select
+                labelId="role-select-label-id"
+                id="role-select"
+                // value={age}
+                label="Role"
+                onChange={() => {
+                  //
+                }}
+              >
+                <MenuItem value={Roles.manufacturer}>Manufacturer</MenuItem>
+                <MenuItem value={Roles.distributor}>Distributor</MenuItem>
+                <MenuItem value={Roles.pharmacy}>Pharmacy</MenuItem>
+              </Select>
+            </FormControl>
+
             <Box sx={{ py: 2 }}>
               <Button
                 color="primary"
@@ -83,17 +117,17 @@ const Login: NextPage = () => {
                 type="submit"
                 variant="contained"
               >
-                Sign In Now
+                Sign Up Now
               </Button>
             </Box>
             <Typography color="textSecondary" variant="body2">
-              Don&apos;t have an account?{' '}
+              Have an account? {/* <NextLink href="/auth/login" passHref> */}
               <Button
                 onClick={() => {
-                  router.push(RouteNames.signup);
+                  router.push(RouteNames.login);
                 }}
               >
-                Sign Up
+                Sign In
               </Button>
             </Typography>
           </form>
@@ -103,5 +137,4 @@ const Login: NextPage = () => {
   );
 };
 
-// export default withAuth(Login)('');
-export default Login;
+export default Register;
