@@ -9,11 +9,17 @@ const withAuth =
   (allowedRole: string) =>
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   (props: any) => {
+    // getting the auth state from redux store
     const { isLoggedIn, role } = useSelector(getAuthState);
     const router = useRouter();
+
+    // using a state to keep track if user is in correct state or path
     const [isValidRoute, setIsValidRoute] = useState(false);
 
     useEffect(() => {
+      // first condition is to check if logged in and if on wrong path
+      // then route to default route of the particular role user is of
+
       if (
         isLoggedIn &&
         !(role === allowedRole) &&
@@ -21,10 +27,17 @@ const withAuth =
       ) {
         setIsValidRoute(false);
         router.push(routeConfig[role].default);
-      } else if (!isLoggedIn && !routeConfig.auth[router.pathname]) {
+      }
+
+      // second condition is to check if not logged in and if on wrong path
+      // then route to default not authenticated path
+      else if (!isLoggedIn && !routeConfig.auth[router.pathname]) {
         setIsValidRoute(false);
         router.push(routeConfig.auth.default);
-      } else setIsValidRoute(true);
+      }
+
+      // if upper two conditions are not met then the route user is in correct and return the component
+      else setIsValidRoute(true);
     }, []);
 
     return isValidRoute ? <Component {...props} /> : null;

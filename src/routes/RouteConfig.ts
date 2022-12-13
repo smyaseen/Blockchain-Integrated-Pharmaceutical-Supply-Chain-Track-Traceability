@@ -1,4 +1,5 @@
 import { RouteNames } from './RouteNames';
+import Roles from '../utility/roles';
 
 const routeConfig: { [key: string]: { [key: string]: string } } = {
   auth: {
@@ -6,17 +7,15 @@ const routeConfig: { [key: string]: { [key: string]: string } } = {
     [RouteNames.signup]: RouteNames.signup,
     [RouteNames.login]: RouteNames.login,
   },
-  manufacturer: {
+  [Roles.manufacturer]: {
     default: RouteNames.manufacturer,
     [RouteNames.manufacturer]: RouteNames.manufacturer,
   },
 
-  // admin: [],
+  [Roles.customer]: {},
+  [Roles.distributor]: {},
 
-  // customer: [],
-  // distributor: [],
-
-  // pharmacy: [],
+  [Roles.pharmacy]: {},
 };
 
 export default routeConfig;

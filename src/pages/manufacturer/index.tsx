@@ -1,7 +1,7 @@
 import React from 'react';
 import { NextPage } from 'next';
-import withAuth from '../../routes/withAuth';
-import Roles from '../../utility/roles';
+// import withAuth from '../../routes/withAuth';
+// import Roles from '../../utility/roles';
 
 const Manufacturer: NextPage = () => {
   console.log('here');
