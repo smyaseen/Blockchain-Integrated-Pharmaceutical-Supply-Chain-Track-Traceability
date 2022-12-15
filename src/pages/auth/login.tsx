@@ -1,105 +1,78 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { NextPage } from 'next';
-import Head from 'next/head';
-import {
-  Box,
-  Container,
-  Button,
-  Grid,
-  // Link as MUILink,
-  TextField,
-  Typography,
-} from '@mui/material';
-// import Link from 'next/link';
-import { useRouter } from 'next/router';
+import Router from 'next/router';
 // import withAuth from '../../routes/withAuth';
 import RouteNames from '../../routes/RouteNames';
+import { TEXT_FIELD } from '../../components/auth/AuthForm/FieldTypes';
+import AuthForm from '../../components/auth/AuthForm';
 
 // eslint-disable-next-line arrow-body-style
 const Login: NextPage = () => {
-  const router = useRouter();
+  const [fields, setFields] = useState([
+    {
+      type: TEXT_FIELD,
+      textFieldType: 'email',
+      name: 'email',
+      label: 'Email Address',
+      variant: 'outlined',
+      value: '',
+      errorMessage: '',
+      // onChange: () => {
+      //   // const updatedFields = fieldChangeHandler(fields, value, index);
+      //   // setFields(updatedFields);
+      // },
+      // getValidation: () => {
+      //   //
+      // },
+    },
+    {
+      type: TEXT_FIELD,
+      textFieldType: 'password',
+      label: 'Password',
+      name: 'password',
+      variant: 'outlined',
+      value: '',
+      errorMessage: '',
+      // onChange: () => {
+      //   // const updatedFields = fieldChangeHandler(fields, value, index);
+      //   // setFields(updatedFields);
+      // },
+      // getValidation: () => {
+      //   //
+      // },
+    },
+  ]);
+
+  const buttons = [
+    {
+      name: 'Sign In Now',
+      color: 'primary',
+      fullWidth: true,
+      size: 'large',
+      type: 'submit',
+      variant: 'contained',
+      loading: false,
+    },
+  ];
+
+  const footerButton = {
+    text: 'Sign Up',
+    onClick: () => {
+      Router.push(RouteNames.signup);
+    },
+  };
 
   return (
-    <>
-      <Head>
-        <title>Login</title>
-      </Head>
-      <Box
-        component="main"
-        sx={{
-          alignItems: 'center',
-          display: 'flex',
-          flexGrow: 1,
-          minHeight: '100%',
-        }}
-      >
-        <Container maxWidth="sm">
-          <form
-            onSubmit={() => {
-              //
-            }}
-          >
-            <Box sx={{ my: 3 }}>
-              <Typography color="textPrimary" variant="h4">
-                Sign in
-              </Typography>
-              <Typography color="textSecondary" gutterBottom variant="body2">
-                Sign in on the internal platform
-              </Typography>
-            </Box>
-
-            <TextField
-              error={false}
-              fullWidth
-              //   helperText={formik.touched.email && formik.errors.email}
-              label="Email Address"
-              margin="normal"
-              name="email"
-              //   onBlur={formik.handleBlur}
-              //   onChange={formik.handleChange}
-              type="email"
-              //   value={formik.values.email}
-              variant="outlined"
-            />
-            <TextField
-              //   error={Boolean(formik.touched.password && formik.errors.password)}
-              fullWidth
-              //   helperText={formik.touched.password && formik.errors.password}
-              label="Password"
-              margin="normal"
-              name="password"
-              //   onBlur={formik.handleBlur}
-              //   onChange={formik.handleChange}
-              type="password"
-              //   value={formik.values.password}
-              variant="outlined"
-            />
-            <Box sx={{ py: 2 }}>
-              <Button
-                color="primary"
-                // disabled={formik.isSubmitting}
-                fullWidth
-                size="large"
-                type="submit"
-                variant="contained"
-              >
-                Sign In Now
-              </Button>
-            </Box>
-            <Typography color="textSecondary" variant="body2">
-              Don&apos;t have an account?{' '}
-              <Button
-                onClick={() => {
-                  router.push(RouteNames.signup);
-                }}
-              >
-                Sign Up
-              </Button>
-            </Typography>
-          </form>
-        </Container>
-      </Box>
-    </>
+    <AuthForm
+      fields={fields}
+      buttons={buttons}
+      responseError=""
+      heading="Sign in"
+      title="Login"
+      subHeading="Sign in on the internal platform"
+      footerText="Don't have an account?"
+      footerButton={footerButton}
+    />
   );
 };
 
