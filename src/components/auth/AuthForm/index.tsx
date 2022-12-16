@@ -1,4 +1,5 @@
-import React, { FocusEventHandler, Fragment, useEffect, useState } from 'react';
+/* eslint-disable @typescript-eslint/no-explicit-any */
+import React, { useEffect, useState } from 'react';
 import Head from 'next/head';
 import {
   Box,
@@ -10,67 +11,13 @@ import {
   Select,
   MenuItem,
   Button,
-  SelectChangeEvent,
-  ButtonPropsColorOverrides,
 } from '@mui/material';
 
 import { LoadingButton } from '@mui/lab';
 import { SELECT, TEXT_FIELD } from './FieldTypes';
+import { AuthFormProps, FieldProp } from './AuthTypes';
 
-interface FieldProp {
-  type: string;
-  errorMessage?: string;
-  getValidation?: (value: string) => void;
-  menuItems?: [{ menuValue: string; menuName: string }];
-  textFieldType?: string;
-  fullWidth?: boolean;
-  label?: string;
-  margin?: any;
-  name?: string;
-  onChange?: (
-    event: SelectChangeEvent<unknown>,
-    child: React.ReactNode
-  ) => void | React.ChangeEventHandler<HTMLTextAreaElement | HTMLInputElement>;
-  onBlur?: FocusEventHandler<HTMLInputElement | HTMLTextAreaElement>;
-  value?: any;
-  variant?: any;
-}
-
-interface ButtonProp {
-  name: string;
-  onClick?: () => void;
-  disabled?: boolean;
-  color?: OverridableStringUnion<
-    | 'inherit'
-    | 'primary'
-    | 'secondary'
-    | 'success'
-    | 'error'
-    | 'info'
-    | 'warning',
-    ButtonPropsColorOverrides
-  >;
-  fullWidth?: boolean;
-  size?: 'small' | 'medium' | 'large';
-  variant?: 'text' | 'outlined' | 'contained';
-  loading?: boolean;
-}
-
-interface AuthFormProps {
-  fields: Array<FieldProp>;
-  buttons: Array<ButtonProp>;
-  responseError: string;
-  title: string;
-  heading: string;
-  subHeading: string;
-  footerText: string;
-  footerButton: {
-    text: string;
-    onClick: React.MouseEventHandler<HTMLButtonElement>;
-  };
-}
-
-const getFields = (field: FieldProp) => {
+const getFields = (field: FieldProp, index: number) => {
   switch (field.type) {
     case TEXT_FIELD: {
       const {
@@ -79,7 +26,7 @@ const getFields = (field: FieldProp) => {
         margin,
         name,
         onBlur,
-        // onChange,
+        onChange,
         textFieldType,
         value,
         variant,
@@ -92,7 +39,7 @@ const getFields = (field: FieldProp) => {
           margin={margin}
           name={name}
           onBlur={onBlur}
-          //   onChange={onChange}
+          onChange={(e) => onChange(e, index)}
           type={textFieldType}
           value={value}
           variant={variant}
@@ -101,12 +48,7 @@ const getFields = (field: FieldProp) => {
     }
 
     case SELECT: {
-      const {
-        label,
-        value,
-        //  onChange,
-        menuItems,
-      } = field;
+      const { label, value, onChange, menuItems } = field;
 
       return (
         <FormControl margin="normal" fullWidth>
@@ -116,7 +58,7 @@ const getFields = (field: FieldProp) => {
             id={`${label}-select`}
             value={value}
             label={label}
-            // onChange={onChange}
+            onChange={onChange}
           >
             {menuItems &&
               menuItems?.map(({ menuValue, menuName }) => (
@@ -172,16 +114,32 @@ const AuthForm = ({
                 {subHeading}
               </Typography>
             </Box>
-            {fieldsData?.map(getFields)}
+            {fieldsData?.map((field, index) => (
+              <>
+                {getFields(field, index)}
+                <span style={{ color: 'red' }}>{field.errorMessage}</span>
+              </>
+            ))}
             <Box sx={{ py: 2 }}>
               {buttons?.map(
-                ({ onClick, name, color, loading, disabled, variant }) => (
+                ({
+                  onClick,
+                  name,
+                  color,
+                  loading,
+                  disabled,
+                  variant,
+                  fullWidth,
+                  size,
+                }) => (
                   <LoadingButton
                     variant={variant}
                     onClick={onClick}
                     color={color}
                     loading={loading}
                     disabled={disabled}
+                    fullWidth={fullWidth}
+                    size={size}
                   >
                     {name}
                   </LoadingButton>
