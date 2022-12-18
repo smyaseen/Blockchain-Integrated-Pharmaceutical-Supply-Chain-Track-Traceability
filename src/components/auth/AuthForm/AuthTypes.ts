@@ -16,6 +16,7 @@ export interface FieldProp {
   value?: any;
   variant?: any;
   values?: [string];
+  disabled?: boolean;
 }
 
 export interface ButtonProp {

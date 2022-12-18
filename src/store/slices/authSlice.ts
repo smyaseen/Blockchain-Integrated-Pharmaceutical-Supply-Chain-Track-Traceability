@@ -24,17 +24,16 @@ export const authSlice = createSlice({
   name: 'authReducer',
   initialState,
   reducers: {
-    setIsLoggedIn: (
+    logIn: (
       state: Draft<typeof initialState>,
-      action: PayloadAction<typeof initialState.isLoggedIn>
+      action: PayloadAction<string>
     ) => {
-      state.isLoggedIn = action.payload;
-    },
-    setRole: (
-      state: Draft<typeof initialState>,
-      action: PayloadAction<typeof initialState.role>
-    ) => {
+      state.isLoggedIn = true;
       state.role = action.payload;
+    },
+    logOut: (state: Draft<typeof initialState>) => {
+      state.isLoggedIn = false;
+      state.role = '';
     },
   },
 });
@@ -43,6 +42,6 @@ export const authSlice = createSlice({
 export const getAuthState = (state: { auth: AuthState }) => state.auth;
 
 // Exports all actions
-export const { setIsLoggedIn, setRole } = authSlice.actions;
+export const { logIn, logOut } = authSlice.actions;
 
 export default authSlice.reducer;

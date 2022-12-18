@@ -30,6 +30,7 @@ const getFields = (field: FieldProp, index: number) => {
         textFieldType,
         value,
         variant,
+        disabled,
       } = field;
 
       return (
@@ -43,12 +44,13 @@ const getFields = (field: FieldProp, index: number) => {
           type={textFieldType}
           value={value}
           variant={variant}
+          disabled={disabled}
         />
       );
     }
 
     case SELECT: {
-      const { label, value, onChange, menuItems } = field;
+      const { label, value, onChange, menuItems, disabled } = field;
 
       return (
         <FormControl margin="normal" fullWidth>
@@ -58,6 +60,7 @@ const getFields = (field: FieldProp, index: number) => {
             id={`${label}-select`}
             value={value}
             label={label}
+            disabled={disabled}
             onChange={(e) => onChange(e, index)}
           >
             {menuItems &&
@@ -155,9 +158,11 @@ const AuthForm = ({
                 {footerButton.text}
               </Button>
             </Typography>
+            {responseError && (
+              <span style={{ color: 'red' }}>{responseError}</span>
+            )}
           </>
         </Container>
-        {responseError && <span style={{ color: 'red' }}>{responseError}</span>}
       </Box>
     </>
   );
