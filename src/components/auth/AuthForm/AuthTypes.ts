@@ -5,7 +5,7 @@ export interface FieldProp {
   type: string;
   errorMessage?: string;
   getValidation?: (value: string) => string;
-  menuItems?: [{ menuValue: string; menuName: string }];
+  menuItems?: Array<{ menuValue: string; menuName: string }>;
   textFieldType?: string;
   fullWidth?: boolean;
   label?: string;

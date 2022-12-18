@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import React, { useEffect, useState } from 'react';
+import React, { Fragment, useEffect, useState } from 'react';
 import Head from 'next/head';
 import {
   Box,
@@ -58,11 +58,13 @@ const getFields = (field: FieldProp, index: number) => {
             id={`${label}-select`}
             value={value}
             label={label}
-            onChange={onChange}
+            onChange={(e) => onChange(e, index)}
           >
             {menuItems &&
               menuItems?.map(({ menuValue, menuName }) => (
-                <MenuItem value={menuValue}>{menuName}</MenuItem>
+                <MenuItem key={menuValue} value={menuValue}>
+                  {menuName}
+                </MenuItem>
               ))}
           </Select>
         </FormControl>
@@ -115,10 +117,10 @@ const AuthForm = ({
               </Typography>
             </Box>
             {fieldsData?.map((field, index) => (
-              <>
+              <Fragment key={field.label}>
                 {getFields(field, index)}
                 <span style={{ color: 'red' }}>{field.errorMessage}</span>
-              </>
+              </Fragment>
             ))}
             <Box sx={{ py: 2 }}>
               {buttons?.map(
@@ -133,6 +135,7 @@ const AuthForm = ({
                   size,
                 }) => (
                   <LoadingButton
+                    key={name}
                     variant={variant}
                     onClick={onClick}
                     color={color}
