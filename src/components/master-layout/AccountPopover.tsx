@@ -1,11 +1,13 @@
 import React from 'react';
 import { Box, MenuItem, MenuList, Popover, Typography } from '@mui/material';
+import { signOut } from 'next-auth/react';
 
 const AccountPopover = (props: any) => {
   const { anchorEl, onClose, open, ...other } = props;
 
   const handleSignOut = async () => {
     onClose?.();
+    signOut();
   };
 
   return (

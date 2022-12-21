@@ -1,16 +1,22 @@
 // middleware.ts
 import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
-import { store } from './store/store';
+
+import { getToken } from 'next-auth/jwt';
 import routeConfig from './routes/RouteConfig';
 
 // This function can be marked `async` if using `await` inside
 // eslint-disable-next-line consistent-return
-export function middleware(request: NextRequest) {
-  const {
-    auth: { isLoggedIn, role },
-  } = store.getState();
+export async function middleware(request: NextRequest) {
+  const session = await getToken({ req: request });
 
+  let isLoggedIn = false;
+  let role = '';
+
+  if (session && session.email) {
+    isLoggedIn = true;
+    role = session.role as string;
+  }
   const {
     nextUrl: { pathname },
   } = request;
@@ -37,6 +43,6 @@ export const config = {
      * - _next/static (static files)
      * - favicon.ico (favicon file)
      */
-    '/((?!api|_next/static|favicon.ico|manifest|icon).*)',
+    '/((?!api|_next/static|favicon.ico|manifest|icon|static).*)',
   ],
 };

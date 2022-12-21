@@ -1,9 +1,8 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { styled } from '@mui/material/styles';
 
-import { Box } from '@mui/material';
-import { useSelector } from '../../store/store';
-import { getAuthState } from '../../store/slices/authSlice';
+import { Box, CircularProgress } from '@mui/material';
+import { useSession } from 'next-auth/react';
 import DashboardNavbar from '../../components/master-layout/DashboardNavbar';
 import DashboardSidebar from '../../components/master-layout/DashboardSidebar';
 
@@ -30,30 +29,45 @@ interface Props {
 }
 
 const Layout = ({ children }: Props) => {
-  const { isLoggedIn } = useSelector(getAuthState);
   const [isSidebarOpen, setSidebarOpen] = useState(true);
+  const { status } = useSession();
 
   return (
+    // eslint-disable-next-line react/jsx-no-useless-fragment
     <>
-      <DashboardLayoutRoot isLoggedIn={isLoggedIn}>
-        <Box
-          sx={{
-            display: 'flex',
-            flex: '1 1 auto',
-            flexDirection: 'column',
-            width: '100%',
+      {status === 'loading' ? (
+        <CircularProgress
+          style={{
+            position: 'absolute',
+            top: '50%',
+            left: '50%',
+            transform: 'translate(-50%, -50%)',
           }}
-        >
-          {children}
-        </Box>
-      </DashboardLayoutRoot>
-      {isLoggedIn && (
+          size={100}
+        />
+      ) : (
         <>
-          <DashboardNavbar onSidebarOpen={() => setSidebarOpen(true)} />
-          <DashboardSidebar
-            onClose={() => setSidebarOpen(false)}
-            open={isSidebarOpen}
-          />
+          <DashboardLayoutRoot isLoggedIn={status === 'authenticated'}>
+            <Box
+              sx={{
+                display: 'flex',
+                flex: '1 1 auto',
+                flexDirection: 'column',
+                width: '100%',
+              }}
+            >
+              {children}
+            </Box>
+          </DashboardLayoutRoot>
+          {status === 'authenticated' && (
+            <>
+              <DashboardNavbar onSidebarOpen={() => setSidebarOpen(true)} />
+              <DashboardSidebar
+                onClose={() => setSidebarOpen(false)}
+                open={isSidebarOpen}
+              />
+            </>
+          )}
         </>
       )}
     </>

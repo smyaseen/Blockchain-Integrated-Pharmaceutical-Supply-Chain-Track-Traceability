@@ -19,15 +19,24 @@ export default async function handler(
 
       const clientDB = await connectToDatabase();
 
-      await clientDB.db().collection('users').insertOne({
-        email,
-        password: hashedPassword,
-        role,
-      });
+      const existingUser = await clientDB
+        .db()
+        .collection('users')
+        .findOne({ email });
 
-      clientDB.close();
+      if (existingUser) {
+        res.status(422).json({ message: 'User already exists!' });
+        clientDB.close();
+      } else {
+        await clientDB.db().collection('users').insertOne({
+          email,
+          password: hashedPassword,
+          role,
+        });
 
-      res.status(201).json({ message: 'User created!' });
+        res.status(201).json({ message: 'User created!' });
+        clientDB.close();
+      }
     } catch (err) {
       res.status(500).json({ message: 'User creation error!' });
     }

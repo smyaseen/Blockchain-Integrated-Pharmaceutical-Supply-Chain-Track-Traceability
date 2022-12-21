@@ -3,6 +3,7 @@ import React, { useState } from 'react';
 import { NextPage } from 'next';
 import Router from 'next/router';
 // import withAuth from '../../routes/withAuth';
+import { signIn } from 'next-auth/react';
 import RouteNames from '../../routes/RouteNames';
 import { TEXT_FIELD } from '../../components/auth/AuthForm/FieldTypes';
 import AuthForm from '../../components/auth/AuthForm';
@@ -12,9 +13,12 @@ import {
   passwordRegex,
   validateOnSubmit,
 } from '../../components/auth/AuthForm/AuthUtils';
+import { setFieldsDisabled } from '../../utility/utils';
 
 // eslint-disable-next-line arrow-body-style
 const Login: NextPage = () => {
+  const [loginButtonLoading, setLoginButtonLoading] = useState(false);
+
   const [fields, setFields] = useState([
     {
       type: TEXT_FIELD,
@@ -67,12 +71,28 @@ const Login: NextPage = () => {
     },
   ]);
 
-  const saveHandler = () => {
-    const {
-      validateArray,
-      //  isValid
-    } = validateOnSubmit(fields, true) as any;
+  const saveHandler = async () => {
+    setLoginButtonLoading(true);
+    const { validateArray, isValid } = validateOnSubmit(fields, true) as any;
     setFields(validateArray);
+
+    if (isValid) {
+      setFields(setFieldsDisabled(true, validateArray) as any);
+
+      const result = await signIn('credentials', {
+        redirect: false,
+        email: validateArray[0].value,
+        password: validateArray[1].value,
+      });
+
+      setFields(setFieldsDisabled(false, validateArray) as any);
+
+      if (result && !result.error) {
+        Router.push('');
+      }
+    }
+
+    setLoginButtonLoading(false);
   };
 
   const buttons = [
@@ -82,7 +102,7 @@ const Login: NextPage = () => {
       fullWidth: true,
       size: 'large' as const,
       variant: 'contained' as const,
-      loading: false,
+      loading: loginButtonLoading,
       onClick: saveHandler,
     },
   ];

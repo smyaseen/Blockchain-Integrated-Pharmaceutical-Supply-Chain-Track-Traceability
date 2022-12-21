@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import React, { useState } from 'react';
 
 import Router from 'next/router';
@@ -13,8 +14,9 @@ import {
   passwordRegex,
   validateOnSubmit,
 } from '../../components/auth/AuthForm/AuthUtils';
-import { store, useDispatch } from '../../store/store';
+import { useDispatch } from '../../store/store';
 import { logIn } from '../../store/slices/authSlice';
+import { setFieldsDisabled } from '../../utility/utils';
 
 interface userData {
   email: string;
@@ -110,7 +112,7 @@ const Register = () => {
 
   const { mutateAsync, isLoading } = useMutation(signUpUser, {
     onSuccess: ({ data, status }) => {
-      if (status === 500) {
+      if (status !== 201) {
         setResponseError(data.message);
       } else {
         dispatch(logIn(fields[2].value));
@@ -123,27 +125,19 @@ const Register = () => {
     // },
   });
 
-  const saveHandler = () => {
+  const saveHandler = async () => {
     const { validateArray, isValid } = validateOnSubmit(fields, true) as any;
 
     if (isValid) {
-      setFields([
-        { ...validateArray[0], disabled: true },
-        { ...validateArray[1], disabled: true },
-        { ...validateArray[2], disabled: true },
-      ]);
+      setFields(setFieldsDisabled(true, validateArray) as any);
 
-      mutateAsync({
+      await mutateAsync({
         email: validateArray[0].value,
         password: validateArray[1].value,
         role: validateArray[2].value,
       });
 
-      setFields([
-        { ...validateArray[0], disabled: false },
-        { ...validateArray[1], disabled: false },
-        { ...validateArray[2], disabled: false },
-      ]);
+      setFields(setFieldsDisabled(false, validateArray) as any);
     } else setFields(validateArray);
   };
 

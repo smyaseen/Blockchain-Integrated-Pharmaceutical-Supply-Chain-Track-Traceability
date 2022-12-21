@@ -11,6 +11,7 @@ import '@fontsource/roboto/700.css';
 
 import { Provider } from 'react-redux';
 // import dynamic from 'next/dynamic';
+import { SessionProvider } from 'next-auth/react';
 import createEmotionCache from '../utility/createEmotionCache';
 
 import '../styles/globals.css';
@@ -38,11 +39,13 @@ const MyApp: React.FunctionComponent<MyAppProps> = (props) => {
       <ThemeProvider theme={theme}>
         <CssBaseline />
         <QueryClientProvider client={queryClient}>
-          <Provider store={store}>
-            <Layout>
-              <Component {...pageProps} />
-            </Layout>
-          </Provider>
+          <SessionProvider>
+            <Provider store={store}>
+              <Layout>
+                <Component {...pageProps} />
+              </Layout>
+            </Provider>
+          </SessionProvider>
         </QueryClientProvider>
       </ThemeProvider>
     </CacheProvider>
