@@ -1,9 +1,14 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import React from 'react';
 import { Box, MenuItem, MenuList, Popover, Typography } from '@mui/material';
-import { signOut } from 'next-auth/react';
+import { signOut, useSession } from 'next-auth/react';
 
 const AccountPopover = (props: any) => {
   const { anchorEl, onClose, open, ...other } = props;
+
+  const {
+    data: { name, role },
+  } = useSession() as any;
 
   const handleSignOut = async () => {
     onClose?.();
@@ -30,9 +35,9 @@ const AccountPopover = (props: any) => {
           px: 2,
         }}
       >
-        <Typography variant="overline">Account</Typography>
+        <Typography variant="overline">{role}</Typography>
         <Typography color="text.secondary" variant="body2">
-          John Doe
+          {name}
         </Typography>
       </Box>
       <MenuList

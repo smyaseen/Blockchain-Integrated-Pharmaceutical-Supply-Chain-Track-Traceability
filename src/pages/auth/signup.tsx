@@ -19,6 +19,7 @@ import { logIn } from '../../store/slices/authSlice';
 import { setFieldsDisabled } from '../../utility/utils';
 
 interface userData {
+  name: string;
   email: string;
   password: string;
   role: string;
@@ -41,6 +42,30 @@ const Register = () => {
   const dispatch = useDispatch();
 
   const [fields, setFields] = useState([
+    {
+      type: TEXT_FIELD,
+      textFieldType: 'text',
+      name: 'name',
+      label: 'Name',
+      variant: 'outlined',
+      value: '',
+      errorMessage: '',
+      fullWidth: true,
+      margin: 'normal',
+      onChange: (
+        { target: { value } }: React.ChangeEvent<HTMLInputElement>,
+        index: number
+      ) => {
+        const updatedFields = fieldChangeHandler(fields, value, index) as any;
+        setFields(updatedFields);
+      },
+      getValidation: (value: string) => {
+        if (!value) {
+          return 'Invalid name';
+        }
+        return '';
+      },
+    },
     {
       type: TEXT_FIELD,
       textFieldType: 'email',
@@ -115,8 +140,8 @@ const Register = () => {
       if (status !== 201) {
         setResponseError(data.message);
       } else {
-        dispatch(logIn(fields[2].value));
-        Router.push(routeConfig[fields[2].value].default);
+        dispatch(logIn(fields[3].value));
+        Router.push(routeConfig[fields[3].value].default);
       }
     },
     // onError: (error) => {
@@ -132,9 +157,10 @@ const Register = () => {
       setFields(setFieldsDisabled(true, validateArray) as any);
 
       await mutateAsync({
-        email: validateArray[0].value,
-        password: validateArray[1].value,
-        role: validateArray[2].value,
+        name: validateArray[0].value,
+        email: validateArray[1].value,
+        password: validateArray[2].value,
+        role: validateArray[3].value,
       });
 
       setFields(setFieldsDisabled(false, validateArray) as any);

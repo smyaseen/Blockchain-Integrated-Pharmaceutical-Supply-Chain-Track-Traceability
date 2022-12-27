@@ -12,23 +12,31 @@ export default async function handler(
   res: NextApiResponse<Data>
 ) {
   if (req.method === 'POST') {
-    const { email, password, role } = req.body;
+    const { name, email, password, role } = req.body;
 
     try {
       const hashedPassword = await encryptPassword(password);
 
       const clientDB = await connectToDatabase();
 
-      const existingUser = await clientDB
+      let existingUser = await clientDB
         .db()
         .collection('users')
         .findOne({ email });
 
       if (existingUser) {
-        res.status(422).json({ message: 'User already exists!' });
+        res.status(422).json({ message: 'User email already exists!' });
+        clientDB.close();
+      }
+
+      existingUser = await clientDB.db().collection('users').findOne({ name });
+
+      if (existingUser) {
+        res.status(422).json({ message: 'User name already exists!' });
         clientDB.close();
       } else {
         await clientDB.db().collection('users').insertOne({
+          name,
           email,
           password: hashedPassword,
           role,
