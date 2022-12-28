@@ -43,4 +43,10 @@ const products = [
   },
 ];
 
+export const batches = [
+  {
+    medicine: '',
+  },
+];
+
 export default products;

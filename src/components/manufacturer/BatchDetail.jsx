@@ -1,3 +1,4 @@
+/* eslint-disable react/jsx-props-no-spreading */
 /* eslint-disable react/jsx-filename-extension */
 import React, { useState } from 'react';
 import {
@@ -8,10 +9,12 @@ import {
   CardHeader,
   Divider,
   Grid,
-  Link,
   TextField,
 } from '@mui/material';
 import QRCode from 'react-qr-code';
+import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
+import { MobileDatePicker } from '@mui/x-date-pickers/MobileDatePicker';
+import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import products from './_data_';
 
 const distributors = [
@@ -41,6 +44,8 @@ function BatchDetail(props) {
     medicine: '',
     quantity: '',
     distributor: '',
+    expiry: '',
+    mfg: '',
   });
 
   const handleChange = (event) => {
@@ -70,7 +75,6 @@ function BatchDetail(props) {
                 required
                 select
                 SelectProps={{ native: true }}
-                value={values.state}
                 variant="outlined"
               >
                 {medicines.map((option) => (
@@ -89,7 +93,6 @@ function BatchDetail(props) {
                 required
                 select
                 SelectProps={{ native: true }}
-                value={values.state}
                 variant="outlined"
               >
                 {distributors.map((option) => (
@@ -107,10 +110,30 @@ function BatchDetail(props) {
                 name="quantity"
                 onChange={handleChange}
                 required
-                value={values.state}
                 variant="outlined"
               />
             </Grid>
+            <Grid item md={6} xs={12}>
+              <LocalizationProvider dateAdapter={AdapterDayjs}>
+                <MobileDatePicker
+                  label="Expiry"
+                  inputFormat="MM/DD/YYYY"
+                  // onChange={handleChange}
+                  renderInput={(params) => <TextField {...params} />}
+                />
+              </LocalizationProvider>
+            </Grid>
+            <Grid item md={6} xs={12}>
+              <LocalizationProvider dateAdapter={AdapterDayjs}>
+                <MobileDatePicker
+                  label="Manufacturer Date"
+                  inputFormat="MM/DD/YYYY"
+                  // onChange={handleChange}
+                  renderInput={(params) => <TextField {...params} />}
+                />
+              </LocalizationProvider>
+            </Grid>
+
             <Grid item md={6} xs={12}>
               <QRCode size={50} value="hey" />
               <br />
