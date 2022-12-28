@@ -8,8 +8,11 @@ const routeConfig: { [key: string]: { [key: string]: string } } = {
     [RouteNames.login]: RouteNames.login,
   },
   [Roles.manufacturer]: {
-    default: RouteNames.manufacturer,
+    default: RouteNames.products,
     [RouteNames.manufacturer]: RouteNames.manufacturer,
+    [RouteNames.products]: RouteNames.products,
+    [RouteNames.createBatch]: RouteNames.createBatch,
+    [RouteNames.manufacturerBatches]: RouteNames.manufacturerBatches,
   },
 
   [Roles.customer]: {},

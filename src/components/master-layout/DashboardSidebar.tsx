@@ -1,25 +1,44 @@
 import React, { useEffect } from 'react';
 import { useRouter } from 'next/router';
 import { Box, Divider, Drawer, useMediaQuery } from '@mui/material';
+import { AddBox, LocalPharmacy, Widgets } from '@mui/icons-material';
+import { useSession } from 'next-auth/react';
 import { ShoppingBag as ShoppingBagIcon } from '../icons/shopping-bag';
 import NavItem from './NavItem';
-import Logo from './Logo';
-
-const items = [
-  {
-    href: '/products',
-    icon: <ShoppingBagIcon fontSize="small" />,
-    title: 'Products',
-  },
-];
+import RouteNames from '../../routes/RouteNames';
+import Roles from '../../utility/roles';
 
 const DashboardSidebar = (props: any) => {
+  const {
+    data: { role },
+  } = useSession() as any;
   const { open, onClose } = props;
   const router = useRouter();
   const lgUp = useMediaQuery((theme) => theme.breakpoints.up('lg'), {
     defaultMatches: true,
     noSsr: false,
   });
+
+  const items =
+    role === Roles.manufacturer
+      ? [
+          {
+            href: RouteNames.products,
+            icon: <ShoppingBagIcon fontSize="small" />,
+            title: 'Products',
+          },
+          {
+            href: RouteNames.manufacturerBatches,
+            icon: <Widgets fontSize="small" />,
+            title: 'Batches',
+          },
+          {
+            href: RouteNames.createBatch,
+            icon: <AddBox fontSize="small" />,
+            title: 'Create Batch',
+          },
+        ]
+      : [];
 
   useEffect(() => {
     if (!router.isReady) {
@@ -41,7 +60,7 @@ const DashboardSidebar = (props: any) => {
     >
       <div>
         <Box sx={{ p: 3 }}>
-          <Logo
+          <LocalPharmacy
             sx={{
               height: 42,
               width: 42,
