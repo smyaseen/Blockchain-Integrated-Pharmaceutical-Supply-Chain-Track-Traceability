@@ -45,7 +45,28 @@ const products = [
 
 export const batches = [
   {
-    medicine: '',
+    medicine: `PANADOL 500MG TAB 200'S`,
+    quantity: 100,
+    distributor: 'IBL',
+    expiry: new Date(new Date('12/23/2024')).toLocaleString().split(',')[0],
+    mfg: new Date(Date.now()).toLocaleString().split(',')[0],
+    created: new Date(Date.now()).toLocaleString().split(',')[0],
+  },
+  {
+    medicine: `Surbex-Z Tablets 30's`,
+    quantity: 200,
+    distributor: 'Getz',
+    expiry: new Date(new Date('12/23/2024')).toLocaleString().split(',')[0],
+    mfg: new Date(Date.now()).toLocaleString().split(',')[0],
+    created: new Date(Date.now()).toLocaleString().split(',')[0],
+  },
+  {
+    medicine: `Cac1000 Plus Tab-Orange T 20's`,
+    quantity: 300,
+    distributor: 'IBL',
+    expiry: new Date(new Date('12/23/2024')).toLocaleString().split(',')[0],
+    mfg: new Date(Date.now()).toLocaleString().split(',')[0],
+    created: new Date(Date.now()).toLocaleString().split(',')[0],
   },
 ];
 

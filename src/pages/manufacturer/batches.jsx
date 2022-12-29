@@ -1,16 +1,15 @@
 /* eslint-disable react/jsx-filename-extension */
-import React, { useState } from 'react';
+import React from 'react';
 import Head from 'next/head';
 import { Box, Container } from '@mui/material';
-import { v4 as uuid } from 'uuid';
-import CustomerListResults from '../../components/manufacturer/CustomerListResults';
-import CustomerListToolbar from '../../components/manufacturer/CustomerListToolbar';
+import BatcheListResults from '../../components/manufacturer/BatcheListResults';
+import { batches } from '../../components/manufacturer/_data_';
 
-function ManufacturerProducts() {
+function ManufacturerBatches() {
   return (
     <>
       <Head>
-        <title>Products</title>
+        <title>Batches</title>
       </Head>
       <Box
         component="main"
@@ -20,9 +19,9 @@ function ManufacturerProducts() {
         }}
       >
         <Container maxWidth={false}>
-          <CustomerListToolbar />
+          {/* <CustomerListToolbar /> */}
           <Box sx={{ mt: 3 }}>
-            <CustomerListResults />
+            <BatcheListResults products={batches} />
           </Box>
         </Container>
       </Box>
@@ -30,4 +29,4 @@ function ManufacturerProducts() {
   );
 }
 
-export default ManufacturerProducts;
+export default ManufacturerBatches;

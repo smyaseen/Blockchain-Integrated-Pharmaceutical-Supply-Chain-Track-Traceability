@@ -13,6 +13,7 @@ const routeConfig: { [key: string]: { [key: string]: string } } = {
     [RouteNames.products]: RouteNames.products,
     [RouteNames.createBatch]: RouteNames.createBatch,
     [RouteNames.manufacturerBatches]: RouteNames.manufacturerBatches,
+    [RouteNames.seeBatch]: RouteNames.seeBatch,
   },
 
   [Roles.customer]: {},
