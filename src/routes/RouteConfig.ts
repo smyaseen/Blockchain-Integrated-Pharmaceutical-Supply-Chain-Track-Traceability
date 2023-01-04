@@ -9,7 +9,6 @@ const routeConfig: { [key: string]: { [key: string]: string } } = {
   },
   [Roles.manufacturer]: {
     default: RouteNames.products,
-    [RouteNames.manufacturer]: RouteNames.manufacturer,
     [RouteNames.products]: RouteNames.products,
     [RouteNames.createBatch]: RouteNames.createBatch,
     [RouteNames.manufacturerBatches]: RouteNames.manufacturerBatches,

@@ -1,5 +1,3 @@
-/* eslint-disable react/jsx-props-no-spreading */
-/* eslint-disable react/jsx-filename-extension */
 import React, { useState } from 'react';
 import {
   Box,
@@ -39,25 +37,24 @@ const medicines = [
   })),
 ];
 
-function BatchDetail(props) {
+const BatchDetail = () => {
   const [values, setValues] = useState({
     medicine: '',
     quantity: '',
     distributor: '',
-    expiry: '',
-    mfg: '',
+    expiry: new Date().toLocaleDateString(),
+    mfg: new Date().toLocaleDateString(),
   });
 
-  const handleChange = (event) => {
+  const handleChange = (name: string, value: string) => {
     setValues({
       ...values,
-      [event.target.name]: event.target.value,
+      [name]: value,
     });
   };
 
   return (
-    // eslint-disable-next-line react/jsx-props-no-spreading
-    <form autoComplete="off" noValidate {...props}>
+    <form autoComplete="off" noValidate>
       <Card>
         <CardHeader
           subheader="Create Batch of Medicines"
@@ -71,7 +68,9 @@ function BatchDetail(props) {
                 fullWidth
                 label="Select Medicine"
                 name="medicine"
-                onChange={handleChange}
+                onChange={({ target: { name, value } }) =>
+                  handleChange(name, value)
+                }
                 required
                 select
                 SelectProps={{ native: true }}
@@ -89,7 +88,9 @@ function BatchDetail(props) {
                 fullWidth
                 label="Select Distributor"
                 name="distributor"
-                onChange={handleChange}
+                onChange={({ target: { name, value } }) =>
+                  handleChange(name, value)
+                }
                 required
                 select
                 SelectProps={{ native: true }}
@@ -108,7 +109,9 @@ function BatchDetail(props) {
                 type="number"
                 label="Quantity"
                 name="quantity"
-                onChange={handleChange}
+                onChange={({ target: { name, value } }) =>
+                  handleChange(name, value)
+                }
                 required
                 variant="outlined"
               />
@@ -117,19 +120,21 @@ function BatchDetail(props) {
               <LocalizationProvider dateAdapter={AdapterDayjs}>
                 <MobileDatePicker
                   label="Expiry"
-                  inputFormat="MM/DD/YYYY"
-                  // onChange={handleChange}
+                  inputFormat="DD/MM/YYYY"
+                  onChange={(value) => value && handleChange('expiry', value)}
                   renderInput={(params) => <TextField {...params} />}
+                  value={values.expiry}
                 />
               </LocalizationProvider>
             </Grid>
             <Grid item md={6} xs={12}>
               <LocalizationProvider dateAdapter={AdapterDayjs}>
                 <MobileDatePicker
-                  label="Manufacturer Date"
-                  inputFormat="MM/DD/YYYY"
-                  // onChange={handleChange}
+                  label="Manufacture Date"
+                  inputFormat="DD/MM/YYYY"
+                  onChange={(value) => value && handleChange('mfg', value)}
                   renderInput={(params) => <TextField {...params} />}
+                  value={values.mfg}
                 />
               </LocalizationProvider>
             </Grid>
@@ -158,6 +163,6 @@ function BatchDetail(props) {
       </Card>
     </form>
   );
-}
+};
 
 export default BatchDetail;
