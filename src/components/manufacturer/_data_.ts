@@ -1,6 +1,11 @@
 import { v4 as uuid } from 'uuid';
 
-const products = [
+export interface Product {
+  id: string;
+  name: string;
+}
+
+const products: Array<Product> = [
   {
     id: uuid(),
     name: `PANADOL 500MG TAB 200'S`,
@@ -43,8 +48,19 @@ const products = [
   },
 ];
 
-export const batches = [
+export interface Batch {
+  id: string;
+  medicine: string;
+  quantity: number;
+  distributor: string;
+  expiry: string;
+  mfg: string;
+  created: string;
+}
+
+export const batches: Array<Batch> = [
   {
+    id: uuid(),
     medicine: `PANADOL 500MG TAB 200'S`,
     quantity: 100,
     distributor: 'IBL',
@@ -53,6 +69,7 @@ export const batches = [
     created: new Date(Date.now()).toLocaleString().split(',')[0],
   },
   {
+    id: uuid(),
     medicine: `Surbex-Z Tablets 30's`,
     quantity: 200,
     distributor: 'Getz',
@@ -61,6 +78,7 @@ export const batches = [
     created: new Date(Date.now()).toLocaleString().split(',')[0],
   },
   {
+    id: uuid(),
     medicine: `Cac1000 Plus Tab-Orange T 20's`,
     quantity: 300,
     distributor: 'IBL',

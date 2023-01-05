@@ -2,7 +2,7 @@
 import React from 'react';
 import Head from 'next/head';
 import { Box, Container } from '@mui/material';
-import BatcheListResults from '../../components/manufacturer/BatcheListResults';
+import BatchListResults from '../../components/manufacturer/BatchListResults';
 import { batches } from '../../components/manufacturer/_data_';
 
 function ManufacturerBatches() {
@@ -21,7 +21,7 @@ function ManufacturerBatches() {
         <Container maxWidth={false}>
           {/* <CustomerListToolbar /> */}
           <Box sx={{ mt: 3 }}>
-            <BatcheListResults products={batches} />
+            <BatchListResults products={batches} />
           </Box>
         </Container>
       </Box>
