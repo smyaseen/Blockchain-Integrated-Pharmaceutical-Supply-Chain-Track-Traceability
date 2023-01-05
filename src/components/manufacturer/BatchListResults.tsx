@@ -1,5 +1,3 @@
-/* eslint-disable react/prop-types */
-/* eslint-disable react/jsx-props-no-spreading */
 import React, { ChangeEvent, useState } from 'react';
 import {
   Box,
@@ -19,7 +17,7 @@ import RouteNames from '../../routes/RouteNames';
 import { Batch } from './_data_';
 
 // eslint-disable-next-line react/prop-types
-function BatchListResults({ products }: { products: Array<Batch> }) {
+const BatchListResults = ({ products }: { products: Array<Batch> }) => {
   const [selectedCustomerIds, setSelectedCustomerIds] = useState<string[]>([]);
   const [limit, setLimit] = useState(10);
   const [page, setPage] = useState(0);
@@ -178,6 +176,6 @@ function BatchListResults({ products }: { products: Array<Batch> }) {
       />
     </Card>
   );
-}
+};
 
 export default BatchListResults;
