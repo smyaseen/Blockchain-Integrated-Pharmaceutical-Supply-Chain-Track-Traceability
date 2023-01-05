@@ -1,4 +1,3 @@
-/* eslint-disable react/jsx-filename-extension */
 import { Box } from '@mui/material';
 import React from 'react';
 import BatchProgress from '../../components/manufacturer/BatchProgress';

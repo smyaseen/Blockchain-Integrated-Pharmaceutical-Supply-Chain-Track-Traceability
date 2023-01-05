@@ -1,6 +1,3 @@
-/* eslint-disable react/prop-types */
-/* eslint-disable react/jsx-props-no-spreading */
-/* eslint-disable react/jsx-filename-extension */
 import React, { useState } from 'react';
 import {
   Box,
@@ -14,13 +11,18 @@ import {
 } from '@mui/material';
 import { Add, Search } from '@mui/icons-material';
 
-function CustomerListToolbar(props) {
+const CustomerListToolbar = ({
+  addProduct,
+  addError,
+}: {
+  addProduct: (value: string) => boolean;
+  addError: string;
+}) => {
   const [toggleAddButton, setToggleAddButton] = useState(false);
   const [addInput, setAddInput] = useState('');
-  const { addProduct, addError } = props;
 
   return (
-    <Box {...props}>
+    <Box>
       <Box
         sx={{
           alignItems: 'center',
@@ -102,6 +104,6 @@ function CustomerListToolbar(props) {
       </Box>
     </Box>
   );
-}
+};
 
 export default CustomerListToolbar;

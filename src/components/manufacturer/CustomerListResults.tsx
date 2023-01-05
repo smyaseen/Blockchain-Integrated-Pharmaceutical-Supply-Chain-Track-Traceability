@@ -1,6 +1,4 @@
-/* eslint-disable react/prop-types */
-/* eslint-disable react/jsx-props-no-spreading */
-import React, { useState } from 'react';
+import React, { ChangeEvent, useState } from 'react';
 import {
   Box,
   Button,
@@ -14,29 +12,36 @@ import {
   TableRow,
   Typography,
 } from '@mui/material';
+import { Product } from './_data_';
 
-// eslint-disable-next-line react/prop-types
-function CustomerListResults({ products, deleteProduct, ...rest }) {
-  const [selectedCustomerIds, setSelectedCustomerIds] = useState([]);
+const CustomerListResults = ({
+  products,
+  deleteProduct,
+}: {
+  products: Product[];
+  deleteProduct: (index: number) => void;
+}) => {
+  const [selectedCustomerIds, setSelectedCustomerIds] = useState<string[]>([]);
   const [limit, setLimit] = useState(10);
   const [page, setPage] = useState(0);
 
-  const handleSelectAll = (event) => {
-    let newSelectedCustomerIds;
+  const handleSelectAll = (event: ChangeEvent<HTMLInputElement>) => {
+    let newSelectedCustomerIds: string[] = [];
 
     if (event.target.checked) {
       // eslint-disable-next-line react/prop-types
       newSelectedCustomerIds = products.map((product) => product.id);
-    } else {
-      newSelectedCustomerIds = [];
     }
 
     setSelectedCustomerIds(newSelectedCustomerIds);
   };
 
-  const handleSelectOne = (event, id) => {
+  const handleSelectOne = (
+    event: ChangeEvent<HTMLInputElement>,
+    id: string
+  ) => {
     const selectedIndex = selectedCustomerIds.indexOf(id);
-    let newSelectedCustomerIds = [];
+    let newSelectedCustomerIds: string[] = [];
 
     if (selectedIndex === -1) {
       newSelectedCustomerIds = newSelectedCustomerIds.concat(
@@ -61,17 +66,21 @@ function CustomerListResults({ products, deleteProduct, ...rest }) {
     setSelectedCustomerIds(newSelectedCustomerIds);
   };
 
-  const handleLimitChange = (event) => {
-    setLimit(event.target.value);
+  const handleLimitChange = (
+    event: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+  ) => {
+    setLimit(Number(event.target.value));
   };
 
-  const handlePageChange = (event, newPage) => {
+  const handlePageChange = (
+    _event: React.MouseEvent<HTMLButtonElement, MouseEvent> | null,
+    newPage: number
+  ) => {
     setPage(newPage);
   };
 
   return (
-    // eslint-disable-next-line react/jsx-filename-extension
-    <Card {...rest}>
+    <Card>
       <Box sx={{ minWidth: 1050 }}>
         <Table>
           <TableHead>
@@ -142,6 +151,6 @@ function CustomerListResults({ products, deleteProduct, ...rest }) {
       />
     </Card>
   );
-}
+};
 
 export default CustomerListResults;

@@ -1,4 +1,3 @@
-/* eslint-disable react/jsx-filename-extension */
 import React, { useState } from 'react';
 import Head from 'next/head';
 import { Box, Container } from '@mui/material';
@@ -7,17 +6,17 @@ import CustomerListResults from '../../components/manufacturer/CustomerListResul
 import CustomerListToolbar from '../../components/manufacturer/CustomerListToolbar';
 import products from '../../components/manufacturer/_data_';
 
-function ManufacturerProducts() {
+const ManufacturerProducts = () => {
   const [listProducts, setListProducts] = useState(products);
   const [addError, setAddError] = useState('');
 
-  const deleteProduct = (index) => {
+  const deleteProduct = (index: number) => {
     const temp = [...listProducts];
     temp.splice(index, 1);
     setListProducts(temp);
   };
 
-  const addProduct = (value) => {
+  const addProduct = (value: string) => {
     if (listProducts.find(({ name }) => name === value)) {
       setAddError('Product already exists');
       return false;
@@ -58,6 +57,6 @@ function ManufacturerProducts() {
       </Box>
     </>
   );
-}
+};
 
 export default ManufacturerProducts;
