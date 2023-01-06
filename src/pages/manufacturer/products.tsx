@@ -2,8 +2,8 @@ import React, { useState } from 'react';
 import Head from 'next/head';
 import { Box, Container } from '@mui/material';
 import { v4 as uuid } from 'uuid';
-import CustomerListResults from '../../components/manufacturer/CustomerListResults';
-import CustomerListToolbar from '../../components/manufacturer/CustomerListToolbar';
+import ProductListResults from '../../components/manufacturer/products/ProductListResults';
+import ProductListToolbar from '../../components/manufacturer/products/ProductListToolbar';
 import products from '../../components/manufacturer/_data_';
 
 const ManufacturerProducts = () => {
@@ -46,9 +46,9 @@ const ManufacturerProducts = () => {
         }}
       >
         <Container maxWidth={false}>
-          <CustomerListToolbar addProduct={addProduct} addError={addError} />
+          <ProductListToolbar addProduct={addProduct} addError={addError} />
           <Box sx={{ mt: 3 }}>
-            <CustomerListResults
+            <ProductListResults
               products={listProducts}
               deleteProduct={deleteProduct}
             />

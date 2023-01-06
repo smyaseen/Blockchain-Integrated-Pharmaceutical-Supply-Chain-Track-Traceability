@@ -12,12 +12,15 @@ import {
   TableRow,
   Typography,
 } from '@mui/material';
-import Router from 'next/router';
-import RouteNames from '../../routes/RouteNames';
-import { Batch } from './_data_';
+import { Product } from '../_data_';
 
-// eslint-disable-next-line react/prop-types
-const BatchListResults = ({ products }: { products: Array<Batch> }) => {
+const CustomerListResults = ({
+  products,
+  deleteProduct,
+}: {
+  products: Product[];
+  deleteProduct: (index: number) => void;
+}) => {
   const [selectedCustomerIds, setSelectedCustomerIds] = useState<string[]>([]);
   const [limit, setLimit] = useState(10);
   const [page, setPage] = useState(0);
@@ -77,7 +80,6 @@ const BatchListResults = ({ products }: { products: Array<Batch> }) => {
   };
 
   return (
-    // eslint-disable-next-line react/jsx-filename-extension
     <Card>
       <Box sx={{ minWidth: 1050 }}>
         <Table>
@@ -94,18 +96,13 @@ const BatchListResults = ({ products }: { products: Array<Batch> }) => {
                   onChange={handleSelectAll}
                 />
               </TableCell>
-              {/* <TableCell>Id</TableCell> */}
-              <TableCell>Medicine</TableCell>
-              <TableCell>Distributor</TableCell>
-              <TableCell>Quantity</TableCell>
-              <TableCell>Expiry</TableCell>
-              <TableCell>MFG</TableCell>
-              <TableCell>Created</TableCell>
-              <TableCell>Batch</TableCell>
+              <TableCell>Id</TableCell>
+              <TableCell>Name</TableCell>
+              <TableCell>Actions</TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
-            {products.slice(0, limit).map((product) => (
+            {products.slice(0, limit).map((product, index) => (
               <TableRow
                 hover
                 key={product.id}
@@ -120,44 +117,22 @@ const BatchListResults = ({ products }: { products: Array<Batch> }) => {
                 </TableCell>
                 <TableCell>
                   <Typography color="textPrimary" variant="body1">
-                    {product.medicine}
+                    {product.id}
                   </Typography>
                 </TableCell>
                 <TableCell>
                   <Typography color="textPrimary" variant="body1">
-                    {product.distributor}
-                  </Typography>
-                </TableCell>
-                <TableCell>
-                  <Typography color="textPrimary" variant="body1">
-                    {product.quantity}
-                  </Typography>
-                </TableCell>
-                <TableCell>
-                  <Typography color="textPrimary" variant="body1">
-                    {product.expiry}
-                  </Typography>
-                </TableCell>
-                <TableCell>
-                  <Typography color="textPrimary" variant="body1">
-                    {product.mfg}
-                  </Typography>
-                </TableCell>
-                <TableCell>
-                  <Typography color="textPrimary" variant="body1">
-                    {product.created}
+                    {product.name}
                   </Typography>
                 </TableCell>
                 <TableCell>
                   {/* <Button variant="contained">Create Batch</Button>{' '} */}
                   <Button
                     variant="contained"
-                    color="info"
-                    onClick={() => {
-                      Router.push(RouteNames.seeBatch);
-                    }}
+                    color="error"
+                    onClick={() => deleteProduct(index)}
                   >
-                    See Batch
+                    Delete
                   </Button>
                 </TableCell>
               </TableRow>
@@ -178,4 +153,4 @@ const BatchListResults = ({ products }: { products: Array<Batch> }) => {
   );
 };
 
-export default BatchListResults;
+export default CustomerListResults;

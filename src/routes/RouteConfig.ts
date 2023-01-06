@@ -10,9 +10,10 @@ const routeConfig: { [key: string]: { [key: string]: string } } = {
   [Roles.manufacturer]: {
     default: RouteNames.products,
     [RouteNames.products]: RouteNames.products,
-    [RouteNames.createBatch]: RouteNames.createBatch,
+    [RouteNames.manufacturerCreateBatch]: RouteNames.manufacturerCreateBatch,
     [RouteNames.manufacturerBatches]: RouteNames.manufacturerBatches,
-    [RouteNames.seeBatch]: RouteNames.seeBatch,
+    [RouteNames.manufacturerBatchProgress]:
+      RouteNames.manufacturerBatchProgress,
   },
 
   [Roles.customer]: {},

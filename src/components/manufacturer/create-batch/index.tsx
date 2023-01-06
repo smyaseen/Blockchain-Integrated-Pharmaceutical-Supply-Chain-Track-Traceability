@@ -13,7 +13,7 @@ import QRCode from 'react-qr-code';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { MobileDatePicker } from '@mui/x-date-pickers/MobileDatePicker';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
-import products from './_data_';
+import products from '../_data_';
 
 const distributors = [
   {
@@ -37,7 +37,7 @@ const medicines = [
   })),
 ];
 
-const BatchDetail = () => {
+const CreateBatch = () => {
   const [values, setValues] = useState({
     medicine: '',
     quantity: '',
@@ -165,4 +165,4 @@ const BatchDetail = () => {
   );
 };
 
-export default BatchDetail;
+export default CreateBatch;

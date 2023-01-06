@@ -2,9 +2,9 @@ export const RouteNames = {
   login: '/auth/login',
   signup: '/auth/signup',
   products: '/manufacturer/products',
-  createBatch: '/manufacturer/create-batch',
+  manufacturerCreateBatch: '/manufacturer/create-batch',
   manufacturerBatches: '/manufacturer/batches',
-  seeBatch: '/manufacturer/see-batch',
+  manufacturerBatchProgress: '/manufacturer/batch-progress',
 };
 
 export default RouteNames;

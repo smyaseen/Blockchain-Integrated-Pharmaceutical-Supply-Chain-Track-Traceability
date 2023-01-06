@@ -33,7 +33,7 @@ const DashboardSidebar = (props: any) => {
             title: 'Batches',
           },
           {
-            href: RouteNames.createBatch,
+            href: RouteNames.manufacturerCreateBatch,
             icon: <AddBox fontSize="small" />,
             title: 'Create Batch',
           },
