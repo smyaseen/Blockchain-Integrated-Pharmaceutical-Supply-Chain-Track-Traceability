@@ -18,7 +18,7 @@ const DashboardLayoutRoot = styled('div')<DashboardLayoutRootProps>(
     paddingTop: 64,
     ...(isLoggedIn && {
       [theme.breakpoints.up('lg')]: {
-        paddingLeft: 280,
+        paddingLeft: 300,
       },
     }),
   })

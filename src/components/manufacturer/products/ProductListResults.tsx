@@ -14,7 +14,7 @@ import {
 } from '@mui/material';
 import { Product } from '../_data_';
 
-const CustomerListResults = ({
+const ProductListResults = ({
   products,
   deleteProduct,
 }: {
@@ -153,4 +153,4 @@ const CustomerListResults = ({
   );
 };
 
-export default CustomerListResults;
+export default ProductListResults;

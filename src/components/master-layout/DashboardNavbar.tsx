@@ -32,11 +32,13 @@ const DashboardNavbar = (props: any) => {
       <DashboardNavbarRoot
         sx={{
           left: {
-            lg: 280,
+            lg: 300,
           },
           width: {
-            lg: 'calc(100% - 280px)',
+            lg: 'calc(100% - 340px)',
           },
+          margin: '1%',
+          borderRadius: '0.75rem',
         }}
         {...other}
       >

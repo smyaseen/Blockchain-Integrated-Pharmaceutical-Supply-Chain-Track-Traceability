@@ -11,7 +11,7 @@ import {
 } from '@mui/material';
 import { Add, Search } from '@mui/icons-material';
 
-const CustomerListToolbar = ({
+const ProductListToolbar = ({
   addProduct,
   addError,
 }: {
@@ -45,7 +45,7 @@ const CustomerListToolbar = ({
           </Button>
         </Box>
       </Box>
-      <Box sx={{ mt: 3 }}>
+      <Box sx={{ mt: 3, boxShadow: 10 }}>
         {toggleAddButton && (
           <Card>
             <CardContent>
@@ -106,4 +106,4 @@ const CustomerListToolbar = ({
   );
 };
 
-export default CustomerListToolbar;
+export default ProductListToolbar;

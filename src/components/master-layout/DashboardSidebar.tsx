@@ -95,9 +95,12 @@ const DashboardSidebar = (props: any) => {
         open
         PaperProps={{
           sx: {
-            backgroundColor: 'neutral.900',
+            backgroundColor: '#1f293e',
             color: '#FFFFFF',
             width: 280,
+            height: '96vh',
+            margin: '0.75rem',
+            borderRadius: '10px',
           },
         }}
         variant="permanent"
@@ -114,9 +117,12 @@ const DashboardSidebar = (props: any) => {
       open={open}
       PaperProps={{
         sx: {
-          backgroundColor: 'neutral.900',
+          backgroundColor: '#1f293e',
           color: '#FFFFFF',
           width: 280,
+          height: '96vh',
+          margin: '0.75rem',
+          borderRadius: '10px',
         },
       }}
       sx={{ zIndex: (theme) => theme.zIndex.appBar + 100 }}
