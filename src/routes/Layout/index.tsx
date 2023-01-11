@@ -1,8 +1,9 @@
 import React, { useState } from 'react';
 import { styled } from '@mui/material/styles';
 
-import { Box, CircularProgress } from '@mui/material';
+import { Box, CircularProgress, Typography } from '@mui/material';
 import { useSession } from 'next-auth/react';
+import { CopyrightRounded, RocketLaunchOutlined } from '@mui/icons-material';
 import DashboardNavbar from '../../components/master-layout/DashboardNavbar';
 import DashboardSidebar from '../../components/master-layout/DashboardSidebar';
 
@@ -36,15 +37,16 @@ const Layout = ({ children }: Props) => {
     // eslint-disable-next-line react/jsx-no-useless-fragment
     <>
       {status === 'loading' ? (
-        <CircularProgress
-          style={{
-            position: 'absolute',
-            top: '50%',
-            left: '50%',
-            transform: 'translate(-50%, -50%)',
+        <Box
+          sx={{
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            height: '100vh',
           }}
-          size={100}
-        />
+        >
+          <CircularProgress size={70} />
+        </Box>
       ) : (
         <>
           <DashboardLayoutRoot isLoggedIn={status === 'authenticated'}>
@@ -59,6 +61,10 @@ const Layout = ({ children }: Props) => {
               {children}
             </Box>
           </DashboardLayoutRoot>
+          <Typography align="center">
+            <CopyrightRounded /> {new Date().getFullYear()}, made by SMY & HFAK
+            for a better web. <RocketLaunchOutlined />
+          </Typography>
           {status === 'authenticated' && (
             <>
               <DashboardNavbar onSidebarOpen={() => setSidebarOpen(true)} />

@@ -42,7 +42,8 @@ const ManufacturerProducts = () => {
         component="main"
         sx={{
           flexGrow: 1,
-          py: 8,
+          pt: 8,
+          pb: 1,
         }}
       >
         <Container maxWidth={false}>

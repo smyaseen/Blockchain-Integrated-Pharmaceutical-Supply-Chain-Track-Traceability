@@ -238,11 +238,13 @@ const theme = createTheme({
       fontSize: '1rem',
       fontWeight: 400,
       lineHeight: 1.5,
+      color: '#354767',
     },
     body2: {
       fontSize: '0.875rem',
       fontWeight: 400,
       lineHeight: 1.57,
+      color: '#354767',
     },
     subtitle1: {
       fontSize: '1rem',
