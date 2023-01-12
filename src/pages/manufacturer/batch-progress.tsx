@@ -5,7 +5,7 @@ import SoldTransactionsTable from '../../components/manufacturer/BatchProgress/S
 
 const BatchProgress = () => (
   <>
-    <Box margin="auto" mt={4}>
+    <Box margin="auto" mt={4} maxWidth={500}>
       <BatchProgressComp />
     </Box>
     <Box m={3}>
