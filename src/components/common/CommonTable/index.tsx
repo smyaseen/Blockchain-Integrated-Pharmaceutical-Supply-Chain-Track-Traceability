@@ -59,7 +59,7 @@ const CommonTable = ({ columns, rows }: { columns: string[]; rows: Row[] }) => (
       <TableHead>
         <TableRow>
           {columns.map((col) => (
-            <TableCell>{col}</TableCell>
+            <TableCell align="center">{col}</TableCell>
           ))}
         </TableRow>
       </TableHead>
@@ -74,14 +74,14 @@ const CommonTable = ({ columns, rows }: { columns: string[]; rows: Row[] }) => (
             }}
           >
             {fields.map((field) => (
-              <TableCell>
+              <TableCell align="center">
                 <Typography color="textPrimary" variant="body1">
                   {field}
                 </Typography>
               </TableCell>
             ))}
             {buttons.map((btn) => (
-              <TableCell>
+              <TableCell align="center">
                 <Button
                   variant={btn.variant ? btn.variant : 'contained'}
                   color={btn.color ? btn.color : 'primary'}

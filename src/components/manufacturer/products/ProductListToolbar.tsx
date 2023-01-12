@@ -2,8 +2,6 @@ import React, { useState } from 'react';
 import {
   Box,
   Button,
-  Card,
-  CardContent,
   TextField,
   InputAdornment,
   SvgIcon,
@@ -45,62 +43,52 @@ const ProductListToolbar = ({
           </Button>
         </Box>
       </Box>
-      <Box sx={{ mt: 3, boxShadow: 10 }}>
-        {toggleAddButton && (
-          <Card>
-            <CardContent>
-              <Box sx={{ maxWidth: 500 }}>
-                <TextField
-                  onChange={(e) => setAddInput(e.target.value)}
-                  fullWidth
-                  InputProps={{
-                    startAdornment: (
-                      <InputAdornment position="start">
-                        <SvgIcon color="action" fontSize="small">
-                          <Add />
-                        </SvgIcon>
-                      </InputAdornment>
-                    ),
-                  }}
-                  placeholder="Add product"
-                  variant="outlined"
-                  value={addInput}
-                />
-                {addError && <p style={{ color: 'red' }}>{addError}</p>}
-                <Button
-                  sx={{ mt: 1 }}
-                  color="primary"
-                  variant="contained"
-                  onClick={() =>
-                    addInput && addProduct(addInput) && setAddInput('')
-                  }
-                >
-                  Add Product
-                </Button>
-              </Box>
-            </CardContent>
-          </Card>
-        )}
-        <Card>
-          <CardContent>
-            <Box sx={{ maxWidth: 500 }}>
-              <TextField
-                fullWidth
-                InputProps={{
-                  startAdornment: (
-                    <InputAdornment position="start">
-                      <SvgIcon color="action" fontSize="small">
-                        <Search />
-                      </SvgIcon>
-                    </InputAdornment>
-                  ),
-                }}
-                placeholder="Search product"
-                variant="outlined"
-              />
-            </Box>
-          </CardContent>
-        </Card>
+      {toggleAddButton && (
+        <Box sx={{ maxWidth: 500 }}>
+          <TextField
+            onChange={(e) => setAddInput(e.target.value)}
+            fullWidth
+            InputProps={{
+              startAdornment: (
+                <InputAdornment position="start">
+                  <SvgIcon color="action" fontSize="small">
+                    <Add />
+                  </SvgIcon>
+                </InputAdornment>
+              ),
+            }}
+            placeholder="Add product"
+            variant="outlined"
+            value={addInput}
+            focused
+          />
+          {addError && <p style={{ color: 'red' }}>{addError}</p>}
+          <Button
+            sx={{ mt: 1 }}
+            color="primary"
+            variant="contained"
+            onClick={() => addInput && addProduct(addInput) && setAddInput('')}
+          >
+            Add Product
+          </Button>
+        </Box>
+      )}
+      <Box sx={{ maxWidth: 500, mt: 2 }}>
+        <TextField
+          fullWidth
+          InputProps={{
+            startAdornment: (
+              <InputAdornment position="start">
+                <SvgIcon color="action" fontSize="small">
+                  <Search />
+                </SvgIcon>
+              </InputAdornment>
+            ),
+          }}
+          placeholder="Search product"
+          variant="outlined"
+          focused
+        />
       </Box>
     </Box>
   );
