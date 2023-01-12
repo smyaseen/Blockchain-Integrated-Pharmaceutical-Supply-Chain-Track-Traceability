@@ -21,7 +21,7 @@ const ManufacturerBatches = () => (
           Dispatched Batches
         </Typography>
         <Box sx={{ mt: 3 }}>
-          <BatchListResults products={batches} />
+          <BatchListResults batches={batches} />
         </Box>
       </Container>
     </Box>

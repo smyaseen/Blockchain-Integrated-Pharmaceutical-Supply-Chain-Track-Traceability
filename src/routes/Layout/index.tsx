@@ -62,8 +62,8 @@ const Layout = ({ children }: Props) => {
             </Box>
           </DashboardLayoutRoot>
           <Typography align="center">
-            <CopyrightRounded /> {new Date().getFullYear()}, made by SMY & HFAK
-            for a better web. <RocketLaunchOutlined />
+            <CopyrightRounded /> {new Date().getFullYear()}, made by SMY & HFAK{' '}
+            <RocketLaunchOutlined />
           </Typography>
           {status === 'authenticated' && (
             <>
