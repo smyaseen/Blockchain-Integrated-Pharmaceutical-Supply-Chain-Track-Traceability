@@ -48,7 +48,7 @@ const ManufacturerProducts = () => {
       >
         <Container maxWidth={false}>
           <ProductListToolbar addProduct={addProduct} addError={addError} />
-          <Box sx={{ mt: 3, boxShadow: 10 }}>
+          <Box sx={{ mt: 3, boxShadow: 10, borderRadius: '20px' }}>
             <ProductListResults
               products={listProducts}
               deleteProduct={deleteProduct}

@@ -13,7 +13,20 @@ import Paper from '@mui/material/Paper';
 
 export interface Row {
   fields: string[];
-  buttons: Array<{ text: string; action: (index: number) => void }>;
+  buttons: Array<{
+    text: string;
+    color?:
+      | 'inherit'
+      | 'primary'
+      | 'secondary'
+      | 'success'
+      | 'error'
+      | 'info'
+      | 'warning'
+      | undefined;
+    variant?: 'text' | 'outlined' | 'contained' | undefined;
+    action: (index: number) => void;
+  }>;
 }
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -69,10 +82,9 @@ const CommonTable = ({ columns, rows }: { columns: string[]; rows: Row[] }) => (
             ))}
             {buttons.map((btn) => (
               <TableCell>
-                {/* <Button variant="contained">Create Batch</Button>{' '} */}
                 <Button
-                  variant="contained"
-                  color="error"
+                  variant={btn.variant ? btn.variant : 'contained'}
+                  color={btn.color ? btn.color : 'primary'}
                   onClick={() => btn.action(index)}
                 >
                   {btn.text}

@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import React from 'react';
 
 import { Product } from '../_data_';
@@ -14,7 +13,7 @@ const ProductListResults = ({
   <CommonTable
     columns={['Id', 'Name', 'Actions']}
     rows={transformObject(products, [
-      { text: 'Delete', action: deleteProduct },
+      { text: 'Delete', color: 'error', action: deleteProduct },
     ])}
   />
 );

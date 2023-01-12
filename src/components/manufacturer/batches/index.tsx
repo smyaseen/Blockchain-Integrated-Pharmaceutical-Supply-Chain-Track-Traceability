@@ -20,7 +20,7 @@ const BatchListResults = ({ batches }: { batches: Array<Batch> }) => (
     ]}
     rows={transformObject(batches, [
       {
-        text: 'See Batch',
+        text: 'Batch Progress',
         action: () => {
           Router.push(RouteNames.manufacturerBatchProgress);
         },
