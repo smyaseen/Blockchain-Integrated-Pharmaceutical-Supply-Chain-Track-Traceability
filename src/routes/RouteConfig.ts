@@ -16,8 +16,13 @@ const routeConfig: { [key: string]: { [key: string]: string } } = {
       RouteNames.manufacturerBatchProgress,
   },
 
-  [Roles.customer]: {},
-  [Roles.distributor]: {},
+  [Roles.distributor]: {
+    default: RouteNames.distributorOrders,
+    [RouteNames.distributorOrders]: RouteNames.distributorOrders,
+    [RouteNames.distributorBatches]: RouteNames.distributorBatches,
+    [RouteNames.distributorCreateOrder]: RouteNames.distributorCreateOrder,
+    [RouteNames.distributorBatchProgress]: RouteNames.distributorBatchProgress,
+  },
 
   [Roles.pharmacy]: {},
 };

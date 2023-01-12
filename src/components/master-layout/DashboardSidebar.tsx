@@ -1,13 +1,19 @@
 import React, { useEffect } from 'react';
 import { useRouter } from 'next/router';
 import { Box, Divider, Drawer, useMediaQuery } from '@mui/material';
-import { AddBox, LocalPharmacy, Widgets } from '@mui/icons-material';
+import {
+  AddBox,
+  LocalPharmacy,
+  LocalShipping,
+  Widgets,
+} from '@mui/icons-material';
 import { useSession } from 'next-auth/react';
 import { ShoppingBag as ShoppingBagIcon } from '../icons/shopping-bag';
 import NavItem from './NavItem';
 import RouteNames from '../../routes/RouteNames';
 import Roles from '../../utility/roles';
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 const DashboardSidebar = (props: any) => {
   const {
     data: { role },
@@ -19,26 +25,42 @@ const DashboardSidebar = (props: any) => {
     noSsr: false,
   });
 
-  const items =
-    role === Roles.manufacturer
-      ? [
-          {
-            href: RouteNames.products,
-            icon: <ShoppingBagIcon fontSize="small" />,
-            title: 'Products',
-          },
-          {
-            href: RouteNames.manufacturerBatches,
-            icon: <Widgets fontSize="small" />,
-            title: 'Batches',
-          },
-          {
-            href: RouteNames.manufacturerCreateBatch,
-            icon: <AddBox fontSize="small" />,
-            title: 'Create Batch',
-          },
-        ]
-      : [];
+  const tabs = {
+    [Roles.manufacturer]: [
+      {
+        href: RouteNames.products,
+        icon: <ShoppingBagIcon fontSize="small" />,
+        title: 'Products',
+      },
+      {
+        href: RouteNames.manufacturerBatches,
+        icon: <Widgets fontSize="small" />,
+        title: 'Batches',
+      },
+      {
+        href: RouteNames.manufacturerCreateBatch,
+        icon: <AddBox fontSize="small" />,
+        title: 'Create Batch',
+      },
+    ],
+    [Roles.distributor]: [
+      {
+        href: RouteNames.distributorOrders,
+        icon: <LocalShipping fontSize="small" />,
+        title: 'Orders',
+      },
+      {
+        href: RouteNames.distributorBatches,
+        icon: <Widgets fontSize="small" />,
+        title: 'Batches',
+      },
+      {
+        href: RouteNames.distributorCreateOrder,
+        icon: <AddBox fontSize="small" />,
+        title: 'Create Order',
+      },
+    ],
+  };
 
   useEffect(() => {
     if (!router.isReady) {
@@ -75,7 +97,7 @@ const DashboardSidebar = (props: any) => {
         }}
       />
       <Box sx={{ flexGrow: 1 }}>
-        {items.map((item) => (
+        {tabs[role].map((item) => (
           <NavItem
             key={item.title}
             icon={item.icon}
