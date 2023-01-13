@@ -3,6 +3,7 @@ import { useRouter } from 'next/router';
 
 import { Box, Button, ListItem } from '@mui/material';
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 const NavItem = (props: any) => {
   const { href, icon, title, ...others } = props;
   const router = useRouter();
@@ -27,10 +28,10 @@ const NavItem = (props: any) => {
           router.push(href);
         }}
         sx={{
-          backgroundColor: active && 'rgba(255,255,255, 0.08)',
+          // backgroundColor: active && 'rgba(255,255,255, 0.08)',
           borderRadius: 1,
           color: active ? 'secondary.main' : 'neutral.300',
-          fontWeight: active && 'fontWeightBold',
+          // fontWeight: active && 'fontWeightBold',
           justifyContent: 'flex-start',
           px: 3,
           textAlign: 'left',
