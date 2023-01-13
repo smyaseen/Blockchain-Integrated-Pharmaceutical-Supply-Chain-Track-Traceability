@@ -13,7 +13,6 @@ import '@fontsource/roboto/700.css';
 import { Provider } from 'react-redux';
 // import dynamic from 'next/dynamic';
 import { SessionProvider } from 'next-auth/react';
-import { NextComponentType, NextPageContext } from 'next';
 
 import createEmotionCache from '../utility/createEmotionCache';
 
@@ -33,15 +32,10 @@ const clientSideEmotionCache = createEmotionCache();
 
 // const Layout = dynamic(() => import('../routes/Layout'), { ssr: false });
 
-const getChildrenWithAnimation = (
-  Component: NextComponentType<NextPageContext, any, any>,
-  pageProps: any
-) =>
+const FadeMUI = ({ children }: { children: any }) =>
   React.createElement(() => (
     <Fade in timeout={500}>
-      <div>
-        <Component {...pageProps} />
-      </div>
+      {children}
     </Fade>
   ));
 
@@ -56,7 +50,13 @@ const MyApp: React.FunctionComponent<MyAppProps> = (props) => {
         <QueryClientProvider client={queryClient}>
           <SessionProvider>
             <Provider store={store}>
-              <Layout>{getChildrenWithAnimation(Component, pageProps)}</Layout>
+              <Layout>
+                <FadeMUI>
+                  <div id="container" style={{ height: '100%' }}>
+                    <Component {...pageProps} />
+                  </div>
+                </FadeMUI>
+              </Layout>
             </Provider>
           </SessionProvider>
         </QueryClientProvider>

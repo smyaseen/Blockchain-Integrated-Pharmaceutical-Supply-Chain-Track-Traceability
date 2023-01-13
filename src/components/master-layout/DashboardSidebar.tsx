@@ -5,10 +5,10 @@ import {
   AddBox,
   LocalPharmacy,
   LocalShipping,
+  ShoppingBag,
   Widgets,
 } from '@mui/icons-material';
 import { useSession } from 'next-auth/react';
-import { ShoppingBag as ShoppingBagIcon } from '../icons/shopping-bag';
 import NavItem from './NavItem';
 import RouteNames from '../../routes/RouteNames';
 import Roles from '../../utility/roles';
@@ -29,7 +29,7 @@ const DashboardSidebar = (props: any) => {
     [Roles.manufacturer]: [
       {
         href: RouteNames.products,
-        icon: <ShoppingBagIcon fontSize="small" />,
+        icon: <ShoppingBag fontSize="small" />,
         title: 'Products',
       },
       {

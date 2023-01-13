@@ -3,8 +3,8 @@ import React, { useRef, useState } from 'react';
 import styled from '@emotion/styled';
 import { AppBar, Avatar, Box, IconButton, Toolbar } from '@mui/material';
 import MenuIcon from '@mui/icons-material/Menu';
+import { Circle } from '@mui/icons-material';
 import AccountPopover from './AccountPopover';
-import { UserCircle as UserCircleIcon } from '../icons/user-circle';
 
 const DashboardNavbarRoot = styled(AppBar)(({ theme }) => ({
   backdropFilter: 'saturate(200%) blur(1.875rem)',
@@ -64,7 +64,7 @@ const DashboardNavbar = (props: any) => {
             }}
             src="/static/images/avatars/avatar_1.png"
           >
-            <UserCircleIcon fontSize="small" />
+            <Circle fontSize="small" />
           </Avatar>
         </Toolbar>
       </DashboardNavbarRoot>
