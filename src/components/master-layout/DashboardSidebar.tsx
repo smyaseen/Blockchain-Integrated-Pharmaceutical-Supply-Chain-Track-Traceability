@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import React, { useEffect } from 'react';
 import { useRouter } from 'next/router';
 import { Box, Divider, Drawer, useMediaQuery } from '@mui/material';
@@ -20,7 +21,7 @@ const DashboardSidebar = (props: any) => {
   } = useSession() as any;
   const { open, onClose } = props;
   const router = useRouter();
-  const lgUp = useMediaQuery((theme) => theme.breakpoints.up('lg'), {
+  const lgUp = useMediaQuery((theme: any) => theme.breakpoints.up('lg'), {
     defaultMatches: true,
     noSsr: false,
   });
