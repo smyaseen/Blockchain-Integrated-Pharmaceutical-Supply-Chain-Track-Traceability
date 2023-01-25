@@ -3,14 +3,15 @@ import React, { useRef, useState } from 'react';
 import styled from '@emotion/styled';
 import { AppBar, Avatar, Box, IconButton, Toolbar } from '@mui/material';
 import MenuIcon from '@mui/icons-material/Menu';
-import { Circle } from '@mui/icons-material';
+import { AccountCircle } from '@mui/icons-material';
 import AccountPopover from './AccountPopover';
 
-const DashboardNavbarRoot = styled(AppBar)(({ theme }) => ({
+const DashboardNavbarRoot = styled(AppBar)(() => ({
   backdropFilter: 'saturate(200%) blur(1.875rem)',
   backgroundColor: 'rgba(240, 242, 245, 0.8)',
 }));
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 const DashboardNavbar = (props: any) => {
   const { onSidebarOpen, ...other } = props;
   const settingsRef = useRef(null);
@@ -61,10 +62,10 @@ const DashboardNavbar = (props: any) => {
               height: 40,
               width: 40,
               ml: 1,
+              backgroundColor: '#1f293e',
             }}
-            src="/static/images/avatars/avatar_1.png"
           >
-            <Circle fontSize="small" />
+            <AccountCircle fontSize="small" />
           </Avatar>
         </Toolbar>
       </DashboardNavbarRoot>
