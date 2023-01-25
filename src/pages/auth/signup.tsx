@@ -17,6 +17,7 @@ import {
 import { useDispatch } from '../../store/store';
 import { logIn } from '../../store/slices/authSlice';
 import { setFieldsDisabled } from '../../utility/utils';
+import { signIn } from 'next-auth/react';
 
 interface userData {
   name: string;
@@ -136,18 +137,21 @@ const Register = () => {
   ]);
 
   const { mutateAsync, isLoading } = useMutation(signUpUser, {
-    onSuccess: ({ data, status }) => {
+    onSuccess: async ({ data, status }) => {
       if (status !== 201) {
         setResponseError(data.message);
       } else {
-        dispatch(logIn(fields[3].value));
-        Router.push(routeConfig[fields[3].value].default);
+        const result = await signIn('credentials', {
+          redirect: false,
+          email: fields[1].value,
+          password: fields[2].value,
+        });
+
+        if (result && !result.error) {
+          Router.push('');
+        }
       }
     },
-    // onError: (error) => {
-    //   console.log('error', error);
-    //   // set
-    // },
   });
 
   const saveHandler = async () => {
