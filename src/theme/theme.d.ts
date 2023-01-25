@@ -4,7 +4,7 @@
 import { Palette, PaletteOptions } from '@mui/material/styles';
 
 interface ExtraPalette {
-  neutral: {
+  neutral?: {
     100?: string;
     200?: string;
     300?: string;
