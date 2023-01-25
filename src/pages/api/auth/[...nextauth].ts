@@ -54,6 +54,8 @@ export const authOptions: NextAuthOptions = {
     session: async ({ session, user, token }) =>
       Promise.resolve({ ...session, ...user, ...token }),
   },
+
+  secret: process.env.NEXTAUTH_SECRET,
 };
 
 export default NextAuth(authOptions);
