@@ -3,21 +3,18 @@ import React, { useState } from 'react';
 
 import Router from 'next/router';
 import { useMutation } from 'react-query';
-import RouteNames from '../../routes/RouteNames';
-import routeConfig from '../../routes/RouteConfig';
-import Roles from '../../utility/roles';
-import AuthForm from '../../components/auth/AuthForm';
-import { SELECT, TEXT_FIELD } from '../../components/auth/AuthForm/FieldTypes';
+import { signIn } from 'next-auth/react';
+import RouteNames from '../routes/RouteNames';
+import Roles from '../utility/roles';
+import AuthForm from '../components/auth/AuthForm';
+import { SELECT, TEXT_FIELD } from '../components/auth/AuthForm/FieldTypes';
 import {
   emailRegex,
   fieldChangeHandler,
   passwordRegex,
   validateOnSubmit,
-} from '../../components/auth/AuthForm/AuthUtils';
-import { useDispatch } from '../../store/store';
-import { logIn } from '../../store/slices/authSlice';
-import { setFieldsDisabled } from '../../utility/utils';
-import { signIn } from 'next-auth/react';
+} from '../components/auth/AuthForm/AuthUtils';
+import { setFieldsDisabled } from '../utility/utils';
 
 interface userData {
   name: string;
@@ -40,7 +37,6 @@ const signUpUser = async (signUpData: userData) => {
 
 const Register = () => {
   const [responseError, setResponseError] = useState('');
-  const dispatch = useDispatch();
 
   const [fields, setFields] = useState([
     {

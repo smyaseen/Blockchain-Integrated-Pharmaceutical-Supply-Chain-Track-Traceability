@@ -1,6 +1,6 @@
 export const RouteNames = {
-  login: '/auth/login',
-  signup: '/auth/signup',
+  login: '/login',
+  signup: '/signup',
   products: '/manufacturer/products',
   manufacturerCreateBatch: '/manufacturer/create-batch',
   manufacturerBatches: '/manufacturer/batches',

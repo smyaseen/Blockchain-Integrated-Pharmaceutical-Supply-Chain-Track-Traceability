@@ -4,16 +4,16 @@ import { NextPage } from 'next';
 import Router from 'next/router';
 // import withAuth from '../../routes/withAuth';
 import { signIn } from 'next-auth/react';
-import RouteNames from '../../routes/RouteNames';
-import { TEXT_FIELD } from '../../components/auth/AuthForm/FieldTypes';
-import AuthForm from '../../components/auth/AuthForm';
+import RouteNames from '../routes/RouteNames';
+import { TEXT_FIELD } from '../components/auth/AuthForm/FieldTypes';
+import AuthForm from '../components/auth/AuthForm';
 import {
   emailRegex,
   fieldChangeHandler,
   passwordRegex,
   validateOnSubmit,
-} from '../../components/auth/AuthForm/AuthUtils';
-import { setFieldsDisabled } from '../../utility/utils';
+} from '../components/auth/AuthForm/AuthUtils';
+import { setFieldsDisabled } from '../utility/utils';
 
 // eslint-disable-next-line arrow-body-style
 const Login: NextPage = () => {
