@@ -21,7 +21,7 @@ import '../styles/globals.css';
 import { store } from '../store/store';
 
 import theme from '../theme';
-import Layout from '.';
+import Layout from '../routes/Layout';
 
 interface MyAppProps extends AppProps {
   // eslint-disable-next-line react/require-default-props
