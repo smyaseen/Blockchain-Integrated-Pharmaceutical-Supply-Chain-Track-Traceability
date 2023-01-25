@@ -1,4 +1,4 @@
-import { Box, Container } from '@mui/material';
+import { Box } from '@mui/material';
 import React from 'react';
 import BatchProgressComp from '../../components/manufacturer/BatchProgress';
 import SoldTransactionsTable from '../../components/manufacturer/BatchProgress/SoldTransactionsTable';

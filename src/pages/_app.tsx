@@ -2,7 +2,7 @@
 import React from 'react';
 import type { AppProps } from 'next/app';
 import { CacheProvider, EmotionCache } from '@emotion/react';
-import { ThemeProvider, CssBaseline, Fade, Grow } from '@mui/material';
+import { ThemeProvider, CssBaseline, Fade } from '@mui/material';
 import { QueryClient, QueryClientProvider } from 'react-query';
 
 import '@fontsource/roboto/300.css';
@@ -21,7 +21,7 @@ import '../styles/globals.css';
 import { store } from '../store/store';
 
 import theme from '../theme';
-import Layout from '../routes/Layout';
+import Layout from '.';
 
 interface MyAppProps extends AppProps {
   // eslint-disable-next-line react/require-default-props
