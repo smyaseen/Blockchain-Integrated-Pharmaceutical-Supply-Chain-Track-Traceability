@@ -35,7 +35,7 @@ const signUpUser = async (signUpData: userData) => {
   return { data, status: response.status };
 };
 
-const Register = () => {
+const SignUp = () => {
   const [responseError, setResponseError] = useState('');
 
   const [fields, setFields] = useState([
@@ -179,12 +179,22 @@ const Register = () => {
     },
   ];
 
-  const footerButton = {
-    text: 'Sign In',
-    onClick: () => {
-      Router.push(RouteNames.login);
+  const footerButtons = [
+    {
+      text: 'Have an account?',
+      btnText: 'Sign In',
+      onClick: () => {
+        Router.push(RouteNames.login);
+      },
     },
-  };
+    {
+      text: `Have a look at Dispatched Batches`,
+      btnText: 'Browse Batches',
+      onClick: () => {
+        Router.push(RouteNames.root);
+      },
+    },
+  ];
 
   return (
     <AuthForm
@@ -194,10 +204,9 @@ const Register = () => {
       heading="Create a new account"
       title="Register"
       subHeading="Use your email to create a new account"
-      footerText="Have an account?"
-      footerButton={footerButton}
+      footerButtons={footerButtons}
     />
   );
 };
 
-export default Register;
+export default SignUp;

@@ -11,6 +11,7 @@ import {
   Select,
   MenuItem,
   Button,
+  Grid,
 } from '@mui/material';
 
 import { LoadingButton } from '@mui/lab';
@@ -86,8 +87,7 @@ const AuthForm = ({
   heading,
   title,
   subHeading,
-  footerText,
-  footerButton,
+  footerButtons,
 }: AuthFormProps) => {
   const [fieldsData, setFieldsData] = useState(fields);
 
@@ -152,12 +152,21 @@ const AuthForm = ({
                 )
               )}
             </Box>
-            <Typography color="textSecondary" variant="body2">
-              {footerText}
-              <Button onClick={footerButton.onClick}>
-                {footerButton.text}
-              </Button>
-            </Typography>
+            <Grid
+              container
+              direction="row"
+              justifyContent="space-around"
+              alignItems="flex-start"
+            >
+              {footerButtons.map(({ text, btnText, onClick }) => (
+                <Grid key={text} item>
+                  <Typography color="textSecondary" variant="body2">
+                    {text}
+                  </Typography>
+                  <Button onClick={onClick}>{btnText}</Button>
+                </Grid>
+              ))}
+            </Grid>
             {responseError && (
               <span style={{ color: 'red' }}>{responseError}</span>
             )}

@@ -1,4 +1,5 @@
 export const RouteNames = {
+  root: '/',
   login: '/login',
   signup: '/signup',
   products: '/manufacturer/products',
@@ -9,6 +10,9 @@ export const RouteNames = {
   distributorBatchProgress: '/distributor/batch-progress',
   distributorCreateOrder: '/distributor/create-order',
   distributorOrders: '/distributor/orders',
+  pharmacyCreateOrder: '/pharmacy/create-order',
+  pharmacyOrders: '/pharmacy/orders',
+  pharmacyBatchProgress: '/pharmacy/batch-progress',
 };
 
 export default RouteNames;

@@ -21,16 +21,18 @@ export async function middleware(request: NextRequest) {
     nextUrl: { pathname },
   } = request;
 
-  if (isLoggedIn && !routeConfig[role][pathname]) {
-    return NextResponse.redirect(
-      new URL(routeConfig[role].default, request.url)
-    );
-  }
+  if (!routeConfig.public[pathname]) {
+    if (isLoggedIn && !routeConfig[role][pathname]) {
+      return NextResponse.redirect(
+        new URL(routeConfig[role].default, request.url)
+      );
+    }
 
-  if (!isLoggedIn && !routeConfig.auth[pathname]) {
-    return NextResponse.redirect(
-      new URL(routeConfig.auth.default, request.url)
-    );
+    if (!isLoggedIn && !routeConfig.auth[pathname]) {
+      return NextResponse.redirect(
+        new URL(routeConfig.public.default, request.url)
+      );
+    }
   }
 }
 

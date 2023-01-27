@@ -44,9 +44,9 @@ export interface AuthFormProps {
   title: string;
   heading: string;
   subHeading: string;
-  footerText: string;
-  footerButton: {
+  footerButtons: Array<{
     text: string;
+    btnText: string;
     onClick: React.MouseEventHandler<HTMLButtonElement>;
-  };
+  }>;
 }

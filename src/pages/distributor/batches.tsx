@@ -5,10 +5,10 @@ import BatchListResults from '../../components/manufacturer/batches';
 import { batches } from '../../components/manufacturer/_data_';
 import RouteNames from '../../routes/RouteNames';
 
-const DistributorOrders = () => (
+const DistributorBatches = () => (
   <>
     <Head>
-      <title>Orders</title>
+      <title>Batches</title>
     </Head>
     <Box
       component="main"
@@ -19,7 +19,7 @@ const DistributorOrders = () => (
     >
       <Container maxWidth={false}>
         <Typography sx={{ m: 1 }} variant="h4">
-          Dispatched Orders
+          Dispatched Batches
         </Typography>
         <Box sx={{ mt: 3 }}>
           <BatchListResults
@@ -32,4 +32,4 @@ const DistributorOrders = () => (
   </>
 );
 
-export default DistributorOrders;
+export default DistributorBatches;

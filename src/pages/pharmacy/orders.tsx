@@ -5,7 +5,7 @@ import BatchListResults from '../../components/manufacturer/batches';
 import { batches } from '../../components/manufacturer/_data_';
 import RouteNames from '../../routes/RouteNames';
 
-const DistributorOrders = () => (
+const PharmacyOrders = () => (
   <>
     <Head>
       <title>Orders</title>
@@ -23,7 +23,7 @@ const DistributorOrders = () => (
         </Typography>
         <Box sx={{ mt: 3 }}>
           <BatchListResults
-            batchRoute={RouteNames.distributorBatchProgress}
+            batchRoute={RouteNames.pharmacyBatchProgress}
             batches={batches}
           />
         </Box>
@@ -32,4 +32,4 @@ const DistributorOrders = () => (
   </>
 );
 
-export default DistributorOrders;
+export default PharmacyOrders;

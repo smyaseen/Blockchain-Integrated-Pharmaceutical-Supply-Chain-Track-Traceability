@@ -3,6 +3,7 @@ import Head from 'next/head';
 import { Box, Container, Typography } from '@mui/material';
 import BatchListResults from '../../components/manufacturer/batches';
 import { batches } from '../../components/manufacturer/_data_';
+import RouteNames from '../../routes/RouteNames';
 
 const ManufacturerBatches = () => (
   <>
@@ -21,7 +22,10 @@ const ManufacturerBatches = () => (
           Dispatched Batches
         </Typography>
         <Box sx={{ mt: 3 }}>
-          <BatchListResults batches={batches} />
+          <BatchListResults
+            batchRoute={RouteNames.manufacturerBatchProgress}
+            batches={batches}
+          />
         </Box>
       </Container>
     </Box>

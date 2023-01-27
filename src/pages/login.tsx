@@ -107,12 +107,22 @@ const Login: NextPage = () => {
     },
   ];
 
-  const footerButton = {
-    text: 'Sign Up',
-    onClick: () => {
-      Router.push(RouteNames.signup);
+  const footerButtons = [
+    {
+      text: `Don't have an account?`,
+      btnText: 'Sign Up',
+      onClick: () => {
+        Router.push(RouteNames.signup);
+      },
     },
-  };
+    {
+      text: `Have a look at Dispatched Batches`,
+      btnText: 'Browse Batches',
+      onClick: () => {
+        Router.push(RouteNames.root);
+      },
+    },
+  ];
 
   return (
     <AuthForm
@@ -122,11 +132,9 @@ const Login: NextPage = () => {
       heading="Sign in"
       title="Login"
       subHeading="Sign in on the internal platform"
-      footerText="Don't have an account?"
-      footerButton={footerButton}
+      footerButtons={footerButtons}
     />
   );
 };
 
-// export default withAuth(Login)('');
 export default Login;

@@ -16,12 +16,14 @@ const DashboardLayoutRoot = styled('div')<DashboardLayoutRootProps>(
     display: 'flex',
     flex: '1 1 auto',
     maxWidth: '100%',
-    paddingTop: 64,
-    ...(isLoggedIn && {
-      [theme.breakpoints.up('lg')]: {
-        paddingLeft: 300,
-      },
-    }),
+    ...(isLoggedIn
+      ? {
+          [theme.breakpoints.up('lg')]: {
+            paddingLeft: 300,
+          },
+          paddingTop: 90,
+        }
+      : { paddingTop: 64 }),
   })
 );
 

@@ -61,6 +61,18 @@ const DashboardSidebar = (props: any) => {
         title: 'Create Order',
       },
     ],
+    [Roles.pharmacy]: [
+      {
+        href: RouteNames.pharmacyOrders,
+        icon: <Widgets fontSize="small" />,
+        title: 'Orders',
+      },
+      {
+        href: RouteNames.pharmacyCreateOrder,
+        icon: <AddBox fontSize="small" />,
+        title: 'Create Order',
+      },
+    ],
   };
 
   useEffect(() => {

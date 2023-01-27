@@ -2,11 +2,17 @@ import { RouteNames } from './RouteNames';
 import Roles from '../utility/roles';
 
 const routeConfig: { [key: string]: { [key: string]: string } } = {
+  [Roles.public]: {
+    default: RouteNames.root,
+    [RouteNames.root]: RouteNames.root,
+  },
+
   auth: {
     default: RouteNames.login,
     [RouteNames.signup]: RouteNames.signup,
     [RouteNames.login]: RouteNames.login,
   },
+
   [Roles.manufacturer]: {
     default: RouteNames.products,
     [RouteNames.products]: RouteNames.products,
@@ -24,7 +30,12 @@ const routeConfig: { [key: string]: { [key: string]: string } } = {
     [RouteNames.distributorBatchProgress]: RouteNames.distributorBatchProgress,
   },
 
-  [Roles.pharmacy]: {},
+  [Roles.pharmacy]: {
+    default: RouteNames.pharmacyOrders,
+    [RouteNames.pharmacyOrders]: RouteNames.pharmacyOrders,
+    [RouteNames.pharmacyCreateOrder]: RouteNames.pharmacyCreateOrder,
+    [RouteNames.pharmacyBatchProgress]: RouteNames.pharmacyBatchProgress,
+  },
 };
 
 export default routeConfig;
