@@ -11,10 +11,16 @@ const ProductListResults = ({
   deleteProduct: (index: number) => void;
 }) => (
   <CommonTable
-    columns={['Id', 'Name', 'Actions']}
-    rows={transformObject(products, [
-      { text: 'Delete', color: 'error', action: deleteProduct },
-    ])}
+    columns={[
+      'Name',
+      // , 'Actions'
+    ]}
+    rows={transformObject(
+      products
+      //   , [
+      //   { text: 'Delete', color: 'error', action: deleteProduct },
+      // ]
+    )}
   />
 );
 

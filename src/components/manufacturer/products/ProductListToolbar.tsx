@@ -13,7 +13,7 @@ const ProductListToolbar = ({
   addProduct,
   addError,
 }: {
-  addProduct: (value: string) => boolean;
+  addProduct: (value: string) => Promise<boolean>;
   addError: string;
 }) => {
   const [toggleAddButton, setToggleAddButton] = useState(false);
@@ -67,13 +67,15 @@ const ProductListToolbar = ({
             sx={{ mt: 1 }}
             color="primary"
             variant="contained"
-            onClick={() => addInput && addProduct(addInput) && setAddInput('')}
+            onClick={async () =>
+              addInput && (await addProduct(addInput)) && setAddInput('')
+            }
           >
             Add Product
           </Button>
         </Box>
       )}
-      <Box sx={{ maxWidth: 500, mt: 2 }}>
+      {/* <Box sx={{ maxWidth: 500, mt: 2 }}>
         <TextField
           fullWidth
           InputProps={{
@@ -89,7 +91,7 @@ const ProductListToolbar = ({
           variant="outlined"
           focused
         />
-      </Box>
+      </Box> */}
     </Box>
   );
 };

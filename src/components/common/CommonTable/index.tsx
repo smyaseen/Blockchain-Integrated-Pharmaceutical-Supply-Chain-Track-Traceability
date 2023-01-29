@@ -13,7 +13,7 @@ import Paper from '@mui/material/Paper';
 
 export interface Row {
   fields: string[];
-  buttons: Array<{
+  buttons?: Array<{
     text: string;
     color?:
       | 'inherit'
@@ -30,13 +30,13 @@ export interface Row {
 }
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-export const transformObject = (data: any, buttons: any) => {
+export const transformObject = (data: any, buttons?: any) => {
   const rows: Row[] = [];
 
   data.forEach((row: Row) => {
     rows.push({
       fields: Object.values(row),
-      buttons,
+      ...(buttons ? { buttons } : {}),
     });
   });
 
@@ -82,7 +82,7 @@ const CommonTable = ({ columns, rows }: { columns: string[]; rows: Row[] }) => (
                 </Typography>
               </TableCell>
             ))}
-            {buttons.map((btn) => (
+            {buttons?.map((btn) => (
               <TableCell key={btn.text} align="center">
                 <Button
                   variant={btn.variant ? btn.variant : 'contained'}

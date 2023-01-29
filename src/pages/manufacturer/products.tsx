@@ -1,33 +1,43 @@
-import React, { useState } from 'react';
+/* eslint-disable @typescript-eslint/no-explicit-any */
+import React, { useEffect, useState } from 'react';
 import Head from 'next/head';
-import { Box, Container } from '@mui/material';
-import { v4 as uuid } from 'uuid';
+import { Box, Container, Typography } from '@mui/material';
+import { useSession } from 'next-auth/react';
 import ProductListResults from '../../components/manufacturer/products/ProductListResults';
 import ProductListToolbar from '../../components/manufacturer/products/ProductListToolbar';
-import products from '../../components/manufacturer/_data_';
+import { Product } from '../../components/manufacturer/_data_';
+import { fetchProducts } from '../../utility/utils';
 
 const ManufacturerProducts = () => {
-  const [listProducts, setListProducts] = useState(products);
+  const [products, setListProducts] = useState<Product[]>([]);
   const [addError, setAddError] = useState('');
+  const { data } = useSession() as any;
+
+  useEffect(() => {
+    (async () => {
+      if (data.name) setListProducts(await fetchProducts(data.name));
+    })();
+  }, []);
 
   const deleteProduct = (index: number) => {
-    const temp = [...listProducts];
+    const temp = [...products];
     temp.splice(index, 1);
     setListProducts(temp);
   };
 
-  const addProduct = (value: string) => {
-    if (listProducts.find(({ name }) => name === value)) {
+  const addProduct = async (value: string) => {
+    if (products.find(({ name }) => name === value)) {
       setAddError('Product already exists');
       return false;
     }
-    setListProducts([
-      ...listProducts,
-      {
-        id: uuid(),
-        name: value,
-      },
-    ]);
+
+    await fetch('/api/products', {
+      method: 'POST',
+      body: JSON.stringify({ manufacturer: data.name, name: value }),
+      headers: { 'Content-Type': 'application/json' },
+    });
+
+    setListProducts([...products, { name: value }]);
 
     setAddError('');
     return true;
@@ -48,12 +58,19 @@ const ManufacturerProducts = () => {
       >
         <Container maxWidth={false}>
           <ProductListToolbar addProduct={addProduct} addError={addError} />
-          <Box sx={{ mt: 3, boxShadow: 10, borderRadius: '20px' }}>
-            <ProductListResults
-              products={listProducts}
-              deleteProduct={deleteProduct}
-            />
-          </Box>
+
+          {!products?.length ? (
+            <Typography sx={{ m: 1 }} variant="h4">
+              No Products Available!
+            </Typography>
+          ) : (
+            <Box sx={{ mt: 3, boxShadow: 10, borderRadius: '20px' }}>
+              <ProductListResults
+                products={products}
+                deleteProduct={deleteProduct}
+              />
+            </Box>
+          )}
         </Container>
       </Box>
     </>

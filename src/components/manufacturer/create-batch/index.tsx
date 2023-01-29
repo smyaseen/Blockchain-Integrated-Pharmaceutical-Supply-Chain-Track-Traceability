@@ -1,4 +1,5 @@
-import React, { useState } from 'react';
+/* eslint-disable @typescript-eslint/no-explicit-any */
+import React, { useEffect, useState } from 'react';
 import {
   Box,
   Button,
@@ -13,7 +14,9 @@ import QRCode from 'react-qr-code';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { MobileDatePicker } from '@mui/x-date-pickers/MobileDatePicker';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
-import products from '../_data_';
+import { useSession } from 'next-auth/react';
+import { Product } from '../_data_';
+import { fetchProducts } from '../../../utility/utils';
 
 const distributors = [
   {
@@ -30,13 +33,6 @@ const distributors = [
   },
 ];
 
-const medicines = [
-  ...products.map(({ name }) => ({
-    value: name.toLowerCase().replaceAll(' ', '-'),
-    label: name,
-  })),
-];
-
 const CreateBatch = () => {
   const [values, setValues] = useState({
     medicine: '',
@@ -45,6 +41,15 @@ const CreateBatch = () => {
     expiry: new Date().toLocaleDateString(),
     mfg: new Date().toLocaleDateString(),
   });
+
+  const [products, setProducts] = useState<Product[]>([]);
+  const { data } = useSession() as any;
+
+  useEffect(() => {
+    (async () => {
+      if (data.name) setProducts(await fetchProducts(data.name));
+    })();
+  }, []);
 
   const handleChange = (name: string, value: string) => {
     setValues({
@@ -76,9 +81,9 @@ const CreateBatch = () => {
                 SelectProps={{ native: true }}
                 variant="outlined"
               >
-                {medicines.map((option) => (
-                  <option key={option.value} value={option.value}>
-                    {option.label}
+                {products.map((option) => (
+                  <option key={option.name} value={option.name}>
+                    {option.name}
                   </option>
                 ))}
               </TextField>
