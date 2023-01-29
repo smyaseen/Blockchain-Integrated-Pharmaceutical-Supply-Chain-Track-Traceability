@@ -16,22 +16,7 @@ import { MobileDatePicker } from '@mui/x-date-pickers/MobileDatePicker';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { useSession } from 'next-auth/react';
 import { Product } from '../_data_';
-import { fetchProducts } from '../../../utility/utils';
-
-const distributors = [
-  {
-    value: 'IBL',
-    label: 'IBL',
-  },
-  {
-    value: 'getz-pharma',
-    label: 'Getz Pharma',
-  },
-  {
-    value: 'gsk',
-    label: 'GSK',
-  },
-];
+import { fetchDistributors, fetchProducts } from '../../../utility/utils';
 
 const CreateBatch = () => {
   const [values, setValues] = useState({
@@ -43,11 +28,13 @@ const CreateBatch = () => {
   });
 
   const [products, setProducts] = useState<Product[]>([]);
+  const [distributors, setDistributors] = useState<string[]>([]);
   const { data } = useSession() as any;
 
   useEffect(() => {
     (async () => {
       if (data.name) setProducts(await fetchProducts(data.name));
+      setDistributors(await fetchDistributors());
     })();
   }, []);
 
@@ -101,9 +88,12 @@ const CreateBatch = () => {
                 SelectProps={{ native: true }}
                 variant="outlined"
               >
-                {distributors.map((option) => (
-                  <option key={option.value} value={option.value}>
-                    {option.label}
+                {distributors.map((value) => (
+                  <option
+                    key={value.replaceAll(' ', '-')}
+                    value={value.replaceAll(' ', '-')}
+                  >
+                    {value}
                   </option>
                 ))}
               </TextField>
@@ -161,7 +151,11 @@ const CreateBatch = () => {
             p: 2,
           }}
         >
-          <Button color="primary" variant="contained">
+          <Button
+            color="primary"
+            variant="contained"
+            disabled={!products.length || !distributors.length}
+          >
             Create Batch
           </Button>
         </Box>

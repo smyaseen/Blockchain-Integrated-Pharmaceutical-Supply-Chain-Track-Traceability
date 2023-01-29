@@ -1,7 +1,6 @@
 import { hash, compare } from 'bcryptjs';
 import { FieldProp } from '../components/auth/AuthForm/AuthTypes';
 import { Product } from '../components/manufacturer/_data_';
-import connectToDatabase from '../lib/db';
 
 export const encryptPassword = async (password: string): Promise<string> =>
   hash(password, 12);
@@ -25,6 +24,17 @@ export const fetchProducts = async (
   try {
     const data = await fetch(`/api/products?manufacturer=${manufacturer}`);
     const res: Product[] = await data.json();
+
+    return res;
+  } catch (error) {
+    return [];
+  }
+};
+
+export const fetchDistributors = async (): Promise<string[]> => {
+  try {
+    const data = await fetch(`/api/distributors`);
+    const res: string[] = await data.json();
 
     return res;
   } catch (error) {
