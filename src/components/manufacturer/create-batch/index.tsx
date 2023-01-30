@@ -9,12 +9,14 @@ import {
   Divider,
   Grid,
   TextField,
+  Typography,
 } from '@mui/material';
 import QRCode from 'react-qr-code';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { MobileDatePicker } from '@mui/x-date-pickers/MobileDatePicker';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { useSession } from 'next-auth/react';
+import Router from 'next/router';
 import { Product } from '../_data_';
 import { fetchDistributors, fetchProducts } from '../../../utility/utils';
 
@@ -29,6 +31,8 @@ const CreateBatch = () => {
 
   const [products, setProducts] = useState<Product[]>([]);
   const [distributors, setDistributors] = useState<string[]>([]);
+  const [newBatchId, setNewBatchId] = useState('');
+  const [saving, setSaving] = useState(false);
   const { data } = useSession() as any;
 
   useEffect(() => {
@@ -46,6 +50,7 @@ const CreateBatch = () => {
   };
 
   const saveBatch = async () => {
+    setSaving(true);
     const { medicine, quantity, distributor, expiry, mfg } = values;
 
     if (medicine && quantity && distributor && expiry && mfg) {
@@ -53,27 +58,36 @@ const CreateBatch = () => {
         `/api/batchId?manufacturer=${data.name}&medicine=${medicine}`
       );
       const lastBatchId = await stream.json();
+      try {
+        const batchId = `${data.name.substring(0, 3).toUpperCase()}-${medicine
+          .substring(0, 3)
+          .toUpperCase()}-${parseInt(lastBatchId, 10) + 1}-${new Date()
+          .toLocaleDateString('en-GB')
+          .replaceAll('/', '')}`;
 
-      await fetch('/api/batch', {
-        method: 'POST',
-        body: JSON.stringify({
-          batchId: `${data.name.substring(0, 3).toUpperCase()}-${medicine
-            .substring(0, 3)
-            .toUpperCase()}-${parseInt(lastBatchId, 10) + 1}-${new Date()
-            .toLocaleDateString()
-            .replaceAll('-', '')}`,
-          manufacturer: data.name,
-          medicine,
-          quantity,
-          distributor,
-          expiry,
-          mfg,
-          status: 'manufactured',
-          sold: 0,
-        }),
-        headers: { 'Content-Type': 'application/json' },
-      });
+        await fetch('/api/batch', {
+          method: 'POST',
+          body: JSON.stringify({
+            batchId,
+            manufacturer: data.name,
+            medicine,
+            quantity,
+            distributor,
+            expiry,
+            mfg,
+            status: 'manufactured',
+            sold: 0,
+            created: new Date().toLocaleDateString('en-GB'),
+          }),
+          headers: { 'Content-Type': 'application/json' },
+        });
+
+        setNewBatchId(batchId);
+      } catch (err) {
+        //
+      }
     }
+    setSaving(false);
   };
   return (
     <form autoComplete="off" noValidate>
@@ -174,11 +188,25 @@ const CreateBatch = () => {
             </Grid>
 
             <Grid item md={6} xs={12}>
-              <QRCode size={50} value="hey" />
-              <br />
-              <Button color="primary" variant="text">
-                bisc.com/batch-detail?batch-getz123
-              </Button>
+              {newBatchId && (
+                <>
+                  <QRCode
+                    size={50}
+                    value={`http://127.0.0.1:8080?batchId=${newBatchId}`}
+                  />
+                  <br />
+                  <Typography>Batch Id generated: </Typography>
+                  <Button
+                    color="primary"
+                    variant="text"
+                    onClick={() =>
+                      Router.push(`http://127.0.0.1:8080?batchId=${newBatchId}`)
+                    }
+                  >
+                    {`http://127.0.0.1:8080?batchId=${newBatchId}`}
+                  </Button>
+                </>
+              )}
             </Grid>
           </Grid>
         </CardContent>
@@ -193,7 +221,7 @@ const CreateBatch = () => {
           <Button
             color="primary"
             variant="contained"
-            disabled={!products.length || !distributors.length}
+            disabled={!products.length || !distributors.length || saving}
             onClick={saveBatch}
           >
             Create Batch

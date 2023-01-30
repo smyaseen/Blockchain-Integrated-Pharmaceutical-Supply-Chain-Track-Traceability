@@ -7,6 +7,7 @@ import {
   LocalPharmacy,
   LocalShipping,
   ShoppingBag,
+  Timeline,
   Widgets,
 } from '@mui/icons-material';
 import { useSession } from 'next-auth/react';
@@ -118,6 +119,12 @@ const DashboardSidebar = (props: any) => {
             title={item.title}
           />
         ))}
+        <NavItem
+          key='Track Batch'
+          icon={<Timeline fontSize="small" />}
+          href="/"
+          title='Track Batch'
+        />
       </Box>
       <Divider sx={{ borderColor: '#2D3748' }} />
     </Box>

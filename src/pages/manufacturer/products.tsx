@@ -10,7 +10,6 @@ import ProductListToolbar from '../../components/manufacturer/products/ProductLi
 import { fetchProducts } from '../../utility/utils';
 
 const ManufacturerProducts = () => {
-  // const [products, setListProducts] = useState<Product[]>([]);
   const [addError, setAddError] = useState('');
   const { data } = useSession() as any;
 

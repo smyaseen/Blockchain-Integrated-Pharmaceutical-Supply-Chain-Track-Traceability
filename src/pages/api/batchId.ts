@@ -19,7 +19,14 @@ export default async function handler(
         await client
           .db()
           .collection('batches')
-          .findOne({ medicine, manufacturer }, { sort: { _id: -1 } })
+          .findOne(
+            {
+              medicine,
+              manufacturer,
+              created: new Date().toLocaleDateString('en-GB'),
+            },
+            { sort: { _id: -1 } }
+          )
       )?.batchId as string;
 
       res.status(201).json(lastBatchId ? lastBatchId.split('-')[2] : 0);
