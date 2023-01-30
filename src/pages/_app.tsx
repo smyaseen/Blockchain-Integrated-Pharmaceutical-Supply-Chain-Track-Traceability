@@ -10,15 +10,12 @@ import '@fontsource/roboto/400.css';
 import '@fontsource/roboto/500.css';
 import '@fontsource/roboto/700.css';
 
-import { Provider } from 'react-redux';
 // import dynamic from 'next/dynamic';
 import { SessionProvider } from 'next-auth/react';
 
 import createEmotionCache from '../utility/createEmotionCache';
 
 import '../styles/globals.css';
-
-import { store } from '../store/store';
 
 import theme from '../theme';
 import Layout from '../routes/Layout';
@@ -49,15 +46,13 @@ const MyApp: React.FunctionComponent<MyAppProps> = (props) => {
         <CssBaseline />
         <QueryClientProvider client={queryClient}>
           <SessionProvider>
-            <Provider store={store}>
-              <Layout>
-                <FadeMUI>
-                  <div id="container" style={{ height: '100%' }}>
-                    <Component {...pageProps} />
-                  </div>
-                </FadeMUI>
-              </Layout>
-            </Provider>
+            <Layout>
+              <FadeMUI>
+                <div id="container" style={{ height: '100%' }}>
+                  <Component {...pageProps} />
+                </div>
+              </FadeMUI>
+            </Layout>
           </SessionProvider>
         </QueryClientProvider>
       </ThemeProvider>
