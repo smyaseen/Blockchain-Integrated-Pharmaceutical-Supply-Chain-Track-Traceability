@@ -45,6 +45,36 @@ const CreateBatch = () => {
     });
   };
 
+  const saveBatch = async () => {
+    const { medicine, quantity, distributor, expiry, mfg } = values;
+
+    if (medicine && quantity && distributor && expiry && mfg) {
+      const stream = await fetch(
+        `/api/batchId?manufacturer=${data.name}&medicine=${medicine}`
+      );
+      const lastBatchId = await stream.json();
+
+      await fetch('/api/batch', {
+        method: 'POST',
+        body: JSON.stringify({
+          batchId: `${data.name.substring(0, 3).toUpperCase()}-${medicine
+            .substring(0, 3)
+            .toUpperCase()}-${parseInt(lastBatchId, 10) + 1}-${new Date()
+            .toLocaleDateString()
+            .replaceAll('-', '')}`,
+          manufacturer: data.name,
+          medicine,
+          quantity,
+          distributor,
+          expiry,
+          mfg,
+          status: 'manufactured',
+          sold: 0,
+        }),
+        headers: { 'Content-Type': 'application/json' },
+      });
+    }
+  };
   return (
     <form autoComplete="off" noValidate>
       <Card>
@@ -116,7 +146,13 @@ const CreateBatch = () => {
                 <MobileDatePicker
                   label="Expiry"
                   inputFormat="DD/MM/YYYY"
-                  onChange={(value) => value && handleChange('expiry', value)}
+                  onChange={(value) =>
+                    value &&
+                    handleChange(
+                      'expiry',
+                      new Date(value.$d).toLocaleDateString()
+                    )
+                  }
                   renderInput={(params) => <TextField {...params} />}
                   value={values.expiry}
                 />
@@ -127,7 +163,10 @@ const CreateBatch = () => {
                 <MobileDatePicker
                   label="Manufacture Date"
                   inputFormat="DD/MM/YYYY"
-                  onChange={(value) => value && handleChange('mfg', value)}
+                  onChange={(value) =>
+                    value &&
+                    handleChange('mfg', new Date(value.$d).toLocaleDateString())
+                  }
                   renderInput={(params) => <TextField {...params} />}
                   value={values.mfg}
                 />
@@ -155,6 +194,7 @@ const CreateBatch = () => {
             color="primary"
             variant="contained"
             disabled={!products.length || !distributors.length}
+            onClick={saveBatch}
           >
             Create Batch
           </Button>

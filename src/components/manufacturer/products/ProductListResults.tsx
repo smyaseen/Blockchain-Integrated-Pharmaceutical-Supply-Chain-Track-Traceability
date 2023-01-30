@@ -5,10 +5,10 @@ import CommonTable, { transformObject } from '../../common/CommonTable';
 
 const ProductListResults = ({
   products,
-  deleteProduct,
-}: {
+}: // deleteProduct,
+{
   products: Product[];
-  deleteProduct: (index: number) => void;
+  // deleteProduct: (index: number) => void;
 }) => (
   <CommonTable
     columns={[

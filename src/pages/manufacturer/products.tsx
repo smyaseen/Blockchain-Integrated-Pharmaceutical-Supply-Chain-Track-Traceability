@@ -1,32 +1,27 @@
+/* eslint-disable no-nested-ternary */
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import Head from 'next/head';
-import { Box, Container, Typography } from '@mui/material';
+import { Box, CircularProgress, Container, Typography } from '@mui/material';
 import { useSession } from 'next-auth/react';
+import { useQuery } from 'react-query';
 import ProductListResults from '../../components/manufacturer/products/ProductListResults';
 import ProductListToolbar from '../../components/manufacturer/products/ProductListToolbar';
-import { Product } from '../../components/manufacturer/_data_';
 import { fetchProducts } from '../../utility/utils';
 
 const ManufacturerProducts = () => {
-  const [products, setListProducts] = useState<Product[]>([]);
+  // const [products, setListProducts] = useState<Product[]>([]);
   const [addError, setAddError] = useState('');
   const { data } = useSession() as any;
 
-  useEffect(() => {
-    (async () => {
-      if (data.name) setListProducts(await fetchProducts(data.name));
-    })();
-  }, []);
-
-  const deleteProduct = (index: number) => {
-    const temp = [...products];
-    temp.splice(index, 1);
-    setListProducts(temp);
-  };
+  const {
+    isLoading,
+    data: products,
+    refetch,
+  } = useQuery('products', () => fetchProducts(data.name));
 
   const addProduct = async (value: string) => {
-    if (products.find(({ name }) => name === value)) {
+    if (products?.find(({ name }) => name === value)) {
       setAddError('Product already exists');
       return false;
     }
@@ -37,9 +32,8 @@ const ManufacturerProducts = () => {
       headers: { 'Content-Type': 'application/json' },
     });
 
-    setListProducts([...products, { name: value }]);
-
     setAddError('');
+    refetch();
     return true;
   };
 
@@ -59,7 +53,9 @@ const ManufacturerProducts = () => {
         <Container maxWidth={false}>
           <ProductListToolbar addProduct={addProduct} addError={addError} />
 
-          {!products?.length ? (
+          {isLoading ? (
+            <CircularProgress />
+          ) : !products?.length ? (
             <Typography sx={{ m: 1 }} variant="h4">
               No Products Available!
             </Typography>
@@ -67,7 +63,7 @@ const ManufacturerProducts = () => {
             <Box sx={{ mt: 3, boxShadow: 10, borderRadius: '20px' }}>
               <ProductListResults
                 products={products}
-                deleteProduct={deleteProduct}
+                // deleteProduct={()deleteProduct}
               />
             </Box>
           )}
