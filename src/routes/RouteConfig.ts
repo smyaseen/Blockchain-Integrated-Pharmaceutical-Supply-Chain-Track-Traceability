@@ -18,23 +18,23 @@ const routeConfig: { [key: string]: { [key: string]: string } } = {
     [RouteNames.products]: RouteNames.products,
     [RouteNames.manufacturerCreateBatch]: RouteNames.manufacturerCreateBatch,
     [RouteNames.manufacturerBatches]: RouteNames.manufacturerBatches,
-    [RouteNames.manufacturerBatchProgress]:
-      RouteNames.manufacturerBatchProgress,
+    // [RouteNames.manufacturerBatchProgress]:
+    //   RouteNames.manufacturerBatchProgress,
   },
 
   [Roles.distributor]: {
-    default: RouteNames.distributorOrders,
-    [RouteNames.distributorOrders]: RouteNames.distributorOrders,
+    default: RouteNames.distributorBatches,
+    // [RouteNames.distributorOrders]: RouteNames.distributorOrders,
     [RouteNames.distributorBatches]: RouteNames.distributorBatches,
     [RouteNames.distributorCreateOrder]: RouteNames.distributorCreateOrder,
-    [RouteNames.distributorBatchProgress]: RouteNames.distributorBatchProgress,
+    // [RouteNames.distributorBatchProgress]: RouteNames.distributorBatchProgress,
   },
 
   [Roles.pharmacy]: {
     default: RouteNames.pharmacyOrders,
     [RouteNames.pharmacyOrders]: RouteNames.pharmacyOrders,
     [RouteNames.pharmacyCreateOrder]: RouteNames.pharmacyCreateOrder,
-    [RouteNames.pharmacyBatchProgress]: RouteNames.pharmacyBatchProgress,
+    // [RouteNames.pharmacyBatchProgress]: RouteNames.pharmacyBatchProgress,
   },
 };
 

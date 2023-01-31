@@ -1,8 +1,16 @@
-import { Box, Button, Container, Grid, Typography } from '@mui/material';
-import React from 'react';
+import {
+  Box,
+  Button,
+  CircularProgress,
+  Container,
+  Grid,
+  Typography,
+} from '@mui/material';
+import React, { useEffect, useState } from 'react';
 import Router from 'next/router';
 import Head from 'next/head';
 import { useSession } from 'next-auth/react';
+import { useQuery } from 'react-query';
 import RouteNames from '../routes/RouteNames';
 import TrackBatch from '../components/common/TrackBatch';
 import BatchProgressComp from '../components/manufacturer/BatchProgress';
@@ -10,6 +18,37 @@ import SoldTransactionsTable from '../components/manufacturer/BatchProgress/Sold
 
 const Home = () => {
   const { status } = useSession();
+
+  const [batchId, setBatchId] = useState(
+    new URLSearchParams(window.location.search).get('batchId')
+  );
+
+  const {
+    isLoading,
+    data: batches,
+    refetch,
+  } = useQuery(
+    'batches',
+    async () => {
+      try {
+        const stream = await fetch(`/api/batch?batchId=${batchId}`);
+        const res = await stream.json();
+
+        return res;
+      } catch (error) {
+        return [];
+      }
+    }
+    // ,
+    // {
+    //   staleTime: Infinity,
+    //   refetchOnMount: true,
+    // }
+  );
+
+  useEffect(() => {
+    refetch();
+  }, [batchId]);
 
   return (
     <>
@@ -57,13 +96,25 @@ const Home = () => {
         )}
       </Grid>
       <Container sx={{ mt: 5 }} maxWidth={false}>
-        <TrackBatch />
-        <Box margin="auto" mt={4} maxWidth={500}>
-          <BatchProgressComp />
-        </Box>
-        <Box m={3}>
-          <SoldTransactionsTable />
-        </Box>
+        <TrackBatch
+          setBatchId={(id) => {
+            setBatchId(id);
+          }}
+        />
+        {isLoading ? (
+          <CircularProgress />
+        ) : (
+          batches && (
+            <>
+              <Box margin="auto" mt={4} maxWidth={500}>
+                <BatchProgressComp batches={batches} />
+              </Box>
+              <Box m={3}>
+                <SoldTransactionsTable batches={batches} />
+              </Box>
+            </>
+          )
+        )}
       </Container>
     </>
   );

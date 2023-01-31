@@ -27,17 +27,56 @@ export default async function handler(
     const client = await connectToDatabase();
 
     const {
-      query: { manufacturer },
+      query: { manufacturer, distributor, pharmacy, batchId },
     } = req;
 
     try {
-      const batches = await client
-        .db()
-        .collection('batches')
-        .find({ manufacturer }, { projection: { _id: 0 } })
-        .toArray();
+      if (batchId) {
+        const batch = await client
+          .db()
+          .collection('batches')
+          .findOne({ batchId });
+        console.log('🚀 ~ file: batch.ts:39 ~ batch', batch);
 
-      res.status(201).json(batches);
+        res.status(201).json(batch);
+      } else if (manufacturer || distributor) {
+        const batches = await client
+          .db()
+          .collection('batches')
+          .find(manufacturer ? { manufacturer } : { distributor }, {
+            projection: { _id: 0, pharmacy: 0 },
+          })
+          .toArray();
+
+        res.status(201).json(batches);
+      } else {
+        console.log('here');
+        const batches = (
+          await client
+            .db()
+            .collection('batches')
+            .find(
+              { 'pharmacy.title': pharmacy },
+              {
+                projection: { _id: 0 },
+              }
+            )
+            .toArray()
+        ).map((batch) => {
+          const pharmaData = batch.pharmacy.find(
+            ({ title }) => title === pharmacy
+          );
+          console.log(batch);
+          const { pharmacy: phar, ...rest } = batch;
+
+          rest.stockPharma = pharmaData.stock;
+          rest.soldPharma = pharmaData.sold;
+
+          return rest;
+        });
+
+        res.status(201).json(batches);
+      }
     } catch (error) {
       res.status(500).json([]);
     }
@@ -56,6 +95,7 @@ export default async function handler(
 
       res.status(201).json('changed status successfully!');
     } catch (error) {
+      console.log('🚀 ~ file: batch.ts:97 ~ error', error);
       res.status(500).json('change status error!');
     }
 

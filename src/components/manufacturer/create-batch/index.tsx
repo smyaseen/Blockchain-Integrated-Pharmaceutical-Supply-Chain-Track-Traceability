@@ -18,7 +18,7 @@ import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { useSession } from 'next-auth/react';
 import Router from 'next/router';
 import { Product } from '../_data_';
-import { fetchDistributors, fetchProducts } from '../../../utility/utils';
+import { fetchUsers, fetchProducts } from '../../../utility/utils';
 
 const CreateBatch = () => {
   const [values, setValues] = useState({
@@ -38,7 +38,7 @@ const CreateBatch = () => {
   useEffect(() => {
     (async () => {
       if (data.name) setProducts(await fetchProducts(data.name));
-      setDistributors(await fetchDistributors());
+      setDistributors(await fetchUsers('distributor'));
     })();
   }, []);
 
@@ -55,7 +55,11 @@ const CreateBatch = () => {
 
     if (medicine && quantity && distributor && expiry && mfg) {
       const stream = await fetch(
-        `/api/batchId?manufacturer=${data.name}&medicine=${medicine}`
+        `/api/batchId?manufacturer=${data.name}&medicine=${medicine}`,
+        {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+        }
       );
       const lastBatchId = await stream.json();
       try {

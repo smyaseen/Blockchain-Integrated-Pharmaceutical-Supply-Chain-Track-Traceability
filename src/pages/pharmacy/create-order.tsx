@@ -1,12 +1,12 @@
 import React from 'react';
 import Head from 'next/head';
 import { Box } from '@mui/material';
-import CreateBatchComp from '../../components/manufacturer/create-batch';
+import CreateBatchComp from '../../components/pharmacy/create-order';
 
 const CreateBatch = () => (
   <>
     <Head>
-      <title>Create Batch</title>
+      <title>Create Order</title>
     </Head>
     <Box
       component="main"

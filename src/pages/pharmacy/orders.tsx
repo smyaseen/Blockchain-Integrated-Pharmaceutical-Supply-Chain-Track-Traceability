@@ -1,35 +1,77 @@
-import React from 'react';
+/* eslint-disable no-nested-ternary */
+/* eslint-disable @typescript-eslint/no-explicit-any */
+import React, { useEffect } from 'react';
 import Head from 'next/head';
-import { Box, Container, Typography } from '@mui/material';
-import BatchListResults from '../../components/manufacturer/batches';
-import { batches } from '../../components/manufacturer/_data_';
+import { Box, CircularProgress, Container, Typography } from '@mui/material';
+import { useSession } from 'next-auth/react';
+import { useQuery } from 'react-query';
+import BatchListResults from '../../components/pharmacy/batches';
 import RouteNames from '../../routes/RouteNames';
 
-const PharmacyOrders = () => (
-  <>
-    <Head>
-      <title>Orders</title>
-    </Head>
-    <Box
-      component="main"
-      sx={{
-        flexGrow: 1,
-        py: 8,
-      }}
-    >
-      <Container maxWidth={false}>
-        <Typography sx={{ m: 1 }} variant="h4">
-          Dispatched Orders
-        </Typography>
-        <Box sx={{ mt: 3 }}>
-          <BatchListResults
-            batchRoute={RouteNames.pharmacyBatchProgress}
-            batches={batches}
-          />
-        </Box>
-      </Container>
-    </Box>
-  </>
-);
+const ManufacturerBatches = () => {
+  const { data } = useSession() as any;
 
-export default PharmacyOrders;
+  const {
+    isLoading,
+    data: batches,
+    refetch,
+  } = useQuery(
+    'orders',
+    async () => {
+      try {
+        const stream = await fetch(`/api/batch?pharmacy=${data.name}`);
+        const res = await stream.json();
+
+        return res;
+      } catch (error) {
+        return [];
+      }
+    },
+    {
+      staleTime: Infinity,
+      refetchOnMount: true,
+    }
+  );
+
+  useEffect(() => {
+    refetch();
+  }, []);
+
+  return (
+    <>
+      <Head>
+        <title>Batches</title>
+      </Head>
+      <Box
+        component="main"
+        sx={{
+          flexGrow: 1,
+          py: 8,
+        }}
+      >
+        <Container maxWidth={false}>
+          <Typography sx={{ m: 1 }} variant="h4">
+            Dispatched Orders
+          </Typography>
+          <Box sx={{ mt: 3 }}>
+            {isLoading ? (
+              <CircularProgress />
+            ) : !batches.length ? (
+              <Typography sx={{ m: 1 }} variant="h6">
+                No Orders Available
+              </Typography>
+            ) : (
+              <BatchListResults
+                batchRoute={RouteNames.distributorBatches}
+                batches={batches}
+                refetch={refetch}
+              />
+            )}
+          </Box>
+        </Container>
+      </Box>
+    </>
+  );
+};
+
+export default ManufacturerBatches;

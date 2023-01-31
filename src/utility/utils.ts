@@ -31,9 +31,35 @@ export const fetchProducts = async (
   }
 };
 
-export const fetchDistributors = async (): Promise<string[]> => {
+export const fetchUsers = async (role: string): Promise<string[]> => {
   try {
-    const data = await fetch(`/api/distributors`);
+    const data = await fetch(`/api/users?role=${role}`);
+    const res: string[] = await data.json();
+
+    return res;
+  } catch (error) {
+    return [];
+  }
+};
+
+export const fetchBatchIdsForDistributor = async (
+  role: string
+): Promise<string[]> => {
+  try {
+    const data = await fetch(`/api/batchId?distributor=${role}`);
+    const res: string[] = await data.json();
+
+    return res;
+  } catch (error) {
+    return [];
+  }
+};
+
+export const fetchBatchIdsForPharmacy = async (
+  role: string
+): Promise<string[]> => {
+  try {
+    const data = await fetch(`/api/batchId?pharmacy=${role}`);
     const res: string[] = await data.json();
 
     return res;

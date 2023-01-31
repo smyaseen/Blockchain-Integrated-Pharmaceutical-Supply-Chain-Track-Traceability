@@ -46,11 +46,11 @@ const DashboardSidebar = (props: any) => {
       },
     ],
     [Roles.distributor]: [
-      {
-        href: RouteNames.distributorOrders,
-        icon: <LocalShipping fontSize="small" />,
-        title: 'Orders',
-      },
+      // {
+      //   href: RouteNames.distributorOrders,
+      //   icon: <LocalShipping fontSize="small" />,
+      //   title: 'Orders',
+      // },
       {
         href: RouteNames.distributorBatches,
         icon: <Widgets fontSize="small" />,
@@ -120,10 +120,10 @@ const DashboardSidebar = (props: any) => {
           />
         ))}
         <NavItem
-          key='Track Batch'
+          key="Track Batch"
           icon={<Timeline fontSize="small" />}
           href="/"
-          title='Track Batch'
+          title="Track Batch"
         />
       </Box>
       <Divider sx={{ borderColor: '#2D3748' }} />

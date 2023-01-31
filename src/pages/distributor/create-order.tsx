@@ -1,7 +1,7 @@
 import React from 'react';
 import Head from 'next/head';
 import { Box } from '@mui/material';
-import CreateBatchComp from '../../components/manufacturer/create-batch';
+import CreateBatchComp from '../../components/distributor/create-order';
 
 const CreateBatch = () => (
   <>

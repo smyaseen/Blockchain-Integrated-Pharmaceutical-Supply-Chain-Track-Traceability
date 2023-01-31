@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import * as React from 'react';
 import Box from '@mui/material/Box';
 import Collapse from '@mui/material/Collapse';
@@ -46,7 +47,7 @@ const Row = (props: { row: ReturnType<typeof createData> }) => {
           </IconButton>
         </TableCell>
         <TableCell component="th" scope="row">
-          {row.name}
+          {row.title}
         </TableCell>
         <TableCell align="center">{row.stock}</TableCell>
         <TableCell align="center">{row.sold}</TableCell>
@@ -64,17 +65,13 @@ const Row = (props: { row: ReturnType<typeof createData> }) => {
               <Table size="small" aria-label="purchases">
                 <TableHead>
                   <TableRow>
-                    <TableCell align="center">Date</TableCell>
                     <TableCell align="center">Amount</TableCell>
                     <TableCell align="center">Detail</TableCell>
                   </TableRow>
                 </TableHead>
                 <TableBody>
-                  {row.history.map((historyRow) => (
-                    <TableRow key={historyRow.date}>
-                      <TableCell component="th" scope="row" align="center">
-                        {historyRow.date}
-                      </TableCell>
+                  {row?.transactions?.map((historyRow) => (
+                    <TableRow key={historyRow}>
                       <TableCell align="center">{historyRow.amount}</TableCell>
                       <TableCell align="center">
                         <Button variant="text">View Transaction</Button>
@@ -103,8 +100,9 @@ const rows = [
     },
   ]),
 ];
+console.log('🚀 ~ file: SoldTransactionsTable.tsx:107 ~ rows', rows);
 
-const SoldTransactionsTable = () => (
+const SoldTransactionsTable = ({ batches }: { batches: any }) => (
   <TableContainer component={Paper}>
     <Table aria-label="collapsible table">
       <TableHead>
@@ -117,7 +115,7 @@ const SoldTransactionsTable = () => (
         </TableRow>
       </TableHead>
       <TableBody>
-        {rows.map((row) => (
+        {batches?.pharmacy?.map((row) => (
           <Row key={row.name} row={row} />
         ))}
       </TableBody>

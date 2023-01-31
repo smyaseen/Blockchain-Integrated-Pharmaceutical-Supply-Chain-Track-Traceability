@@ -3,19 +3,19 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 import connectToDatabase from '../../lib/db';
 
-const getDistributors = async (res: NextApiResponse) => {
+const getUsers = async (req: NextApiRequest, res: NextApiResponse) => {
   const client = await connectToDatabase();
 
   try {
-    const distributors = (
-      await client
-        .db()
-        .collection('users')
-        .find({ role: 'distributor' })
-        .toArray()
+    const {
+      query: { role },
+    } = req;
+
+    const users = (
+      await client.db().collection('users').find({ role }).toArray()
     ).map(({ name }) => name);
 
-    res.status(201).json(distributors);
+    res.status(201).json(users);
   } catch (error) {
     res.status(500).json([]);
   }
@@ -27,7 +27,7 @@ export default async function handler(
   res: NextApiResponse
 ) {
   if (req.method === 'GET') {
-    getDistributors(res);
+    getUsers(req, res);
   }
 }
 
