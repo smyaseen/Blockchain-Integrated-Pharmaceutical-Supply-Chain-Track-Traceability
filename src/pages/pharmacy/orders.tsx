@@ -56,7 +56,7 @@ const ManufacturerBatches = () => {
           <Box sx={{ mt: 3 }}>
             {isLoading ? (
               <CircularProgress />
-            ) : !batches.length ? (
+            ) : !batches?.length || !batches ? (
               <Typography sx={{ m: 1 }} variant="h6">
                 No Orders Available
               </Typography>

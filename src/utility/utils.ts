@@ -1,4 +1,13 @@
 import { hash, compare } from 'bcryptjs';
+import {
+  DeliveryDiningRounded,
+  FactoryRounded,
+  LocalPharmacyRounded,
+  LocalShippingRounded,
+  ShoppingCartCheckoutRounded,
+  SvgIconComponent,
+  WarehouseRounded,
+} from '@mui/icons-material';
 import { FieldProp } from '../components/auth/AuthForm/AuthTypes';
 import { Product } from '../components/manufacturer/_data_';
 
@@ -44,14 +53,15 @@ export const fetchUsers = async (role: string): Promise<string[]> => {
 
 export const fetchBatchIdsForDistributor = async (
   role: string
-): Promise<string[]> => {
+): Promise<[] | [{ batchId: string; quantity: number; sold: number }]> => {
   try {
     const data = await fetch(`/api/batchId?distributor=${role}`);
-    const res: string[] = await data.json();
+    const res: [{ batchId: string; quantity: number; sold: number }] =
+      await data.json();
 
     return res;
   } catch (error) {
-    return [];
+    return Promise.resolve([]);
   }
 };
 
@@ -67,3 +77,42 @@ export const fetchBatchIdsForPharmacy = async (
     return [];
   }
 };
+
+export const timelineNumber: { [key: string]: number } = {
+  manufactured: 0,
+  'Shipped To Distributor': 1,
+  'Reached Warehouse': 2,
+  'Shipped to Pharmacy(s)': 3,
+  'Reached Pharmacy(s)': 4,
+  'Sold To Customer(s)': 5,
+};
+
+export const timelineConfig: Array<{
+  typography: string;
+  Icon: SvgIconComponent;
+}> = [
+  {
+    typography: 'manufactured',
+    Icon: FactoryRounded,
+  },
+  {
+    typography: 'Shipped To Warehouse',
+    Icon: LocalShippingRounded,
+  },
+  {
+    typography: 'Reached Warehouse',
+    Icon: WarehouseRounded,
+  },
+  {
+    typography: 'Shipped to Pharmacy(s)',
+    Icon: DeliveryDiningRounded,
+  },
+  {
+    typography: 'Reached Pharmacy(s)',
+    Icon: LocalPharmacyRounded,
+  },
+  {
+    typography: 'Sold To Customer(s)',
+    Icon: ShoppingCartCheckoutRounded,
+  },
+];

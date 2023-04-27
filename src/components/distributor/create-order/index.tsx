@@ -19,15 +19,24 @@ import {
   fetchBatchIdsForDistributor,
 } from '../../../utility/utils';
 
-const CreateBatch = () => {
-  const [values, setValues] = useState({
-    batchId: '',
-    remaining: 0,
-    quantity: '',
-    pharmacy: '',
-  });
+const initialValue = {
+  batchId: '',
+  remaining: 0,
+  quantity: 0,
+  pharmacy: '',
+};
 
-  const [batchIds, setBatchIds] = useState([]);
+const CreateBatch = () => {
+  const [values, setValues] = useState<{
+    batchId: string;
+    remaining: number;
+    quantity: number;
+    pharmacy: string;
+  }>(initialValue);
+
+  const [batchIds, setBatchIds] = useState<
+    [] | [{ batchId: string; quantity: number; sold: number }]
+  >([]);
   const [pharmacies, setPharmacies] = useState<string[]>([]);
   const [saving, setSaving] = useState(false);
   const { data } = useSession() as any;
@@ -39,16 +48,7 @@ const CreateBatch = () => {
     })();
   }, []);
 
-  useEffect(() => {
-    console.log('values', values);
-  }, [values]);
-
   const handleChange = (name: string, value: string, remaining?: number) => {
-    console.log(
-      '🚀 ~ file: index.tsx:43 ~ handleChange ~ name: string, value: string',
-      name,
-      value
-    );
     setValues({
       ...values,
       [name]: value,
@@ -67,13 +67,13 @@ const CreateBatch = () => {
           body: JSON.stringify({
             batchId,
             quantity,
-            pharmacy,
+            pharmacy: pharmacy.replaceAll('-', ' '),
           }),
           headers: { 'Content-Type': 'application/json' },
         });
 
         setBatchIds(await fetchBatchIdsForDistributor(data.name));
-        setValues({});
+        setValues(initialValue);
       } catch (err) {
         //
       }
@@ -83,108 +83,114 @@ const CreateBatch = () => {
   return (
     <form autoComplete="off" noValidate>
       <Card>
-        <CardHeader
-          subheader="Create Order from Batches"
-          title="Create Order"
-        />
-        <Divider />
-        <CardContent>
-          <Grid container spacing={3}>
-            <Grid item md={6} xs={12}>
-              <TextField
-                fullWidth
-                label="Select Batch Id"
-                name="batchId"
-                onChange={({ target: { name, value } }) => {
-                  const batch = batchIds.find(
-                    ({ batchId }) => batchId === value
-                  );
-                  handleChange(name, value, batch.quantity - batch.sold);
-                }}
-                required
-                select
-                SelectProps={{ native: true }}
-                variant="outlined"
-                value={values.batchId}
-              >
-                {batchIds.map((option) => (
-                  <option key={option.batchId} value={option.batchId}>
-                    {option.batchId}
-                  </option>
-                ))}
-              </TextField>
-              <Typography variant="h6">
-                Remaining: {values.remaining}
-              </Typography>
+        <>
+          <CardHeader
+            subheader="Create Order from Batches"
+            title="Create Order"
+          />
+          <Divider />
+          <CardContent>
+            <Grid container spacing={3}>
+              <Grid item md={6} xs={12}>
+                <TextField
+                  fullWidth
+                  label="Select Batch Id"
+                  name="batchId"
+                  onChange={({ target: { name, value } }) => {
+                    const batch = batchIds.find(
+                      ({ batchId }) => batchId === value
+                    );
+                    handleChange(
+                      name,
+                      value,
+                      !batch?.quantity && !batch?.sold
+                        ? batch?.quantity
+                        : batch.quantity - batch.sold
+                    );
+                  }}
+                  required
+                  select
+                  SelectProps={{ native: true }}
+                  variant="outlined"
+                  value={values.batchId}
+                >
+                  {batchIds.map((option) => (
+                    <option key={option.batchId} value={option.batchId}>
+                      {option.batchId}
+                    </option>
+                  ))}
+                </TextField>
+                <Typography variant="h6">
+                  Remaining: {values.remaining}
+                </Typography>
+              </Grid>
+              <Grid item md={6} xs={12}>
+                <TextField
+                  fullWidth
+                  label="Select Pharmacy"
+                  name="pharmacy"
+                  onChange={({ target: { name, value } }) => {
+                    handleChange(name, value);
+                  }}
+                  required
+                  select
+                  SelectProps={{ native: true }}
+                  variant="outlined"
+                  value={values.pharmacy}
+                >
+                  {pharmacies.map((value) => (
+                    <option
+                      key={value.replaceAll(' ', '-')}
+                      value={value.replaceAll(' ', '-')}
+                    >
+                      {value}
+                    </option>
+                  ))}
+                </TextField>
+              </Grid>
+              <Grid item md={6} xs={12}>
+                <TextField
+                  fullWidth
+                  type="number"
+                  label="Quantity"
+                  name="quantity"
+                  onChange={({ target: { name, value } }) =>
+                    handleChange(name, value)
+                  }
+                  required
+                  variant="outlined"
+                  value={values.quantity}
+                />
+              </Grid>
             </Grid>
-            <Grid item md={6} xs={12}>
-              <TextField
-                fullWidth
-                label="Select Pharmacy"
-                name="pharmacy"
-                onChange={({ target: { name, value } }) => {
-                  console.log(name, value);
-                  handleChange(name, value);
-                }}
-                required
-                select
-                SelectProps={{ native: true }}
-                variant="outlined"
-                value={values.pharmacy}
-              >
-                {pharmacies.map((value) => (
-                  <option
-                    key={value.replaceAll(' ', '-')}
-                    value={value.replaceAll(' ', '-')}
-                  >
-                    {value}
-                  </option>
-                ))}
-              </TextField>
-            </Grid>
-            <Grid item md={6} xs={12}>
-              <TextField
-                fullWidth
-                type="number"
-                label="Quantity"
-                name="quantity"
-                onChange={({ target: { name, value } }) =>
-                  handleChange(name, value)
-                }
-                required
-                variant="outlined"
-                value={values.quantity}
-              />
-            </Grid>
-          </Grid>
-        </CardContent>
-        <Divider />
-        {console.log(values)}
-        <Box
-          sx={{
-            display: 'flex',
-            justifyContent: 'flex-end',
-            p: 2,
-          }}
-        >
-          <Button
-            color="primary"
-            variant="contained"
-            disabled={
-              !batchIds.length ||
-              !pharmacies.length ||
-              values.quantity > values.remaining ||
-              !values.remaining ||
-              !values.quantity ||
-              !values.batchId ||
-              !values.pharmacy ||
-              saving
-            }
-            onClick={saveOrder}
+          </CardContent>
+          <Divider />
+          <Box
+            sx={{
+              display: 'flex',
+              justifyContent: 'flex-end',
+              p: 2,
+            }}
           >
-            Create Order
-          </Button>
-        </Box>
+            <Button
+              color="primary"
+              variant="contained"
+              disabled={
+                !batchIds.length ||
+                !pharmacies.length ||
+                values.quantity > values.remaining ||
+                !values.remaining ||
+                !values.quantity ||
+                !values.batchId ||
+                !values.pharmacy ||
+                saving
+              }
+              onClick={saveOrder}
+            >
+              Create Order
+            </Button>
+          </Box>
+        </>
       </Card>
     </form>
   );

@@ -109,9 +109,11 @@ const Home = () => {
               <Box margin="auto" mt={4} maxWidth={500}>
                 <BatchProgressComp batches={batches} />
               </Box>
-              <Box m={3}>
-                <SoldTransactionsTable batches={batches} />
-              </Box>
+              {batches.pharmacy && (
+                <Box m={3}>
+                  <SoldTransactionsTable batches={batches} />
+                </Box>
+              )}
             </>
           )
         )}

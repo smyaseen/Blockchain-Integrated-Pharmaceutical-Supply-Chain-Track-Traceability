@@ -76,7 +76,7 @@ const CreateBatch = () => {
             manufacturer: data.name,
             medicine,
             quantity,
-            distributor,
+            distributor: distributor.replaceAll('-', ' '),
             expiry,
             mfg,
             status: 'manufactured',

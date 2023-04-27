@@ -71,7 +71,6 @@ export default async function handler(
 
       res.status(201).json(batchIds?.length ? batchIds : []);
     } catch (error) {
-      console.log('🚀 ~ file: batchId.ts:79 ~ error', error);
       res.status(500).json([]);
     }
 

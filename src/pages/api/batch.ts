@@ -36,16 +36,18 @@ export default async function handler(
           .db()
           .collection('batches')
           .findOne({ batchId });
-        console.log('🚀 ~ file: batch.ts:39 ~ batch', batch);
 
         res.status(201).json(batch);
       } else if (manufacturer || distributor) {
         const batches = await client
           .db()
           .collection('batches')
-          .find(manufacturer ? { manufacturer } : { distributor }, {
-            projection: { _id: 0, pharmacy: 0 },
-          })
+          .find(
+            manufacturer ? { manufacturer } : { distributor: distributor },
+            {
+              projection: { _id: 0, pharmacy: 0 },
+            }
+          )
           .toArray();
 
         res.status(201).json(batches);
@@ -95,7 +97,6 @@ export default async function handler(
 
       res.status(201).json('changed status successfully!');
     } catch (error) {
-      console.log('🚀 ~ file: batch.ts:97 ~ error', error);
       res.status(500).json('change status error!');
     }
 
