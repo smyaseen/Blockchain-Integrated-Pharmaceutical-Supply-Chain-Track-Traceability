@@ -13,7 +13,7 @@ export async function middleware(request: NextRequest) {
   let isLoggedIn = false;
   let role = '';
 
-  if (session && session.email) {
+  if (session && session.id) {
     isLoggedIn = true;
     role = session.role as string;
   }

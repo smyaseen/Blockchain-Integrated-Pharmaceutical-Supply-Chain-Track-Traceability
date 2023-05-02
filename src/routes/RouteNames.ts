@@ -1,6 +1,5 @@
 export const RouteNames = {
   root: '/',
-  login: '/login',
   signup: '/signup',
   products: '/manufacturer/products',
   manufacturerCreateBatch: '/manufacturer/create-batch',

@@ -1,51 +1,34 @@
-import NextAuth, { NextAuthOptions } from 'next-auth';
-import Credentials from 'next-auth/providers/credentials';
-import connectToDatabase from '../../../lib/db';
-import { verifyPassword } from '../../../utility/utils';
+import NextAuth from 'next-auth';
+import CredentialsProvider from 'next-auth/providers/credentials';
 
-export const authOptions: NextAuthOptions = {
-  session: {
-    strategy: 'jwt',
-  },
+export default NextAuth({
   providers: [
-    Credentials({
-      type: 'credentials',
+    CredentialsProvider({
+      name: 'Credentials',
       credentials: {
-        email: { type: 'text', placeholder: 'email' },
-        password: { label: 'Password', type: 'password' },
+        address: {
+          label: 'Address',
+          type: 'text',
+          placeholder: '0x0',
+        },
+        name: { type: 'text', placeholder: '' },
+        role: { type: 'text', placeholder: '' },
       },
       async authorize(credentials) {
-        const client = await connectToDatabase();
-        const usersCollection = client.db().collection('users');
-        const user = await usersCollection.findOne({
-          email: credentials?.email,
-        });
+        if (!credentials?.address || !credentials?.role || !credentials?.name)
+          return null;
 
-        if (!user) {
-          client.close();
-          throw new Error('No user found!');
-        }
-
-        const isValid = await verifyPassword(
-          credentials?.password || '',
-          user.password
-        );
-
-        if (!isValid) {
-          client.close();
-          throw new Error('Could not log you in!');
-        }
-
-        client.close();
         return {
-          id: user.id,
-          name: user.name,
-          email: user.email,
-          role: user.role,
+          id: credentials?.address,
+          name: credentials?.name,
+          role: credentials?.role,
         };
       },
     }),
   ],
+  session: {
+    strategy: 'jwt',
+  },
 
   callbacks: {
     async jwt({ token, user }) {
@@ -54,8 +37,5 @@ export const authOptions: NextAuthOptions = {
     session: async ({ session, user, token }) =>
       Promise.resolve({ ...session, ...user, ...token }),
   },
-
-  secret: process.env.NEXTAUTH_SECRET,
-};
-
-export default NextAuth(authOptions);
+  secret: process.env.NEXT_AUTH_SECRET,
+});

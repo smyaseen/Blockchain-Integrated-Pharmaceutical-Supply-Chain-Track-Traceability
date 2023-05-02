@@ -2,6 +2,7 @@
 import React from 'react';
 import { Box, MenuItem, MenuList, Popover, Typography } from '@mui/material';
 import { signOut, useSession } from 'next-auth/react';
+import { useDisconnect } from 'wagmi';
 
 const AccountPopover = (props: any) => {
   const { anchorEl, onClose, open, ...other } = props;
@@ -10,9 +11,12 @@ const AccountPopover = (props: any) => {
     data: { name, role },
   } = useSession() as any;
 
+  const { disconnect } = useDisconnect();
+
   const handleSignOut = async () => {
     onClose?.();
-    signOut();
+    await signOut();
+    disconnect();
   };
 
   return (

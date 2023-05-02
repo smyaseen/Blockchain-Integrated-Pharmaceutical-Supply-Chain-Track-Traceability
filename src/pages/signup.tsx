@@ -1,39 +1,27 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import React, { useState } from 'react';
-
+import React, { useEffect, useState } from 'react';
 import Router from 'next/router';
-import { useMutation } from 'react-query';
+import {
+  useAccount,
+  useConnect,
+  useContractWrite,
+  usePrepareContractWrite,
+} from 'wagmi';
+import { disconnect } from '@wagmi/core';
 import { signIn } from 'next-auth/react';
 import RouteNames from '../routes/RouteNames';
-import Roles from '../utility/roles';
+import Roles, { bytes32Roles, RoleTypes } from '../utility/roles';
 import AuthForm from '../components/auth/AuthForm';
 import { SELECT, TEXT_FIELD } from '../components/auth/AuthForm/FieldTypes';
 import {
-  emailRegex,
   fieldChangeHandler,
-  passwordRegex,
   validateOnSubmit,
 } from '../components/auth/AuthForm/AuthUtils';
 import { setFieldsDisabled } from '../utility/utils';
+import AccessControl from '../contracts/AccessControl.json';
 
-interface userData {
-  name: string;
-  email: string;
-  password: string;
-  role: string;
-}
-
-const signUpUser = async (signUpData: userData) => {
-  const response = await fetch('/api/auth/signup', {
-    method: 'POST',
-    body: JSON.stringify(signUpData),
-    headers: { 'Content-Type': 'application/json' },
-  });
-
-  const data = await response.json();
-
-  return { data, status: response.status };
-};
+const ACCESS_CONTROL_CONTRACT_ADDRESS =
+  '0x5FbDB2315678afecb367f032d93F642f64180aa3';
 
 const SignUp = () => {
   const [responseError, setResponseError] = useState('');
@@ -63,55 +51,7 @@ const SignUp = () => {
         return '';
       },
     },
-    {
-      type: TEXT_FIELD,
-      textFieldType: 'email',
-      name: 'email',
-      label: 'Email Address',
-      variant: 'outlined',
-      value: '',
-      errorMessage: '',
-      fullWidth: true,
-      margin: 'normal',
-      onChange: (
-        { target: { value } }: React.ChangeEvent<HTMLInputElement>,
-        index: number
-      ) => {
-        const updatedFields = fieldChangeHandler(fields, value, index) as any;
-        setFields(updatedFields);
-      },
-      getValidation: (value: string) => {
-        if (!emailRegex.test(value)) {
-          return 'Invalid email';
-        }
-        return '';
-      },
-    },
-    {
-      type: TEXT_FIELD,
-      textFieldType: 'password',
-      label: 'Password',
-      name: 'password',
-      variant: 'outlined',
-      value: '',
-      errorMessage: '',
-      fullWidth: true,
-      margin: 'normal',
 
-      onChange: (
-        { target: { value } }: React.ChangeEvent<HTMLInputElement>,
-        index: number
-      ) => {
-        const updatedFields = fieldChangeHandler(fields, value, index) as any;
-        setFields(updatedFields);
-      },
-      getValidation: (value) => {
-        if (passwordRegex.test(value) && value.length >= 8) {
-          return '';
-        }
-        return 'Password must be 8 characters long and contains at least one number and letter';
-      },
-    },
     {
       type: SELECT,
       label: 'Role',
@@ -132,23 +72,32 @@ const SignUp = () => {
     },
   ]);
 
-  const { mutateAsync, isLoading } = useMutation(signUpUser, {
-    onSuccess: async ({ data, status }) => {
-      if (status !== 201) {
-        setResponseError(data.message);
-      } else {
-        const result = await signIn('credentials', {
-          redirect: false,
-          email: fields[1].value,
-          password: fields[2].value,
-        });
+  const { connect, connectors } = useConnect();
+  const { address, isConnected } = useAccount();
 
-        if (result && !result.error) {
-          Router.push('');
-        }
-      }
-    },
+  const { config, isFetchedAfterMount, isFetching } = usePrepareContractWrite({
+    address: ACCESS_CONTROL_CONTRACT_ADDRESS,
+    abi: AccessControl,
+    functionName: 'grantRole',
+    args: [fields[0].value, bytes32Roles[fields[1].value as keyof RoleTypes]],
   });
+
+  const { write, error: writeError } = useContractWrite(config);
+
+  useEffect(() => {
+    if (address && isConnected && isFetchedAfterMount && write) {
+      write();
+
+      (async () => {
+        await signIn('credentials', {
+          address,
+          name: fields[0].value,
+          role: fields[1].value,
+        });
+        setFields(setFieldsDisabled(false, fields) as any);
+      })();
+    }
+  }, [address, isFetchedAfterMount]);
 
   const saveHandler = async () => {
     const { validateArray, isValid } = validateOnSubmit(fields, true) as any;
@@ -156,16 +105,27 @@ const SignUp = () => {
     if (isValid) {
       setFields(setFieldsDisabled(true, validateArray) as any);
 
-      await mutateAsync({
-        name: validateArray[0].value,
-        email: validateArray[1].value,
-        password: validateArray[2].value,
-        role: validateArray[3].value,
-      });
-
-      setFields(setFieldsDisabled(false, validateArray) as any);
+      try {
+        connect({ connector: connectors[0] });
+      } catch (error: any) {
+        setResponseError('Metamask Connect failed!');
+      }
     } else setFields(validateArray);
   };
+
+  useEffect(() => {
+    if (writeError) {
+      const regex = /reverted with reason string '([^']+)'/;
+      const match = writeError.message.match(regex);
+      const reasonString = match ? match[1] : '';
+
+      setResponseError(`Error Signing Up: ${reasonString || ''}`);
+
+      disconnect();
+    } else {
+      setResponseError('');
+    }
+  }, [writeError]);
 
   const buttons = [
     {
@@ -173,20 +133,14 @@ const SignUp = () => {
       color: 'primary' as const,
       fullWidth: true,
       size: 'large' as const,
+      disabled: !!(isConnected && isFetchedAfterMount && write),
       variant: 'contained' as const,
-      loading: isLoading,
+      loading: isFetching,
       onClick: saveHandler,
     },
   ];
 
   const footerButtons = [
-    {
-      text: 'Have an account?',
-      btnText: 'Sign In',
-      onClick: () => {
-        Router.push(RouteNames.login);
-      },
-    },
     {
       text: `Have a look at Dispatched Batches`,
       btnText: 'Browse Batches',

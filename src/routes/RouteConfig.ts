@@ -8,9 +8,8 @@ const routeConfig: { [key: string]: { [key: string]: string } } = {
   },
 
   auth: {
-    default: RouteNames.login,
+    default: RouteNames.root,
     [RouteNames.signup]: RouteNames.signup,
-    [RouteNames.login]: RouteNames.login,
   },
 
   [Roles.manufacturer]: {

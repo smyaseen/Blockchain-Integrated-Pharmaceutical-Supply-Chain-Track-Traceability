@@ -100,7 +100,6 @@ const rows = [
     },
   ]),
 ];
-console.log('🚀 ~ file: SoldTransactionsTable.tsx:107 ~ rows', rows);
 
 const SoldTransactionsTable = ({ batches }: { batches: any }) => (
   <TableContainer component={Paper}>

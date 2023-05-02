@@ -52,7 +52,6 @@ export default async function handler(
 
         res.status(201).json(batches);
       } else {
-        console.log('here');
         const batches = (
           await client
             .db()
@@ -68,7 +67,7 @@ export default async function handler(
           const pharmaData = batch.pharmacy.find(
             ({ title }) => title === pharmacy
           );
-          console.log(batch);
+
           const { pharmacy: phar, ...rest } = batch;
 
           rest.stockPharma = pharmaData.stock;
