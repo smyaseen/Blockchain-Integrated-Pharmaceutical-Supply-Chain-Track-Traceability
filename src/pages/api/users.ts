@@ -13,7 +13,10 @@ const getUsers = async (req: NextApiRequest, res: NextApiResponse) => {
 
     const users = (
       await client.db().collection('users').find({ role }).toArray()
-    ).map(({ name }) => name);
+    ).map(({ name, address }) => ({
+      name,
+      address,
+    }));
 
     res.status(201).json(users);
   } catch (error) {

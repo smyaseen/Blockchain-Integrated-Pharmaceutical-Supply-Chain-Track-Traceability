@@ -40,10 +40,12 @@ export const fetchProducts = async (
   }
 };
 
-export const fetchUsers = async (role: string): Promise<string[]> => {
+export const fetchUsers = async (
+  role: string
+): Promise<{ name: string; address: string }[]> => {
   try {
     const data = await fetch(`/api/users?role=${role}`);
-    const res: string[] = await data.json();
+    const res: { name: string; address: string }[] = await data.json();
 
     return res;
   } catch (error) {

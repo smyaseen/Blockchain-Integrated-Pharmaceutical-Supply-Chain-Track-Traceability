@@ -1,7 +1,6 @@
 // Next.js API route support: https://nextjs.org/docs/api-routes/introduction
 import type { NextApiRequest, NextApiResponse } from 'next';
 import connectToDatabase from '../../../lib/db';
-import { encryptPassword } from '../../../utility/utils';
 
 type Data = {
   message: string;
@@ -12,20 +11,18 @@ export default async function handler(
   res: NextApiResponse<Data>
 ) {
   if (req.method === 'POST') {
-    const { name, email, password, role } = req.body;
+    const { name, address, role } = req.body;
 
     try {
-      const hashedPassword = await encryptPassword(password);
-
       const clientDB = await connectToDatabase();
 
       let existingUser = await clientDB
         .db()
         .collection('users')
-        .findOne({ email });
+        .findOne({ address });
 
       if (existingUser) {
-        res.status(422).json({ message: 'User email already exists!' });
+        res.status(422).json({ message: 'User address already exists!' });
         clientDB.close();
       }
 
@@ -37,8 +34,7 @@ export default async function handler(
       } else {
         await clientDB.db().collection('users').insertOne({
           name,
-          email,
-          password: hashedPassword,
+          address,
           role,
         });
 

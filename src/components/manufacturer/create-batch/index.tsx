@@ -17,20 +17,29 @@ import { MobileDatePicker } from '@mui/x-date-pickers/MobileDatePicker';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { useSession } from 'next-auth/react';
 import Router from 'next/router';
+import { useContractWrite, usePrepareContractWrite } from 'wagmi';
+import { ethers } from 'ethers';
 import { Product } from '../_data_';
 import { fetchUsers, fetchProducts } from '../../../utility/utils';
+import AccessControl from '../../../contracts/AccessControl.json';
+import { bytes32Roles, RoleTypes } from '../../../utility/roles';
+
+const ACCESS_CONTROL_CONTRACT_ADDRESS =
+  '0x5FbDB2315678afecb367f032d93F642f64180aa3';
 
 const CreateBatch = () => {
   const [values, setValues] = useState({
     medicine: '',
     quantity: '',
-    distributor: '',
+    distributor: { name: '', address: '' },
     expiry: new Date().toLocaleDateString(),
     mfg: new Date().toLocaleDateString(),
   });
 
   const [products, setProducts] = useState<Product[]>([]);
-  const [distributors, setDistributors] = useState<string[]>([]);
+  const [distributors, setDistributors] = useState<
+    { name: string; address: string }[]
+  >([]);
   const [newBatchId, setNewBatchId] = useState('');
   const [saving, setSaving] = useState(false);
   const { data } = useSession() as any;
@@ -42,16 +51,39 @@ const CreateBatch = () => {
     })();
   }, []);
 
-  const handleChange = (name: string, value: string) => {
+  const handleChange = (
+    name: string,
+    value: string | { name: string; address: string }
+  ) => {
     setValues({
       ...values,
       [name]: value,
     });
   };
 
+  const { config, isFetchedAfterMount, isFetching } = usePrepareContractWrite({
+    address: ACCESS_CONTROL_CONTRACT_ADDRESS,
+    abi: AccessControl,
+    functionName: 'createBatch',
+    args: [
+      bytes32Roles['manufacturer' as keyof RoleTypes],
+      values.distributor.address || ethers.constants.AddressZero,
+    ],
+  });
+
+  const { data: result, write, isSuccess } = useContractWrite(config);
+
   const saveBatch = async () => {
     setSaving(true);
+
     const { medicine, quantity, distributor, expiry, mfg } = values;
+    const {
+      logs: {
+        1: {
+          topics: { 1: tokenId },
+        },
+      },
+    } = await result.wait();
 
     if (medicine && quantity && distributor && expiry && mfg) {
       const stream = await fetch(
@@ -76,7 +108,9 @@ const CreateBatch = () => {
             manufacturer: data.name,
             medicine,
             quantity,
-            distributor: distributor.replaceAll('-', ' '),
+            distributor: distributor.name.replaceAll('-', ' '),
+            // eslint-disable-next-line radix
+            tokenId: parseInt(tokenId as string),
             expiry,
             mfg,
             status: 'manufactured',
@@ -93,6 +127,15 @@ const CreateBatch = () => {
     }
     setSaving(false);
   };
+
+  useEffect(() => {
+    (async () => {
+      if (isSuccess && (await result)) {
+        await saveBatch();
+      }
+    })();
+  }, [isSuccess]);
+
   return (
     <form autoComplete="off" noValidate>
       <Card>
@@ -128,9 +171,12 @@ const CreateBatch = () => {
                 fullWidth
                 label="Select Distributor"
                 name="distributor"
-                onChange={({ target: { name, value } }) =>
-                  handleChange(name, value)
-                }
+                onChange={({ target: { name, value } }) => {
+                  const dist = distributors.find(
+                    (val) => val.name === value.split('-').join(' ')
+                  );
+                  if (dist) handleChange(name, dist);
+                }}
                 required
                 select
                 SelectProps={{ native: true }}
@@ -138,10 +184,10 @@ const CreateBatch = () => {
               >
                 {distributors.map((value) => (
                   <option
-                    key={value.replaceAll(' ', '-')}
-                    value={value.replaceAll(' ', '-')}
+                    key={value.name.replaceAll(' ', '-')}
+                    value={value.name.replaceAll(' ', '-')}
                   >
-                    {value}
+                    {value.name}
                   </option>
                 ))}
               </TextField>
@@ -215,6 +261,7 @@ const CreateBatch = () => {
           </Grid>
         </CardContent>
         <Divider />
+
         <Box
           sx={{
             display: 'flex',
@@ -225,8 +272,16 @@ const CreateBatch = () => {
           <Button
             color="primary"
             variant="contained"
-            disabled={!products.length || !distributors.length || saving}
-            onClick={saveBatch}
+            disabled={
+              isFetching ||
+              !values.distributor.address ||
+              !write ||
+              !isFetchedAfterMount ||
+              !products.length ||
+              !distributors.length ||
+              saving
+            }
+            onClick={write}
           >
             Create Batch
           </Button>

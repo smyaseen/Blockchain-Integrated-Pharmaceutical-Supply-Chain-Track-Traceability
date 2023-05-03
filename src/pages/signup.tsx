@@ -8,6 +8,7 @@ import {
   usePrepareContractWrite,
 } from 'wagmi';
 import { disconnect } from '@wagmi/core';
+import { useMutation } from 'react-query';
 import { signIn } from 'next-auth/react';
 import RouteNames from '../routes/RouteNames';
 import Roles, { bytes32Roles, RoleTypes } from '../utility/roles';
@@ -19,6 +20,24 @@ import {
 } from '../components/auth/AuthForm/AuthUtils';
 import { setFieldsDisabled } from '../utility/utils';
 import AccessControl from '../contracts/AccessControl.json';
+
+interface userData {
+  name: string;
+  address: string;
+  role: string;
+}
+
+const signUpUser = async (signUpData: userData) => {
+  const response = await fetch('/api/auth/signup', {
+    method: 'POST',
+    body: JSON.stringify(signUpData),
+    headers: { 'Content-Type': 'application/json' },
+  });
+
+  const data = await response.json();
+
+  return { data, status: response.status };
+};
 
 const ACCESS_CONTROL_CONTRACT_ADDRESS =
   '0x5FbDB2315678afecb367f032d93F642f64180aa3';
@@ -75,6 +94,26 @@ const SignUp = () => {
   const { connect, connectors } = useConnect();
   const { address, isConnected } = useAccount();
 
+  const { mutateAsync, isLoading } = useMutation(signUpUser, {
+    onSuccess: async ({ data, status }) => {
+      if (status !== 201) {
+        setResponseError(data.message);
+        disconnect();
+      } else {
+        const result = await signIn('credentials', {
+          address,
+          name: fields[0].value,
+          role: fields[1].value,
+        });
+        setFields(setFieldsDisabled(false, fields) as any);
+
+        if (result && !result.error) {
+          Router.push('');
+        }
+      }
+    },
+  });
+
   const { config, isFetchedAfterMount, isFetching } = usePrepareContractWrite({
     address: ACCESS_CONTROL_CONTRACT_ADDRESS,
     abi: AccessControl,
@@ -82,22 +121,25 @@ const SignUp = () => {
     args: [fields[0].value, bytes32Roles[fields[1].value as keyof RoleTypes]],
   });
 
-  const { write, error: writeError } = useContractWrite(config);
+  const { write, error: writeError, isSuccess } = useContractWrite(config);
 
   useEffect(() => {
     if (address && isConnected && isFetchedAfterMount && write) {
       write();
-
-      (async () => {
-        await signIn('credentials', {
-          address,
-          name: fields[0].value,
-          role: fields[1].value,
-        });
-        setFields(setFieldsDisabled(false, fields) as any);
-      })();
     }
   }, [address, isFetchedAfterMount]);
+
+  useEffect(() => {
+    if (isSuccess) {
+      (async () => {
+        await mutateAsync({
+          name: fields[0].value,
+          role: fields[1].value,
+          address: address as string,
+        });
+      })();
+    }
+  }, [isSuccess]);
 
   const saveHandler = async () => {
     const { validateArray, isValid } = validateOnSubmit(fields, true) as any;
@@ -135,7 +177,7 @@ const SignUp = () => {
       size: 'large' as const,
       disabled: !!(isConnected && isFetchedAfterMount && write),
       variant: 'contained' as const,
-      loading: isFetching,
+      loading: isFetching || isLoading,
       onClick: saveHandler,
     },
   ];
