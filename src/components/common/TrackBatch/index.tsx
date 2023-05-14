@@ -15,7 +15,7 @@ const TrackBatch = ({ setBatchId }: { setBatchId: any }) => {
         display: 'flex',
         flexDirection: 'row',
         alignItems: 'center',
-        justifyContent: 'center',
+        justifyContent: 'left',
       }}
     >
       <Paper
@@ -23,12 +23,12 @@ const TrackBatch = ({ setBatchId }: { setBatchId: any }) => {
         sx={{
           p: '2px 4px',
           display: 'flex',
-          width: 400,
+          width: 600,
         }}
       >
         <InputBase
           sx={{ ml: 1, flex: 1 }}
-          placeholder="Input Batch Id"
+          placeholder="Input Batch Id -> Manufacturer-Medicine-Lot#-DDMMYYYY"
           value={id}
           onKeyDown={(e) => {
             if (e.key === 'Enter') {

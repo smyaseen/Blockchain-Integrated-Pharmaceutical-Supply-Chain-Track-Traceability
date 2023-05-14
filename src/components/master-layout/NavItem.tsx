@@ -1,12 +1,11 @@
 import React from 'react';
-import { useRouter } from 'next/router';
+import router from 'next/router';
 
 import { Box, Button, ListItem } from '@mui/material';
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const NavItem = (props: any) => {
   const { href, icon, title, ...others } = props;
-  const router = useRouter();
   const active = href ? router.pathname === href : false;
 
   return (

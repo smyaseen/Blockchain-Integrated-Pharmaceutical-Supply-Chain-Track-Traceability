@@ -143,7 +143,6 @@ const SignUp = () => {
 
   const saveHandler = async () => {
     const { validateArray, isValid } = validateOnSubmit(fields, true) as any;
-
     if (isValid) {
       setFields(setFieldsDisabled(true, validateArray) as any);
 

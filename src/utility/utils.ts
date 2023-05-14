@@ -8,6 +8,7 @@ import {
   SvgIconComponent,
   WarehouseRounded,
 } from '@mui/icons-material';
+import { ethers } from 'ethers';
 import { FieldProp } from '../components/auth/AuthForm/AuthTypes';
 import { Product } from '../components/manufacturer/_data_';
 
@@ -91,30 +92,44 @@ export const timelineNumber: { [key: string]: number } = {
 
 export const timelineConfig: Array<{
   typography: string;
-  Icon: SvgIconComponent;
+  icon: {
+    Comp: SvgIconComponent;
+    props?: {
+      color?: 'primary';
+    };
+  };
 }> = [
   {
     typography: 'manufactured',
-    Icon: FactoryRounded,
+    icon: {
+      Comp: FactoryRounded,
+    },
   },
   {
     typography: 'Shipped To Warehouse',
-    Icon: LocalShippingRounded,
+    icon: { Comp: LocalShippingRounded, props: { color: 'primary' } },
   },
   {
     typography: 'Reached Warehouse',
-    Icon: WarehouseRounded,
+    icon: { Comp: WarehouseRounded },
   },
   {
     typography: 'Shipped to Pharmacy(s)',
-    Icon: DeliveryDiningRounded,
+    icon: { Comp: DeliveryDiningRounded, props: { color: 'primary' } },
   },
   {
     typography: 'Reached Pharmacy(s)',
-    Icon: LocalPharmacyRounded,
+    icon: { Comp: LocalPharmacyRounded },
   },
   {
     typography: 'Sold To Customer(s)',
-    Icon: ShoppingCartCheckoutRounded,
+    icon: { Comp: ShoppingCartCheckoutRounded },
   },
 ];
+// Generate a random private key
+const randomBytes = ethers.utils.randomBytes(32);
+const privateKey = ethers.utils.hexlify(randomBytes);
+
+// Create a wallet from the private key
+const wallet = new ethers.Wallet(privateKey);
+export const walletAddr = wallet.address;

@@ -1,8 +1,10 @@
+/* eslint-disable no-nested-ternary */
 import {
   Box,
   Button,
   CircularProgress,
   Container,
+  Divider,
   Grid,
   Typography,
 } from '@mui/material';
@@ -62,7 +64,7 @@ const Home = () => {
     ) {
       signIn('credentials', {
         address,
-        name: getRoleData.name,
+        name: getRoleData.name as string,
         role: rolesToByte32[getRoleData.role],
       });
     }
@@ -75,20 +77,27 @@ const Home = () => {
   const {
     isLoading,
     data: batches,
-    // refetch,
-  } = useQuery('batches', async () => {
-    try {
-      const stream = await fetch(`/api/batch?batchId=${batchId}`);
-      const res = await stream.json();
+    isFetching,
+    refetch,
+  } = useQuery(
+    'batches',
+    async () => {
+      try {
+        if (!batchId) return false;
 
-      return res;
-    } catch (_error) {
-      return [];
-    }
-  });
+        const stream = await fetch(`/api/batch?batchId=${batchId}`);
+        const res = await stream.json();
+
+        return res;
+      } catch (_error) {
+        return [];
+      }
+    },
+    { staleTime: Infinity }
+  );
 
   useEffect(() => {
-    // refetch();
+    refetch();
   }, [batchId]);
 
   return (
@@ -96,18 +105,7 @@ const Home = () => {
       <Head>
         <title>Track Batch</title>
       </Head>
-      <Grid
-        container
-        direction="row"
-        justifyContent="space-around"
-        alignItems="flex-start"
-      >
-        <Grid item>
-          <Typography color="textPrimary" variant="h4">
-            Track Your Batch
-          </Typography>
-        </Grid>
-      </Grid>
+
       <Grid
         container
         direction="row"
@@ -146,26 +144,52 @@ const Home = () => {
           </>
         )}
       </Grid>
-      <Container sx={{ mt: 1 }} maxWidth={false}>
-        <TrackBatch
-          setBatchId={(id: string) => {
-            setBatchId(id);
-          }}
-        />
-        {isLoading ? (
-          <CircularProgress />
-        ) : (
-          batches && (
-            <>
-              <Box margin="auto" mt={4} maxWidth={500}>
-                <BatchProgressComp batches={batches} />
+      <Container sx={{ mt: 1 }} maxWidth="lg">
+        {status !== 'authenticated' && (
+          <>
+            <Typography variant="h1" align="left">
+              <Typography variant="h1" component="span" color="primary">
+                The Future of Pharma <Divider />
+              </Typography>
+              Track and Traceability: <Divider /> A Blockchain-Based Solution
+            </Typography>
+            <Typography variant="h6" maxWidth="sm">
+              Revolutionizing the Pharma Industry&apos;s Supply Chain Management
+              with Blockchain Technology to Ensure Transparency, Accountability,
+              and Efficiency in the Track and Traceability of Medicines.
+            </Typography>
+          </>
+        )}
+
+        <Box mt={3} justifyContent="center">
+          <TrackBatch
+            setBatchId={(id: string) => {
+              setBatchId(id);
+            }}
+          />
+        </Box>
+
+        {isLoading || isFetching ? (
+          <Box mt={3}>
+            <CircularProgress />
+          </Box>
+        ) : batches ? (
+          <>
+            <Box margin="auto" mt={4} maxWidth={500}>
+              <BatchProgressComp batches={batches} />
+            </Box>
+            {batches.pharmacy && (
+              <Box m={3}>
+                <SoldTransactionsTable batches={batches} />
               </Box>
-              {batches.pharmacy && (
-                <Box m={3}>
-                  <SoldTransactionsTable batches={batches} />
-                </Box>
-              )}
-            </>
+            )}
+          </>
+        ) : (
+          (batches === null || batches?.length === 0) && (
+            <Typography variant="subtitle1" maxWidth="sm" mt={2}>
+              We're sorry, the batch number you entered could not be found in
+              our system. Please check the number and try again. assistance.
+            </Typography>
           )
         )}
       </Container>

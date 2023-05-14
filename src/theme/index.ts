@@ -98,6 +98,18 @@ const theme = createTheme({
           height: '100%',
           width: '100%',
         },
+        '#nprogress': {
+          pointerEvents: 'none',
+        },
+        '#nprogress .bar': {
+          backgroundColor: '#5048E5',
+          height: 3,
+          left: 0,
+          position: 'fixed',
+          top: 0,
+          width: '100%',
+          zIndex: 2000,
+        },
       },
     },
     MuiOutlinedInput: {

@@ -13,14 +13,21 @@ import Typography from '@mui/material/Typography';
 
 import { Button, Grid } from '@mui/material';
 import QRCode from 'react-qr-code';
-import { timelineConfig, timelineNumber } from '../../../utility/utils';
+import {
+  timelineConfig,
+  timelineNumber,
+  walletAddr,
+} from '../../../utility/utils';
 
 const getComponent = (batches: any) => {
   const { status } = batches;
   const comp = [];
 
   for (let i = 0; i <= timelineNumber[status]; i++) {
-    const { typography, Icon } = timelineConfig[i];
+    const {
+      typography,
+      icon: { Comp, props },
+    } = timelineConfig[i];
 
     comp.push(
       <TimelineItem key={typography}>
@@ -30,14 +37,21 @@ const getComponent = (batches: any) => {
           variant="body2"
           color="text.secondary"
         >
-          <Button variant="contained" fullWidth>
+          <Button
+            variant="contained"
+            fullWidth
+            // eslint-disable-next-line no-loop-func
+            onClick={() => {
+              alert(walletAddr);
+            }}
+          >
             View Transaction
           </Button>
         </TimelineOppositeContent>
         <TimelineSeparator>
           <TimelineConnector />
-          <TimelineDot>
-            <Icon fontSize="large" />
+          <TimelineDot color={props?.color || 'inherit'}>
+            <Comp fontSize="large" />
           </TimelineDot>
           <TimelineConnector />
         </TimelineSeparator>
@@ -63,9 +77,13 @@ const TimeLine = ({ batches }: { batches: any }) => (
       justifyContent="space-evenly"
       alignItems="flex-start"
     >
-      <Grid item>Manufactured: {batches.quantity}</Grid>
-      <Grid item>Sold: {batches.sold}</Grid>
-      <Grid item>Remaining: {batches.quantity - batches.sold}</Grid>
+      {batches && (
+        <>
+          <Grid item>Manufactured: {batches.quantity}</Grid>
+          <Grid item>Sold: {batches.sold}</Grid>
+          <Grid item>Remaining: {batches.quantity - batches.sold}</Grid>
+        </>
+      )}
     </Grid>
     <Timeline
       position="alternate"

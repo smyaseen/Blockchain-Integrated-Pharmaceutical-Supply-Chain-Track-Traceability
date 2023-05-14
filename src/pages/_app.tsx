@@ -25,6 +25,8 @@ import '../styles/globals.css';
 import theme from '../theme';
 // import Layout from '../routes/Layout';
 
+import useNProgress from '../components/nprogress/use-nprogress';
+
 interface MyAppProps extends AppProps {
   // eslint-disable-next-line react/require-default-props
   emotionCache?: EmotionCache;
@@ -77,6 +79,8 @@ const FadeMUI = ({ children }: { children: any }) =>
 const MyApp: React.FunctionComponent<MyAppProps> = (props) => {
   const { Component, emotionCache = clientSideEmotionCache, pageProps } = props;
   const [queryClient] = React.useState(() => new QueryClient());
+
+  useNProgress();
 
   return (
     <CacheProvider value={emotionCache}>
