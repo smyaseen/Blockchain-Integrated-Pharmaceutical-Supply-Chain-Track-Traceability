@@ -100,7 +100,7 @@ export const timelineConfig: Array<{
   };
 }> = [
   {
-    typography: 'manufactured',
+    typography: 'Manufactured',
     icon: {
       Comp: FactoryRounded,
     },

@@ -1,3 +1,5 @@
+/* eslint-disable no-unused-expressions */
+/* eslint-disable no-unsafe-optional-chaining */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import React, { useEffect, useState } from 'react';
 import {
@@ -6,6 +8,7 @@ import {
   Card,
   CardContent,
   CardHeader,
+  CircularProgress,
   Divider,
   Grid,
   TextField,
@@ -19,7 +22,7 @@ import { useSession } from 'next-auth/react';
 import Router from 'next/router';
 import { useContractWrite, usePrepareContractWrite } from 'wagmi';
 import { ethers } from 'ethers';
-import { Product } from '../_data_';
+import { useQuery } from 'react-query';
 import { fetchUsers, fetchProducts } from '../../../utility/utils';
 import AccessControl from '../../../contracts/AccessControl.json';
 import { bytes32Roles, RoleTypes } from '../../../utility/roles';
@@ -32,24 +35,45 @@ const CreateBatch = () => {
     medicine: '',
     quantity: '',
     distributor: { name: '', address: '' },
-    expiry: new Date().toLocaleDateString(),
+    expiry: new Date(
+      new Date().setFullYear(new Date().getFullYear() + 1)
+    ).toLocaleDateString(),
     mfg: new Date().toLocaleDateString(),
   });
 
-  const [products, setProducts] = useState<Product[]>([]);
-  const [distributors, setDistributors] = useState<
-    { name: string; address: string }[]
-  >([]);
   const [newBatchId, setNewBatchId] = useState('');
   const [saving, setSaving] = useState(false);
   const { data } = useSession() as any;
 
-  useEffect(() => {
-    (async () => {
-      if (data.name) setProducts(await fetchProducts(data.name));
-      setDistributors(await fetchUsers('distributor'));
-    })();
-  }, []);
+  const { data: products, isFetching: fetchingProducts } = useQuery(
+    'products',
+    async () => fetchProducts(data.name),
+    {
+      staleTime: Infinity,
+      onSuccess(prods: [{ name: string }]) {
+        prods.length &&
+          setValues({
+            ...values,
+            medicine: prods[0].name,
+          });
+      },
+    }
+  );
+
+  const { data: distributors, isFetching: fetchingDistributors } = useQuery(
+    'distributors',
+    async () => fetchUsers('distributor'),
+    {
+      staleTime: Infinity,
+      onSuccess(dist: [{ name: string; address: string }]) {
+        dist.length &&
+          setValues({
+            ...values,
+            distributor: dist[0],
+          });
+      },
+    }
+  );
 
   const handleChange = (
     name: string,
@@ -83,7 +107,7 @@ const CreateBatch = () => {
           topics: { 1: tokenId },
         },
       },
-    } = await result.wait();
+    } = await result?.wait?.();
 
     if (medicine && quantity && distributor && expiry && mfg) {
       const stream = await fetch(
@@ -144,148 +168,177 @@ const CreateBatch = () => {
           title="Create Batch"
         />
         <Divider />
-        <CardContent>
-          <Grid container spacing={3}>
-            <Grid item md={6} xs={12}>
-              <TextField
-                fullWidth
-                label="Select Medicine"
-                name="medicine"
-                onChange={({ target: { name, value } }) =>
-                  handleChange(name, value)
-                }
-                required
-                select
-                SelectProps={{ native: true }}
-                variant="outlined"
-              >
-                {products.map((option) => (
-                  <option key={option.name} value={option.name}>
-                    {option.name}
-                  </option>
-                ))}
-              </TextField>
-            </Grid>
-            <Grid item md={6} xs={12}>
-              <TextField
-                fullWidth
-                label="Select Distributor"
-                name="distributor"
-                onChange={({ target: { name, value } }) => {
-                  const dist = distributors.find(
-                    (val) => val.name === value.split('-').join(' ')
-                  );
-                  if (dist) handleChange(name, dist);
-                }}
-                required
-                select
-                SelectProps={{ native: true }}
-                variant="outlined"
-              >
-                {distributors.map((value) => (
-                  <option
-                    key={value.name.replaceAll(' ', '-')}
-                    value={value.name.replaceAll(' ', '-')}
-                  >
-                    {value.name}
-                  </option>
-                ))}
-              </TextField>
-            </Grid>
-            <Grid item md={6} xs={12}>
-              <TextField
-                fullWidth
-                type="number"
-                label="Quantity"
-                name="quantity"
-                onChange={({ target: { name, value } }) =>
-                  handleChange(name, value)
-                }
-                required
-                variant="outlined"
-              />
-            </Grid>
-            <Grid item md={6} xs={12}>
-              <LocalizationProvider dateAdapter={AdapterDayjs}>
-                <MobileDatePicker
-                  label="Expiry"
-                  inputFormat="DD/MM/YYYY"
-                  onChange={(value) =>
-                    value &&
-                    handleChange(
-                      'expiry',
-                      new Date(value.$d).toLocaleDateString()
-                    )
-                  }
-                  renderInput={(params) => <TextField {...params} />}
-                  value={values.expiry}
-                />
-              </LocalizationProvider>
-            </Grid>
-            <Grid item md={6} xs={12}>
-              <LocalizationProvider dateAdapter={AdapterDayjs}>
-                <MobileDatePicker
-                  label="Manufacture Date"
-                  inputFormat="DD/MM/YYYY"
-                  onChange={(value) =>
-                    value &&
-                    handleChange('mfg', new Date(value.$d).toLocaleDateString())
-                  }
-                  renderInput={(params) => <TextField {...params} />}
-                  value={values.mfg}
-                />
-              </LocalizationProvider>
-            </Grid>
-
-            <Grid item md={6} xs={12}>
-              {newBatchId && (
-                <>
-                  <QRCode
-                    size={50}
-                    value={`http://127.0.0.1:8080?batchId=${newBatchId}`}
-                  />
-                  <br />
-                  <Typography>Batch Id generated: </Typography>
-                  <Button
-                    color="primary"
-                    variant="text"
-                    onClick={() =>
-                      Router.push(`http://127.0.0.1:8080?batchId=${newBatchId}`)
-                    }
-                  >
-                    {`http://127.0.0.1:8080?batchId=${newBatchId}`}
-                  </Button>
-                </>
-              )}
-            </Grid>
-          </Grid>
-        </CardContent>
-        <Divider />
-
-        <Box
-          sx={{
-            display: 'flex',
-            justifyContent: 'flex-end',
-            p: 2,
-          }}
-        >
-          <Button
-            color="primary"
-            variant="contained"
-            disabled={
-              isFetching ||
-              !values.distributor.address ||
-              !write ||
-              !isFetchedAfterMount ||
-              !products.length ||
-              !distributors.length ||
-              saving
-            }
-            onClick={write}
+        {fetchingDistributors || fetchingProducts ? (
+          <Box
+            sx={{
+              display: 'flex',
+            }}
+            justifyContent="center"
+            mt={2}
           >
-            Create Batch
-          </Button>
-        </Box>
+            <CircularProgress />
+          </Box>
+        ) : (
+          <>
+            <CardContent>
+              <Grid container spacing={3}>
+                <Grid item md={6} xs={12}>
+                  <TextField
+                    fullWidth
+                    label="Select Medicine"
+                    name="medicine"
+                    onChange={({ target: { name, value } }) =>
+                      handleChange(name, value)
+                    }
+                    required
+                    select
+                    SelectProps={{ native: true }}
+                    variant="outlined"
+                  >
+                    {products?.map((option) => (
+                      <option key={option.name} value={option.name}>
+                        {option.name}
+                      </option>
+                    ))}
+                  </TextField>
+                </Grid>
+                <Grid item md={6} xs={12}>
+                  <TextField
+                    fullWidth
+                    label="Select Distributor"
+                    name="distributor"
+                    onChange={({ target: { name, value } }) => {
+                      const dist = distributors?.find(
+                        (val) => val.name === value.split('-').join(' ')
+                      );
+                      if (dist) handleChange(name, dist);
+                    }}
+                    required
+                    select
+                    SelectProps={{ native: true }}
+                    variant="outlined"
+                  >
+                    {distributors?.map((value) => (
+                      <option
+                        key={value.name.replaceAll(' ', '-')}
+                        value={value.name.replaceAll(' ', '-')}
+                      >
+                        {value.name}
+                      </option>
+                    ))}
+                  </TextField>
+                </Grid>
+                <Grid item md={6} xs={12}>
+                  <TextField
+                    fullWidth
+                    type="number"
+                    label="Quantity"
+                    name="quantity"
+                    onChange={({ target: { name, value } }) =>
+                      handleChange(name, value)
+                    }
+                    required
+                    variant="outlined"
+                  />
+                </Grid>
+                <Grid item md={6} xs={12}>
+                  <LocalizationProvider dateAdapter={AdapterDayjs}>
+                    <MobileDatePicker
+                      label="Expiry"
+                      inputFormat="DD/MM/YYYY"
+                      disablePast
+                      minDate={
+                        new Date(
+                          new Date().setFullYear(new Date().getFullYear() + 1)
+                        )
+                      }
+                      onChange={(value) =>
+                        value &&
+                        handleChange(
+                          'expiry',
+                          new Date(value.$d).toLocaleDateString()
+                        )
+                      }
+                      renderInput={(params) => <TextField {...params} />}
+                      value={values.expiry}
+                    />
+                  </LocalizationProvider>
+                </Grid>
+                <Grid item md={6} xs={12}>
+                  <LocalizationProvider dateAdapter={AdapterDayjs}>
+                    <MobileDatePicker
+                      label="Manufacture Date"
+                      inputFormat="DD/MM/YYYY"
+                      disablePast
+                      onChange={(value) =>
+                        value &&
+                        handleChange(
+                          'mfg',
+                          new Date(value.$d).toLocaleDateString()
+                        )
+                      }
+                      renderInput={(params) => <TextField {...params} />}
+                      value={values.mfg}
+                    />
+                  </LocalizationProvider>
+                </Grid>
+
+                <Grid item md={6} xs={12}>
+                  {newBatchId && (
+                    <>
+                      <QRCode
+                        size={50}
+                        value={`http://127.0.0.1:8080?batchId=${newBatchId}`}
+                      />
+                      <br />
+                      <Typography>Batch Id generated: </Typography>
+                      <Button
+                        color="primary"
+                        variant="text"
+                        onClick={() =>
+                          Router.push(
+                            `http://127.0.0.1:8080?batchId=${newBatchId}`
+                          )
+                        }
+                      >
+                        {`http://127.0.0.1:8080?batchId=${newBatchId}`}
+                      </Button>
+                    </>
+                  )}
+                </Grid>
+              </Grid>
+            </CardContent>
+            <Divider />
+
+            <Box
+              sx={{
+                display: 'flex',
+                justifyContent: 'flex-end',
+                p: 2,
+              }}
+            >
+              <Button
+                color="primary"
+                variant="contained"
+                disabled={
+                  isFetching ||
+                  !values.distributor.address ||
+                  !write ||
+                  !values.quantity ||
+                  !isFetchedAfterMount ||
+                  !products?.length ||
+                  !distributors?.length ||
+                  fetchingProducts ||
+                  fetchingDistributors ||
+                  saving
+                }
+                onClick={write}
+              >
+                Create Batch
+              </Button>
+            </Box>
+          </>
+        )}
       </Card>
     </form>
   );

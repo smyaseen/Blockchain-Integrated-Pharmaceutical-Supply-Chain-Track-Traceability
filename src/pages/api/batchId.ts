@@ -49,7 +49,9 @@ export default async function handler(
           projection: {
             batchId: 1,
             _id: 0,
-            ...(distributor ? { quantity: 1, sold: 1 } : { pharmacy: 1 }),
+            ...(distributor
+              ? { quantity: 1, sold: 1, tokenId: 1 }
+              : { pharmacy: 1 }),
           },
         })
         .toArray();

@@ -11,10 +11,11 @@ import {
 import React, { useEffect, useState } from 'react';
 import Router from 'next/router';
 import Head from 'next/head';
-import { Wallet } from '@mui/icons-material';
-import { useConnect, useAccount, useContractRead } from 'wagmi';
+import { AppRegistration, Wallet } from '@mui/icons-material';
+import { useConnect, useAccount } from 'wagmi';
 import { useQuery } from 'react-query';
 import { signIn, useSession } from 'next-auth/react';
+import { ethers } from 'ethers';
 import RouteNames from '../routes/RouteNames';
 import TrackBatch from '../components/common/TrackBatch';
 import BatchProgressComp from '../components/manufacturer/BatchProgress';
@@ -38,7 +39,17 @@ const Home = () => {
   );
 
   const { connect, connectors, error } = useConnect();
+
   const { address, isConnected } = useAccount();
+
+  const provider = new ethers.providers.Web3Provider(window.ethereum);
+  const connectedProvider = provider.getSigner(address).provider;
+
+  const contract = new ethers.Contract(
+    ACCESS_CONTROL_CONTRACT_ADDRESS,
+    AccessControl,
+    connectedProvider
+  );
 
   const handleLogin = async () => {
     try {
@@ -48,27 +59,20 @@ const Home = () => {
     }
   };
 
-  const { isFetchedAfterMount: getRoleFetched, data: getRoleData } =
-    useContractRead({
-      address: ACCESS_CONTROL_CONTRACT_ADDRESS,
-      abi: AccessControl,
-      functionName: 'getRole',
-    });
-
   useEffect(() => {
-    if (
-      address &&
-      getRoleFetched &&
-      isConnected &&
-      status !== 'authenticated'
-    ) {
-      signIn('credentials', {
-        address,
-        name: getRoleData.name as string,
-        role: rolesToByte32[getRoleData.role],
-      });
+    if (address && isConnected && status !== 'authenticated') {
+      contract
+        .connect(provider.getSigner(address))
+        .getRole()
+        .then(({ name, role }: { name: string; role: string }) => {
+          signIn('credentials', {
+            address,
+            name,
+            role: rolesToByte32[role],
+          });
+        });
     }
-  }, [address, getRoleFetched]);
+  }, [address]);
 
   useEffect(() => {
     setIsMetamaskAvailable(window.ethereum !== undefined);
@@ -125,7 +129,7 @@ const Home = () => {
                 </Typography>
 
                 <Button
-                  disabled={!getRoleFetched}
+                  // disabled={!getRoleFetched}
                   onClick={handleLogin}
                   endIcon={<Wallet />}
                 >
@@ -137,7 +141,10 @@ const Home = () => {
               <Typography color="textSecondary" gutterBottom variant="body2">
                 Don&apos;t have an account?
               </Typography>
-              <Button onClick={() => Router.push(RouteNames.signup)}>
+              <Button
+                endIcon={<AppRegistration />}
+                onClick={() => Router.push(RouteNames.signup)}
+              >
                 Sign Up
               </Button>
             </Grid>
@@ -187,8 +194,8 @@ const Home = () => {
         ) : (
           (batches === null || batches?.length === 0) && (
             <Typography variant="subtitle1" maxWidth="sm" mt={2}>
-              We're sorry, the batch number you entered could not be found in
-              our system. Please check the number and try again. assistance.
+              We&apos;re sorry, the batch number you entered could not be found
+              in our system. Please check the number and try again.
             </Typography>
           )
         )}
