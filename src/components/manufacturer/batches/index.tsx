@@ -1,3 +1,4 @@
+/* eslint-disable no-unsafe-optional-chaining */
 /* eslint-disable react/jsx-no-useless-fragment */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import React from 'react';
@@ -9,9 +10,7 @@ import { Batch } from '../_data_';
 import CommonTable, { transformObject } from '../../common/CommonTable';
 import AccessControl from '../../../contracts/AccessControl.json';
 import { bytes32Roles, RoleTypes } from '../../../utility/roles';
-
-const ACCESS_CONTROL_CONTRACT_ADDRESS =
-  '0x5FbDB2315678afecb367f032d93F642f64180aa3';
+import { ACCESS_CONTROL_CONTRACT_ADDRESS } from '../../../utility/utils';
 
 // eslint-disable-next-line react/prop-types
 const BatchListResults = ({
@@ -36,11 +35,11 @@ const BatchListResults = ({
     args,
   });
 
-  const { write } = useContractWrite(config);
+  const { writeAsync } = useContractWrite(config);
 
   return (
     <>
-      {!isFetched || !isFetchedAfterMount || !write ? (
+      {!isFetched || !isFetchedAfterMount || !writeAsync ? (
         <CircularProgress />
       ) : (
         <CommonTable
@@ -74,12 +73,13 @@ const BatchListResults = ({
                 if (batches[index].status.toLowerCase() === 'manufactured') {
                   args[0] = batches[index].tokenId;
 
-                  write?.();
+                  const { hash } = await writeAsync?.();
 
                   await fetch('/api/batch', {
                     method: 'PUT',
                     body: JSON.stringify({
                       status: 'Shipped To Distributor',
+                      transactions: [...batches[index].transactions, hash],
                       batchId: batches[index].batchId,
                     }),
                     headers: { 'Content-Type': 'application/json' },

@@ -1,3 +1,4 @@
+/* eslint-disable no-unsafe-optional-chaining */
 /* eslint-disable no-unused-expressions */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import React, { useState } from 'react';
@@ -17,57 +18,58 @@ import {
 import { useSession } from 'next-auth/react';
 
 import { useQuery } from 'react-query';
-import { usePrepareContractWrite } from 'wagmi';
+import { useContractWrite, usePrepareContractWrite } from 'wagmi';
+import { ethers } from 'ethers';
 import {
   fetchUsers,
   fetchBatchIdsForDistributor,
+  ACCESS_CONTROL_CONTRACT_ADDRESS,
 } from '../../../utility/utils';
 import AccessControl from '../../../contracts/AccessControl.json';
+import { bytes32Roles, RoleTypes } from '../../../utility/roles';
 
 const initialValue = {
   batchId: '',
   remaining: 0,
   quantity: 0,
-  pharmacy: '',
+  pharmacy: { name: '', address: ethers.constants.AddressZero },
   tokenId: 0,
 };
-
-const ACCESS_CONTROL_CONTRACT_ADDRESS =
-  '0x5FbDB2315678afecb367f032d93F642f64180aa3';
 
 const CreateBatch = () => {
   const [values, setValues] = useState<{
     batchId: string;
     remaining: number;
     quantity: number;
-    pharmacy: string;
+    pharmacy: { name: string; address: string };
     tokenId: number;
   }>(initialValue);
 
   const [saving, setSaving] = useState(false);
   const { data } = useSession() as any;
 
-  const { data: batchIds, isFetching: fetchingBatchIds } = useQuery(
-    'batchIds',
-    async () => fetchBatchIdsForDistributor(data.name),
-    {
-      staleTime: Infinity,
-      onSuccess(
-        ids: [
-          { batchId: string; quantity: number; sold: number; tokenId: number }
-        ]
-      ) {
-        ids.length &&
-          setValues({
-            ...values,
-            batchId: ids[0].batchId,
-            remaining: ids[0].quantity - ids[0].sold,
-            quantity: ids[0].quantity,
-            tokenId: ids[0].tokenId,
-          });
-      },
-    }
-  );
+  const {
+    data: batchIds,
+    isFetching: fetchingBatchIds,
+    refetch: refetchBatchIds,
+  } = useQuery('batchIds', async () => fetchBatchIdsForDistributor(data.name), {
+    staleTime: Infinity,
+    retryOnMount: true,
+    onSuccess(
+      ids: [
+        { batchId: string; quantity: number; sold: number; tokenId: number }
+      ]
+    ) {
+      ids.length &&
+        setValues({
+          ...values,
+          batchId: ids[0].batchId,
+          remaining: ids[0].quantity - ids[0].sold,
+          quantity: ids[0].quantity,
+          tokenId: ids[0].tokenId,
+        });
+    },
+  });
 
   const { data: pharmacies, isFetching: fetchingPharmacies } = useQuery(
     'pharmacies',
@@ -78,33 +80,40 @@ const CreateBatch = () => {
         pharms.length &&
           setValues({
             ...values,
-            pharmacy: pharms[0].name.replaceAll(' ', '-'),
+            pharmacy: pharms[0],
           });
       },
     }
   );
 
-  // const { config, isFetchedAfterMount, isFetching } = usePrepareContractWrite({
-  //   address: ACCESS_CONTROL_CONTRACT_ADDRESS,
-  //   abi: AccessControl,
-  //   functionName: 'createBatch',
-  //   args: [
+  const { config, isFetchedAfterMount, isFetching } = usePrepareContractWrite({
+    address: ACCESS_CONTROL_CONTRACT_ADDRESS,
+    abi: AccessControl,
+    functionName: 'addPharmacy',
+    args: [
+      values.pharmacy.address,
+      0,
+      bytes32Roles['distributor' as keyof RoleTypes],
+    ],
+  });
 
-  //   ],
-  // });
+  const { writeAsync } = useContractWrite(config);
 
-  // const { data: result, write, isSuccess } = useContractWrite(config);
-
-  const handleChange = (name: string, value: string, remaining?: number) => {
+  const handleChange = (
+    name: string,
+    value: string | number,
+    remaining?: number
+  ) => {
     setValues({
       ...values,
-      [name]: value,
+      [name]: typeof value === 'number' ? pharmacies?.[value] : value,
       ...(remaining ? { remaining } : {}),
     });
   };
 
   const saveOrder = async () => {
     setSaving(true);
+
     const { batchId, quantity, pharmacy } = values;
 
     if (batchId && quantity && pharmacy) {
@@ -114,18 +123,37 @@ const CreateBatch = () => {
           body: JSON.stringify({
             batchId,
             quantity,
-            pharmacy: pharmacy.replaceAll('-', ' '),
+            pharmacy: pharmacy.name.replaceAll('-', ' '),
           }),
           headers: { 'Content-Type': 'application/json' },
         });
 
+        await refetchBatchIds();
         setValues(initialValue);
+        const { hash } = await writeAsync?.();
+
+        const transactions = batchIds?.find(
+          (b) => b.batchId === batchId
+        ).transactions;
+
+        await fetch('/api/batch', {
+          method: 'PUT',
+          body: JSON.stringify({
+            status: 'Shipped to Pharmacy(s)',
+            transactions: [...transactions, hash],
+            batchId,
+          }),
+          headers: { 'Content-Type': 'application/json' },
+        });
+
+        refetchBatchIds();
       } catch (err) {
         //
       }
     }
     setSaving(false);
   };
+
   return (
     <form autoComplete="off" noValidate>
       <Card>
@@ -135,7 +163,12 @@ const CreateBatch = () => {
             title="Create Order"
           />
           <Divider />
-          {fetchingPharmacies || fetchingBatchIds ? (
+          {fetchingPharmacies ||
+          fetchingBatchIds ||
+          !isFetchedAfterMount ||
+          isFetching ||
+          !writeAsync ||
+          saving ? (
             <Box
               sx={{
                 display: 'flex',
@@ -196,11 +229,8 @@ const CreateBatch = () => {
                       variant="outlined"
                       value={values.pharmacy}
                     >
-                      {pharmacies?.map(({ name }) => (
-                        <option
-                          key={name.replaceAll(' ', '-')}
-                          value={name.replaceAll(' ', '-')}
-                        >
+                      {pharmacies?.map(({ name }, index) => (
+                        <option key={name.replaceAll(' ', '-')} value={index}>
                           {name}
                         </option>
                       ))}
@@ -241,9 +271,12 @@ const CreateBatch = () => {
                     !values.quantity ||
                     !values.batchId ||
                     !values.pharmacy ||
+                    isFetching ||
+                    !writeAsync ||
+                    !isFetchedAfterMount ||
                     saving
                   }
-                  onClick={saveOrder}
+                  onClick={async () => saveOrder()}
                 >
                   Create Order
                 </Button>

@@ -8,7 +8,7 @@ import { publicProvider } from 'wagmi/providers/public';
 
 import { MetaMaskConnector } from 'wagmi/connectors/metaMask';
 import { WagmiConfig, createClient, configureChains } from 'wagmi';
-import { hardhat } from '@wagmi/core/chains';
+import { hardhat, goerli } from '@wagmi/core/chains';
 
 import '@fontsource/roboto/300.css';
 import '@fontsource/roboto/400.css';
@@ -36,19 +36,27 @@ interface MyAppProps extends AppProps {
 // Two popular providers are Alchemy (alchemy.com) and Infura (infura.io)
 const { chains, provider, webSocketProvider } = configureChains(
   [
+    // {
+    //   ...hardhat,
+    //   id: 1337,
+    //   nativeCurrency: {
+    //     ...hardhat.nativeCurrency,
+    //     name: 'Hardhat',
+    //     symbol: 'HardhatETH',
+    //   },
+    // },
     {
-      ...hardhat,
-      id: 1337,
+      ...goerli,
+      id: 5,
       nativeCurrency: {
-        ...hardhat.nativeCurrency,
-        name: 'Hardhat',
-        symbol: 'HardhatETH',
+        ...goerli.nativeCurrency,
+        name: 'Goerli 2',
+        symbol: 'GoerliETH',
       },
     },
   ],
   [publicProvider()]
 );
-// console.log('🚀 ~ file: _app.tsx:35 ~ chains:', chains);
 
 // Set up client
 const client = createClient({

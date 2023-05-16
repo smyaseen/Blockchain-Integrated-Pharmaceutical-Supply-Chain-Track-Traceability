@@ -31,7 +31,7 @@ const createData = (
 });
 
 const Row = (props: { row: ReturnType<typeof createData> }) => {
-  const { row } = props;
+  const { row, batches } = props;
   const [open, setOpen] = React.useState(false);
 
   return (
@@ -52,7 +52,13 @@ const Row = (props: { row: ReturnType<typeof createData> }) => {
         <TableCell align="center">{row.stock}</TableCell>
         <TableCell align="center">{row.sold}</TableCell>
         <TableCell align="center">
-          <Button variant="text">View Transaction</Button>
+          <Button
+            variant="text"
+            target="_blank"
+            href={`https://goerli.etherscan.io/tx/${batches.transactions[6]}`}
+          >
+            View Transaction
+          </Button>
         </TableCell>
       </TableRow>
       <TableRow>
@@ -70,11 +76,19 @@ const Row = (props: { row: ReturnType<typeof createData> }) => {
                   </TableRow>
                 </TableHead>
                 <TableBody>
-                  {row?.transactions?.map((historyRow) => (
+                  {row?.transactions?.map((historyRow, i) => (
                     <TableRow key={historyRow}>
                       <TableCell align="center">{historyRow.amount}</TableCell>
                       <TableCell align="center">
-                        <Button variant="text">View Transaction</Button>
+                        <Button
+                          variant="text"
+                          target="_blank"
+                          href={`https://goerli.etherscan.io/tx/${
+                            batches.transactions[i + 7]
+                          }`}
+                        >
+                          View Transaction
+                        </Button>
                       </TableCell>
                     </TableRow>
                   ))}
@@ -87,19 +101,6 @@ const Row = (props: { row: ReturnType<typeof createData> }) => {
     </>
   );
 };
-
-const rows = [
-  createData('Pharmacy A', 159, 6.0, [
-    {
-      date: '2020-01-05',
-      amount: 3,
-    },
-    {
-      date: '2020-01-02',
-      amount: 1,
-    },
-  ]),
-];
 
 const SoldTransactionsTable = ({ batches }: { batches: any }) => (
   <TableContainer component={Paper}>
@@ -115,7 +116,7 @@ const SoldTransactionsTable = ({ batches }: { batches: any }) => (
       </TableHead>
       <TableBody>
         {batches?.pharmacy?.map((row) => (
-          <Row key={row.name} row={row} />
+          <Row key={row.name} batches={batches} row={row} />
         ))}
       </TableBody>
     </Table>

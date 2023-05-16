@@ -52,6 +52,7 @@ export default async function handler(
             ...(distributor
               ? { quantity: 1, sold: 1, tokenId: 1 }
               : { pharmacy: 1 }),
+            transactions: 1,
           },
         })
         .toArray();

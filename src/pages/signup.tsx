@@ -20,7 +20,10 @@ import {
   fieldChangeHandler,
   validateOnSubmit,
 } from '../components/auth/AuthForm/AuthUtils';
-import { setFieldsDisabled } from '../utility/utils';
+import {
+  ACCESS_CONTROL_CONTRACT_ADDRESS,
+  setFieldsDisabled,
+} from '../utility/utils';
 import AccessControl from '../contracts/AccessControl.json';
 
 interface userData {
@@ -40,9 +43,6 @@ const signUpUser = async (signUpData: userData) => {
 
   return { data, status: response.status };
 };
-
-const ACCESS_CONTROL_CONTRACT_ADDRESS =
-  '0x5FbDB2315678afecb367f032d93F642f64180aa3';
 
 const SignUp = () => {
   const [responseError, setResponseError] = useState('');
@@ -123,18 +123,13 @@ const SignUp = () => {
     args: [fields[0].value, bytes32Roles[fields[1].value as keyof RoleTypes]],
   });
 
-  const { write, error: writeError, isSuccess } = useContractWrite(config);
+  const { writeAsync, error: writeError, isSuccess } = useContractWrite(config);
 
   useEffect(() => {
-    if (address && isConnected && isFetchedAfterMount && write) {
-      console.log(
-        '🚀',
-        fields[0].value,
-        fields[1].value,
-        bytes32Roles[fields[1].value as keyof RoleTypes]
-      );
-
-      write();
+    if (address && isConnected && isFetchedAfterMount && writeAsync) {
+      (async () => {
+        await writeAsync();
+      })();
     }
   }, [address, isFetchedAfterMount]);
 
@@ -183,7 +178,7 @@ const SignUp = () => {
       color: 'primary' as const,
       fullWidth: true,
       size: 'large' as const,
-      disabled: !!(isConnected && isFetchedAfterMount && write),
+      disabled: !!(isConnected && isFetchedAfterMount && writeAsync),
       variant: 'contained' as const,
       loading: isFetching || isLoading,
       onClick: saveHandler,

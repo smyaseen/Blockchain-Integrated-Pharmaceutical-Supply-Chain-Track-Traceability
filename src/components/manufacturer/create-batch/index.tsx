@@ -23,12 +23,13 @@ import Router from 'next/router';
 import { useContractWrite, usePrepareContractWrite } from 'wagmi';
 import { ethers } from 'ethers';
 import { useQuery } from 'react-query';
-import { fetchUsers, fetchProducts } from '../../../utility/utils';
+import {
+  fetchUsers,
+  fetchProducts,
+  ACCESS_CONTROL_CONTRACT_ADDRESS,
+} from '../../../utility/utils';
 import AccessControl from '../../../contracts/AccessControl.json';
 import { bytes32Roles, RoleTypes } from '../../../utility/roles';
-
-const ACCESS_CONTROL_CONTRACT_ADDRESS =
-  '0x5FbDB2315678afecb367f032d93F642f64180aa3';
 
 const CreateBatch = () => {
   const [values, setValues] = useState({
@@ -109,6 +110,8 @@ const CreateBatch = () => {
       },
     } = await result?.wait?.();
 
+    const { hash } = result;
+
     if (medicine && quantity && distributor && expiry && mfg) {
       const stream = await fetch(
         `/api/batchId?manufacturer=${data.name}&medicine=${medicine}`,
@@ -140,6 +143,7 @@ const CreateBatch = () => {
             status: 'manufactured',
             sold: 0,
             created: new Date().toLocaleDateString('en-GB'),
+            transactions: [hash],
           }),
           headers: { 'Content-Type': 'application/json' },
         });

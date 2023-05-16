@@ -1,9 +1,5 @@
 [
-  {
-    "inputs": [],
-    "stateMutability": "nonpayable",
-    "type": "constructor"
-  },
+  { "inputs": [], "stateMutability": "nonpayable", "type": "constructor" },
   {
     "anonymous": false,
     "inputs": [
@@ -111,66 +107,33 @@
     "name": "Transfer",
     "type": "event"
   },
-  {
-    "stateMutability": "payable",
-    "type": "fallback"
-  },
+  { "stateMutability": "payable", "type": "fallback" },
   {
     "inputs": [],
     "name": "DISTRIBUTER",
-    "outputs": [
-      {
-        "internalType": "bytes32",
-        "name": "",
-        "type": "bytes32"
-      }
-    ],
+    "outputs": [{ "internalType": "bytes32", "name": "", "type": "bytes32" }],
     "stateMutability": "view",
     "type": "function"
   },
   {
     "inputs": [],
     "name": "MANUFACTURER",
-    "outputs": [
-      {
-        "internalType": "bytes32",
-        "name": "",
-        "type": "bytes32"
-      }
-    ],
+    "outputs": [{ "internalType": "bytes32", "name": "", "type": "bytes32" }],
     "stateMutability": "view",
     "type": "function"
   },
   {
     "inputs": [],
     "name": "PHARMACY",
-    "outputs": [
-      {
-        "internalType": "bytes32",
-        "name": "",
-        "type": "bytes32"
-      }
-    ],
+    "outputs": [{ "internalType": "bytes32", "name": "", "type": "bytes32" }],
     "stateMutability": "view",
     "type": "function"
   },
   {
     "inputs": [
-      {
-        "internalType": "address",
-        "name": "_pharmacy",
-        "type": "address"
-      },
-      {
-        "internalType": "uint256",
-        "name": "_tokenId",
-        "type": "uint256"
-      },
-      {
-        "internalType": "bytes32",
-        "name": "_role",
-        "type": "bytes32"
-      }
+      { "internalType": "address", "name": "_pharmacy", "type": "address" },
+      { "internalType": "uint256", "name": "_tokenId", "type": "uint256" },
+      { "internalType": "bytes32", "name": "_role", "type": "bytes32" }
     ],
     "name": "addPharmacy",
     "outputs": [],
@@ -179,16 +142,8 @@
   },
   {
     "inputs": [
-      {
-        "internalType": "address",
-        "name": "to",
-        "type": "address"
-      },
-      {
-        "internalType": "uint256",
-        "name": "tokenId",
-        "type": "uint256"
-      }
+      { "internalType": "address", "name": "to", "type": "address" },
+      { "internalType": "uint256", "name": "tokenId", "type": "uint256" }
     ],
     "name": "approve",
     "outputs": [],
@@ -197,63 +152,29 @@
   },
   {
     "inputs": [
-      {
-        "internalType": "address",
-        "name": "owner",
-        "type": "address"
-      }
+      { "internalType": "address", "name": "owner", "type": "address" }
     ],
     "name": "balanceOf",
-    "outputs": [
-      {
-        "internalType": "uint256",
-        "name": "",
-        "type": "uint256"
-      }
-    ],
+    "outputs": [{ "internalType": "uint256", "name": "", "type": "uint256" }],
     "stateMutability": "view",
     "type": "function"
   },
   {
     "inputs": [
-      {
-        "internalType": "bytes32",
-        "name": "_role",
-        "type": "bytes32"
-      },
-      {
-        "internalType": "address",
-        "name": "_distributer",
-        "type": "address"
-      }
+      { "internalType": "bytes32", "name": "_role", "type": "bytes32" },
+      { "internalType": "address", "name": "_distributer", "type": "address" }
     ],
     "name": "createBatch",
-    "outputs": [
-      {
-        "internalType": "uint256",
-        "name": "",
-        "type": "uint256"
-      }
-    ],
+    "outputs": [{ "internalType": "uint256", "name": "", "type": "uint256" }],
     "stateMutability": "nonpayable",
     "type": "function"
   },
   {
     "inputs": [
-      {
-        "internalType": "uint256",
-        "name": "tokenId",
-        "type": "uint256"
-      }
+      { "internalType": "uint256", "name": "tokenId", "type": "uint256" }
     ],
     "name": "getApproved",
-    "outputs": [
-      {
-        "internalType": "address",
-        "name": "",
-        "type": "address"
-      }
-    ],
+    "outputs": [{ "internalType": "address", "name": "", "type": "address" }],
     "stateMutability": "view",
     "type": "function"
   },
@@ -263,21 +184,9 @@
     "outputs": [
       {
         "components": [
-          {
-            "internalType": "string",
-            "name": "name",
-            "type": "string"
-          },
-          {
-            "internalType": "bytes32",
-            "name": "role",
-            "type": "bytes32"
-          },
-          {
-            "internalType": "bool",
-            "name": "doesExist",
-            "type": "bool"
-          }
+          { "internalType": "string", "name": "name", "type": "string" },
+          { "internalType": "bytes32", "name": "role", "type": "bytes32" },
+          { "internalType": "bool", "name": "doesExist", "type": "bool" }
         ],
         "internalType": "struct AccessControl.Role",
         "name": "",
@@ -289,16 +198,8 @@
   },
   {
     "inputs": [
-      {
-        "internalType": "string",
-        "name": "_name",
-        "type": "string"
-      },
-      {
-        "internalType": "bytes32",
-        "name": "_role",
-        "type": "bytes32"
-      }
+      { "internalType": "string", "name": "_name", "type": "string" },
+      { "internalType": "bytes32", "name": "_role", "type": "bytes32" }
     ],
     "name": "grantRole",
     "outputs": [],
@@ -307,106 +208,46 @@
   },
   {
     "inputs": [
-      {
-        "internalType": "address",
-        "name": "owner",
-        "type": "address"
-      },
-      {
-        "internalType": "address",
-        "name": "operator",
-        "type": "address"
-      }
+      { "internalType": "address", "name": "owner", "type": "address" },
+      { "internalType": "address", "name": "operator", "type": "address" }
     ],
     "name": "isApprovedForAll",
-    "outputs": [
-      {
-        "internalType": "bool",
-        "name": "",
-        "type": "bool"
-      }
-    ],
+    "outputs": [{ "internalType": "bool", "name": "", "type": "bool" }],
     "stateMutability": "view",
     "type": "function"
   },
   {
     "inputs": [],
     "name": "name",
-    "outputs": [
-      {
-        "internalType": "string",
-        "name": "",
-        "type": "string"
-      }
-    ],
+    "outputs": [{ "internalType": "string", "name": "", "type": "string" }],
     "stateMutability": "view",
     "type": "function"
   },
   {
-    "inputs": [
-      {
-        "internalType": "uint256",
-        "name": "",
-        "type": "uint256"
-      }
-    ],
+    "inputs": [{ "internalType": "uint256", "name": "", "type": "uint256" }],
     "name": "nfts",
     "outputs": [
-      {
-        "internalType": "address",
-        "name": "manufacturer",
-        "type": "address"
-      },
-      {
-        "internalType": "address",
-        "name": "distributer",
-        "type": "address"
-      },
-      {
-        "internalType": "string",
-        "name": "status",
-        "type": "string"
-      }
+      { "internalType": "address", "name": "manufacturer", "type": "address" },
+      { "internalType": "address", "name": "distributer", "type": "address" },
+      { "internalType": "string", "name": "status", "type": "string" }
     ],
     "stateMutability": "view",
     "type": "function"
   },
   {
     "inputs": [
-      {
-        "internalType": "uint256",
-        "name": "tokenId",
-        "type": "uint256"
-      }
+      { "internalType": "uint256", "name": "tokenId", "type": "uint256" }
     ],
     "name": "ownerOf",
-    "outputs": [
-      {
-        "internalType": "address",
-        "name": "",
-        "type": "address"
-      }
-    ],
+    "outputs": [{ "internalType": "address", "name": "", "type": "address" }],
     "stateMutability": "view",
     "type": "function"
   },
   {
     "inputs": [
-      {
-        "internalType": "address",
-        "name": "from",
-        "type": "address"
-      },
-      {
-        "internalType": "address",
-        "name": "to",
-        "type": "address"
-      },
-      {
-        "internalType": "uint256",
-        "name": "tokenId",
-        "type": "uint256"
-      }
+      { "internalType": "address", "name": "from", "type": "address" },
+      { "internalType": "address", "name": "to", "type": "address" },
+      { "internalType": "uint256", "name": "tokenId", "type": "uint256" }
     ],
     "name": "safeTransferFrom",
     "outputs": [],
@@ -415,26 +256,10 @@
   },
   {
     "inputs": [
-      {
-        "internalType": "address",
-        "name": "from",
-        "type": "address"
-      },
-      {
-        "internalType": "address",
-        "name": "to",
-        "type": "address"
-      },
-      {
-        "internalType": "uint256",
-        "name": "tokenId",
-        "type": "uint256"
-      },
-      {
-        "internalType": "bytes",
-        "name": "data",
-        "type": "bytes"
-      }
+      { "internalType": "address", "name": "from", "type": "address" },
+      { "internalType": "address", "name": "to", "type": "address" },
+      { "internalType": "uint256", "name": "tokenId", "type": "uint256" },
+      { "internalType": "bytes", "name": "data", "type": "bytes" }
     ],
     "name": "safeTransferFrom",
     "outputs": [],
@@ -443,16 +268,8 @@
   },
   {
     "inputs": [
-      {
-        "internalType": "address",
-        "name": "operator",
-        "type": "address"
-      },
-      {
-        "internalType": "bool",
-        "name": "approved",
-        "type": "bool"
-      }
+      { "internalType": "address", "name": "operator", "type": "address" },
+      { "internalType": "bool", "name": "approved", "type": "bool" }
     ],
     "name": "setApprovalForAll",
     "outputs": [],
@@ -461,67 +278,33 @@
   },
   {
     "inputs": [
-      {
-        "internalType": "bytes4",
-        "name": "interfaceId",
-        "type": "bytes4"
-      }
+      { "internalType": "bytes4", "name": "interfaceId", "type": "bytes4" }
     ],
     "name": "supportsInterface",
-    "outputs": [
-      {
-        "internalType": "bool",
-        "name": "",
-        "type": "bool"
-      }
-    ],
+    "outputs": [{ "internalType": "bool", "name": "", "type": "bool" }],
     "stateMutability": "view",
     "type": "function"
   },
   {
     "inputs": [],
     "name": "symbol",
-    "outputs": [
-      {
-        "internalType": "string",
-        "name": "",
-        "type": "string"
-      }
-    ],
+    "outputs": [{ "internalType": "string", "name": "", "type": "string" }],
     "stateMutability": "view",
     "type": "function"
   },
   {
     "inputs": [
-      {
-        "internalType": "uint256",
-        "name": "tokenId",
-        "type": "uint256"
-      }
+      { "internalType": "uint256", "name": "tokenId", "type": "uint256" }
     ],
     "name": "tokenURI",
-    "outputs": [
-      {
-        "internalType": "string",
-        "name": "",
-        "type": "string"
-      }
-    ],
+    "outputs": [{ "internalType": "string", "name": "", "type": "string" }],
     "stateMutability": "view",
     "type": "function"
   },
   {
     "inputs": [
-      {
-        "internalType": "uint256",
-        "name": "_tokenId",
-        "type": "uint256"
-      },
-      {
-        "internalType": "address",
-        "name": "_distributer",
-        "type": "address"
-      }
+      { "internalType": "uint256", "name": "_tokenId", "type": "uint256" },
+      { "internalType": "address", "name": "_distributer", "type": "address" }
     ],
     "name": "transferBatch",
     "outputs": [],
@@ -530,21 +313,9 @@
   },
   {
     "inputs": [
-      {
-        "internalType": "address",
-        "name": "from",
-        "type": "address"
-      },
-      {
-        "internalType": "address",
-        "name": "to",
-        "type": "address"
-      },
-      {
-        "internalType": "uint256",
-        "name": "tokenId",
-        "type": "uint256"
-      }
+      { "internalType": "address", "name": "from", "type": "address" },
+      { "internalType": "address", "name": "to", "type": "address" },
+      { "internalType": "uint256", "name": "tokenId", "type": "uint256" }
     ],
     "name": "transferFrom",
     "outputs": [],
@@ -553,29 +324,14 @@
   },
   {
     "inputs": [
-      {
-        "internalType": "uint256",
-        "name": "_tokenId",
-        "type": "uint256"
-      },
-      {
-        "internalType": "string",
-        "name": "_status",
-        "type": "string"
-      },
-      {
-        "internalType": "bytes32",
-        "name": "_role",
-        "type": "bytes32"
-      }
+      { "internalType": "uint256", "name": "_tokenId", "type": "uint256" },
+      { "internalType": "string", "name": "_status", "type": "string" },
+      { "internalType": "bytes32", "name": "_role", "type": "bytes32" }
     ],
     "name": "updateStatus",
     "outputs": [],
     "stateMutability": "nonpayable",
     "type": "function"
   },
-  {
-    "stateMutability": "payable",
-    "type": "receive"
-  }
+  { "stateMutability": "payable", "type": "receive" }
 ]

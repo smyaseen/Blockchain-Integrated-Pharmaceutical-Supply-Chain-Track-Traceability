@@ -85,14 +85,14 @@ export default async function handler(
   } else if (req.method === 'PUT') {
     const client = await connectToDatabase();
     const {
-      body: { batchId, status },
+      body: { batchId, ...others },
     } = req;
 
     try {
       await client
         .db()
         .collection('batches')
-        .updateOne({ batchId }, { $set: { status } });
+        .updateOne({ batchId }, { $set: { ...others } });
 
       res.status(201).json('changed status successfully!');
     } catch (error) {

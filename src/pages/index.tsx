@@ -22,11 +22,10 @@ import BatchProgressComp from '../components/manufacturer/BatchProgress';
 import SoldTransactionsTable from '../components/manufacturer/BatchProgress/SoldTransactionsTable';
 import AccessControl from '../contracts/AccessControl.json';
 import { rolesToByte32 } from '../utility/roles';
+import { ACCESS_CONTROL_CONTRACT_ADDRESS } from '../utility/utils';
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 declare let window: any;
-const ACCESS_CONTROL_CONTRACT_ADDRESS =
-  '0x5FbDB2315678afecb367f032d93F642f64180aa3';
 
 const Home = () => {
   const { status } = useSession();

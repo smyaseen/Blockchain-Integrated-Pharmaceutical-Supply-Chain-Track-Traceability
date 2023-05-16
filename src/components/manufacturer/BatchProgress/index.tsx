@@ -40,10 +40,8 @@ const getComponent = (batches: any) => {
           <Button
             variant="contained"
             fullWidth
-            // eslint-disable-next-line no-loop-func
-            onClick={() => {
-              alert(walletAddr);
-            }}
+            target="_blank"
+            href={`https://goerli.etherscan.io/tx/${batches.transactions[i]}`}
           >
             View Transaction
           </Button>
@@ -60,7 +58,10 @@ const getComponent = (batches: any) => {
             {typography}
           </Typography>
           <br />
-          <QRCode size={50} value="hey" />
+          <QRCode
+            size={50}
+            value={`https://goerli.etherscan.io/tx/${batches.transactions[i]}`}
+          />
         </TimelineContent>
       </TimelineItem>
     );

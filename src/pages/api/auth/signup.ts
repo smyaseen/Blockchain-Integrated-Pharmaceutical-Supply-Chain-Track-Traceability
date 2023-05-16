@@ -42,6 +42,8 @@ export default async function handler(
         clientDB.close();
       }
     } catch (err) {
+      console.log('🚀 ~ file: signup.ts:45 ~ err:', err);
+
       res.status(500).json({ message: 'User creation error!' });
     }
   }
