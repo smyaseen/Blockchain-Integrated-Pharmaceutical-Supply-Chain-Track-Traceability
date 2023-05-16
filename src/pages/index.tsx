@@ -41,14 +41,20 @@ const Home = () => {
 
   const { address, isConnected } = useAccount();
 
-  const provider = new ethers.providers.Web3Provider(window.ethereum);
-  const connectedProvider = provider.getSigner(address).provider;
+  const provider = isMetamaskAvailable
+    ? new ethers.providers.Web3Provider(window.ethereum)
+    : null;
+  const connectedProvider = isMetamaskAvailable
+    ? provider.getSigner(address).provider
+    : null;
 
-  const contract = new ethers.Contract(
-    ACCESS_CONTROL_CONTRACT_ADDRESS,
-    AccessControl,
-    connectedProvider
-  );
+  const contract = isMetamaskAvailable
+    ? new ethers.Contract(
+        ACCESS_CONTROL_CONTRACT_ADDRESS,
+        AccessControl,
+        connectedProvider
+      )
+    : null;
 
   const handleLogin = async () => {
     try {
@@ -116,8 +122,26 @@ const Home = () => {
         alignItems="flex-start"
       >
         {!isMetamaskAvailable && (
-          <Typography color="primary">Install MetaMask!</Typography>
+          <Typography color="primary">
+            Install MetaMask to access Portal!
+          </Typography>
         )}
+
+        <Grid item>
+          <>
+            <Typography color="textSecondary" gutterBottom variant="body2">
+              Don&apos;t know Initials?
+            </Typography>
+
+            <Button
+              // disabled={!getRoleFetched}
+              onClick={() => Router.push(RouteNames.browseDictionary)}
+              endIcon={<Wallet />}
+            >
+              Browse Dictionary
+            </Button>
+          </>
+        </Grid>
 
         {isMetamaskAvailable && !isConnected && status !== 'authenticated' && (
           <>
@@ -150,16 +174,45 @@ const Home = () => {
           </>
         )}
       </Grid>
-      <Container sx={{ mt: 1 }} maxWidth="lg">
+      <Container sx={{ mt: 1, ml: 5 }} maxWidth="xl">
         {status !== 'authenticated' && (
           <>
-            <Typography variant="h1" align="left">
-              <Typography variant="h1" component="span" color="primary">
-                The Future of Pharma <Divider />
+            <Typography
+              sx={{
+                typography: {
+                  xl: 'h1',
+                  lg: 'h1',
+                  md: 'h1',
+                  sm: 'h4',
+                  xs: 'h5',
+                },
+              }}
+              align="left"
+            >
+              <Typography
+                sx={{
+                  typography: {
+                    xl: 'h1',
+                    lg: 'h1',
+                    md: 'h1',
+                    sm: 'h4',
+                    xs: 'h5',
+                  },
+                }}
+                component="span"
+                color="primary"
+              >
+                The Future of Pharma{' '}
+                <Divider style={{ visibility: 'hidden' }} />
               </Typography>
-              Track and Traceability: <Divider /> A Blockchain-Based Solution
+              Track and Traceability:{' '}
+              <Divider style={{ visibility: 'hidden' }} /> A Blockchain-Based
+              Solution
             </Typography>
-            <Typography variant="h6" maxWidth="sm">
+            <Typography
+              sx={{ typography: { sm: 'h6', xs: 'body2' } }}
+              maxWidth="sm"
+            >
               Revolutionizing the Pharma Industry&apos;s Supply Chain Management
               with Blockchain Technology to Ensure Transparency, Accountability,
               and Efficiency in the Track and Traceability of Medicines.
@@ -185,7 +238,13 @@ const Home = () => {
               <BatchProgressComp batches={batches} />
             </Box>
             {batches.pharmacy && (
-              <Box m={3}>
+              <Box
+                m={3}
+                maxWidth="lg"
+                sx={{
+                  margin: 'auto',
+                }}
+              >
                 <SoldTransactionsTable batches={batches} />
               </Box>
             )}

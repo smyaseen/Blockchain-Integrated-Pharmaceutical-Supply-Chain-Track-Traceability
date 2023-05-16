@@ -55,6 +55,7 @@ const BatchListResults = ({
             'Status',
             'Sold',
             'Created',
+            'Last Status #',
             'Batch',
             'Change Status',
           ]}

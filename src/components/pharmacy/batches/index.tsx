@@ -53,6 +53,7 @@ const BatchListResults = ({
             'Status',
             'Sold',
             'Created',
+            'Last Status #',
             'Pharma Sold',
             'Pharma Stock',
             'Batch',

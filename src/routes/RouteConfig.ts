@@ -5,6 +5,7 @@ const routeConfig: { [key: string]: { [key: string]: string } } = {
   [Roles.public]: {
     default: RouteNames.root,
     [RouteNames.root]: RouteNames.root,
+    [RouteNames.browseDictionary]: RouteNames.browseDictionary,
   },
 
   auth: {

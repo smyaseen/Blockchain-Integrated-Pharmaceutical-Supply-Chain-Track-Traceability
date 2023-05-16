@@ -21,11 +21,13 @@ import {
   ACCESS_CONTROL_CONTRACT_ADDRESS,
   fetchBatchIdsForPharmacy,
 } from '../../../utility/utils';
-import { useContractWrite, usePrepareContractWrite } from 'wagmi';
+import { useAccount, useContractWrite, usePrepareContractWrite } from 'wagmi';
 import AccessControl from '../../../contracts/AccessControl.json';
 import { bytes32Roles, RoleTypes } from '../../../utility/roles';
 
 const CreateBatch = () => {
+  const { address } = useAccount();
+
   const [values, setValues] = useState({
     batchId: '',
     remaining: 0,
@@ -59,6 +61,13 @@ const CreateBatch = () => {
     bytes32Roles['pharmacy' as keyof RoleTypes],
   ];
 
+  const args2 = [
+    address,
+    batchIds?.find((b) => b.batchId === values.batchId)?.tokenId || 0,
+    values.quantity,
+    bytes32Roles['pharmacy' as keyof RoleTypes],
+  ];
+
   const { config, isFetched, isFetchedAfterMount } = usePrepareContractWrite({
     address: ACCESS_CONTROL_CONTRACT_ADDRESS,
     abi: AccessControl,
@@ -67,6 +76,15 @@ const CreateBatch = () => {
   });
 
   const { writeAsync } = useContractWrite(config);
+
+  const { config: configCreate } = usePrepareContractWrite({
+    address: ACCESS_CONTROL_CONTRACT_ADDRESS,
+    abi: AccessControl,
+    functionName: 'pharmacyCreateOrder',
+    args: args2,
+  });
+
+  const { writeAsync: writeCreate } = useContractWrite(configCreate);
 
   const handleChange = (name: string, value: string, remaining?: number) => {
     setValues({
@@ -82,27 +100,26 @@ const CreateBatch = () => {
 
     if (batchId && quantity) {
       try {
+        const { hash } = await writeCreate?.();
+
         await fetch('/api/order?role=pharmacy', {
           method: 'POST',
           body: JSON.stringify({
             pharmacy: data.name,
             batchId,
             quantity,
+            hash,
           }),
           headers: { 'Content-Type': 'application/json' },
         });
 
-        const { hash } = await writeAsync?.();
-
-        const transactions = batchIds?.find(
-          (b) => b.batchId === batchId
-        ).transactions;
+        await writeAsync?.();
 
         await fetch('/api/batch', {
           method: 'PUT',
           body: JSON.stringify({
             status: 'Sold To Customer(s)',
-            transactions: [...transactions, hash],
+
             batchId,
           }),
           headers: { 'Content-Type': 'application/json' },
@@ -203,6 +220,8 @@ const CreateBatch = () => {
                     !values.remaining ||
                     !values.quantity ||
                     !values.batchId ||
+                    !writeCreate ||
+                    !writeAsync ||
                     saving
                   }
                   onClick={saveOrder}

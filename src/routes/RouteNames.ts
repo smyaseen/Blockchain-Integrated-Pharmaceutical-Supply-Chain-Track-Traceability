@@ -12,6 +12,7 @@ export const RouteNames = {
   pharmacyCreateOrder: '/pharmacy/create-order',
   pharmacyOrders: '/pharmacy/orders',
   pharmacyBatchProgress: '/pharmacy/batch-progress',
+  browseDictionary: '/browseDictionary',
 };
 
 export default RouteNames;

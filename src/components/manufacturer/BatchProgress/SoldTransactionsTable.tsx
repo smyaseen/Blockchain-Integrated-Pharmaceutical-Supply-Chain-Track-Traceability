@@ -76,16 +76,14 @@ const Row = (props: { row: ReturnType<typeof createData> }) => {
                   </TableRow>
                 </TableHead>
                 <TableBody>
-                  {row?.transactions?.map((historyRow, i) => (
+                  {row?.transactions?.map((historyRow) => (
                     <TableRow key={historyRow}>
                       <TableCell align="center">{historyRow.amount}</TableCell>
                       <TableCell align="center">
                         <Button
                           variant="text"
                           target="_blank"
-                          href={`https://goerli.etherscan.io/tx/${
-                            batches.transactions[i + 7]
-                          }`}
+                          href={`https://goerli.etherscan.io/tx/${historyRow.hash}`}
                         >
                           View Transaction
                         </Button>

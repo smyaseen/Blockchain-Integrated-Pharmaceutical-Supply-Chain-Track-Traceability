@@ -162,7 +162,9 @@
   {
     "inputs": [
       { "internalType": "bytes32", "name": "_role", "type": "bytes32" },
-      { "internalType": "address", "name": "_distributer", "type": "address" }
+      { "internalType": "address", "name": "_distributer", "type": "address" },
+      { "internalType": "string", "name": "_medicine", "type": "string" },
+      { "internalType": "uint256", "name": "_quantity", "type": "uint256" }
     ],
     "name": "createBatch",
     "outputs": [{ "internalType": "uint256", "name": "", "type": "uint256" }],
@@ -229,6 +231,9 @@
     "outputs": [
       { "internalType": "address", "name": "manufacturer", "type": "address" },
       { "internalType": "address", "name": "distributer", "type": "address" },
+      { "internalType": "string", "name": "medicine", "type": "string" },
+      { "internalType": "uint256", "name": "quantity", "type": "uint256" },
+      { "internalType": "uint256", "name": "sold", "type": "uint256" },
       { "internalType": "string", "name": "status", "type": "string" }
     ],
     "stateMutability": "view",
@@ -241,6 +246,18 @@
     "name": "ownerOf",
     "outputs": [{ "internalType": "address", "name": "", "type": "address" }],
     "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      { "internalType": "address", "name": "_pharmacy", "type": "address" },
+      { "internalType": "uint256", "name": "_tokenId", "type": "uint256" },
+      { "internalType": "uint256", "name": "_amount", "type": "uint256" },
+      { "internalType": "bytes32", "name": "_role", "type": "bytes32" }
+    ],
+    "name": "pharmacyCreateOrder",
+    "outputs": [],
+    "stateMutability": "nonpayable",
     "type": "function"
   },
   {

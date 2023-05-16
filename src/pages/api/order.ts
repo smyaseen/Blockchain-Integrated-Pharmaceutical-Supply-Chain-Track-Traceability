@@ -9,7 +9,7 @@ export default async function handler(
 ) {
   if (req.method === 'POST') {
     const {
-      body: { batchId, quantity, pharmacy },
+      body: { batchId, quantity, pharmacy, hash },
       query: { role },
     } = req;
     console.log(
@@ -36,7 +36,7 @@ export default async function handler(
                 status: 'Sold To Customer(s)',
               },
               $push: {
-                'pharmacy.$.transactions': { amount: quantity },
+                'pharmacy.$.transactions': { amount: quantity, hash },
               },
             }
           );

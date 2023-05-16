@@ -4,6 +4,7 @@ import { useRouter } from 'next/router';
 import { Box, Divider, Drawer, useMediaQuery } from '@mui/material';
 import {
   AddBox,
+  Book,
   LocalPharmacy,
   LocalShipping,
   ShoppingBag,
@@ -124,6 +125,12 @@ const DashboardSidebar = (props: any) => {
           icon={<Timeline fontSize="small" />}
           href="/"
           title="Track Batch"
+        />
+        <NavItem
+          key="Browse Dictionary"
+          icon={<Book fontSize="small" />}
+          href={RouteNames.browseDictionary}
+          title="Browse Dictionary"
         />
       </Box>
       <Divider sx={{ borderColor: '#2D3748' }} />

@@ -93,6 +93,8 @@ const CreateBatch = () => {
     args: [
       bytes32Roles['manufacturer' as keyof RoleTypes],
       values.distributor.address || ethers.constants.AddressZero,
+      values.medicine || '',
+      values.quantity || 1,
     ],
   });
 
