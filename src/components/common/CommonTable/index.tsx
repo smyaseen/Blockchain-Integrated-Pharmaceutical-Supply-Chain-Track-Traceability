@@ -75,13 +75,15 @@ const CommonTable = ({ columns, rows }: { columns: string[]; rows: Row[] }) => (
                 index !== rows.length - 1 ? '1.5px solid #f0f2f5' : 'none',
             }}
           >
-            {fields.map((field) => (
-              <TableCell key={field} align="center">
-                <Typography color="textPrimary" variant="body1">
-                  {field}
-                </Typography>
-              </TableCell>
-            ))}
+            {fields
+              .filter((field) => !Array.isArray(field))
+              .map((field) => (
+                <TableCell key={field} align="center">
+                  <Typography color="textPrimary" variant="body1">
+                    {field}
+                  </Typography>
+                </TableCell>
+              ))}
             {buttons?.map((btn) => (
               <TableCell key={btn.text} align="center">
                 <Button

@@ -50,7 +50,7 @@ const CreateBatch = () => {
           ...values,
           batchId: ids[0].batchId,
           remaining: ids[0].quantity - ids[0].sold,
-          quantity: ids[0].quantity,
+          quantity: 0,
         });
     },
   });
@@ -64,7 +64,7 @@ const CreateBatch = () => {
   const args2 = [
     address,
     batchIds?.find((b) => b.batchId === values.batchId)?.tokenId || 0,
-    values.quantity,
+    999999,
     bytes32Roles['pharmacy' as keyof RoleTypes],
   ];
 

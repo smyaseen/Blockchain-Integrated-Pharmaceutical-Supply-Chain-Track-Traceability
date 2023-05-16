@@ -99,6 +99,21 @@ const CreateBatch = () => {
 
   const { writeAsync } = useContractWrite(config);
 
+  const args2 = [
+    0,
+    'Shipped to Pharmacy(s)',
+    bytes32Roles['distributor' as keyof RoleTypes],
+  ];
+
+  const { config: config2 } = usePrepareContractWrite({
+    address: ACCESS_CONTROL_CONTRACT_ADDRESS,
+    abi: AccessControl,
+    functionName: 'updateStatus',
+    args: args2,
+  });
+
+  const { writeAsync: write2 } = useContractWrite(config2);
+
   const handleChange = (
     name: string,
     value: string | number,
@@ -128,9 +143,7 @@ const CreateBatch = () => {
           headers: { 'Content-Type': 'application/json' },
         });
 
-        await refetchBatchIds();
-        setValues(initialValue);
-        const { hash } = await writeAsync?.();
+        const { hash } = await write2?.();
 
         const transactions = batchIds?.find(
           (b) => b.batchId === batchId
@@ -146,7 +159,11 @@ const CreateBatch = () => {
           headers: { 'Content-Type': 'application/json' },
         });
 
+       
+
         refetchBatchIds();
+
+        await writeAsync?.();
       } catch (err) {
         //
       }
@@ -167,7 +184,6 @@ const CreateBatch = () => {
           fetchingBatchIds ||
           !isFetchedAfterMount ||
           isFetching ||
-          !writeAsync ||
           saving ? (
             <Box
               sx={{
@@ -272,7 +288,6 @@ const CreateBatch = () => {
                     !values.batchId ||
                     !values.pharmacy ||
                     isFetching ||
-                    !writeAsync ||
                     !isFetchedAfterMount ||
                     saving
                   }

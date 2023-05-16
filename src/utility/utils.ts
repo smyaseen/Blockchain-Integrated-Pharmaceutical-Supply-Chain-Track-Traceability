@@ -135,4 +135,4 @@ const wallet = new ethers.Wallet(privateKey);
 export const walletAddr = wallet.address;
 
 export const ACCESS_CONTROL_CONTRACT_ADDRESS =
-  '0x42E9d1D82A5B01774bcAa07C4bc8F38090237065';
+  '0xDBF0473621bF56b9AF012274C6F7d54E3EF5Cc6A';

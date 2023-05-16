@@ -174,7 +174,7 @@ const CreateBatch = () => {
           title="Create Batch"
         />
         <Divider />
-        {fetchingDistributors || fetchingProducts ? (
+        {fetchingDistributors || fetchingProducts || saving ? (
           <Box
             sx={{
               display: 'flex',
