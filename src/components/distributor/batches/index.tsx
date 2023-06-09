@@ -61,7 +61,7 @@ const BatchListResults = ({
               text: 'Batch Progress',
               action: (index: number) => {
                 Router.push(
-                  `http://127.0.0.1:8080?batchId=${batches[index].batchId}`
+                  `https://bisc.vercel.app?batchId=${batches[index].batchId}`
                 );
               },
             },
