@@ -64,7 +64,7 @@ const CreateBatch = () => {
   const args2 = [
     address,
     batchIds?.find((b) => b.batchId === values.batchId)?.tokenId || 0,
-    999999,
+    values.quantity,
     bytes32Roles['pharmacy' as keyof RoleTypes],
   ];
 
