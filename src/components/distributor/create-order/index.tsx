@@ -1,7 +1,7 @@
 /* eslint-disable no-unsafe-optional-chaining */
 /* eslint-disable no-unused-expressions */
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   Box,
   Button,
@@ -34,6 +34,7 @@ const initialValue = {
   quantity: 0,
   pharmacy: { name: '', address: ethers.constants.AddressZero },
   tokenId: 0,
+  index: 0,
 };
 
 const CreateBatch = () => {
@@ -43,10 +44,12 @@ const CreateBatch = () => {
     quantity: number;
     pharmacy: { name: string; address: string };
     tokenId: number;
+    index: number;
   }>(initialValue);
 
   const [saving, setSaving] = useState(false);
   const { data } = useSession() as any;
+  const [tokenId, setTokenId] = useState(0);
 
   const {
     data: batchIds,
@@ -71,6 +74,12 @@ const CreateBatch = () => {
     },
   });
 
+  useEffect(() => {
+    setTokenId(
+      batchIds?.find((b) => b.batchId === values.batchId)?.tokenId || 0
+    );
+  }, [values.batchId]);
+
   const { data: pharmacies, isFetching: fetchingPharmacies } = useQuery(
     'pharmacies',
     async () => fetchUsers('pharmacy'),
@@ -92,7 +101,7 @@ const CreateBatch = () => {
     functionName: 'addPharmacy',
     args: [
       values.pharmacy.address,
-      0,
+      tokenId,
       bytes32Roles['distributor' as keyof RoleTypes],
     ],
   });
@@ -100,7 +109,7 @@ const CreateBatch = () => {
   const { writeAsync } = useContractWrite(config);
 
   const args2 = [
-    0,
+    tokenId,
     'Shipped to Pharmacy(s)',
     bytes32Roles['distributor' as keyof RoleTypes],
   ];
@@ -121,7 +130,11 @@ const CreateBatch = () => {
   ) => {
     setValues({
       ...values,
-      [name]: typeof value === 'number' ? pharmacies?.[value] : value,
+      [name]:
+        name === 'pharmacy'
+          ? pharmacies?.[parseInt(value as string, 10)]
+          : value,
+      ...(name === 'pharmacy' ? { index: parseInt(value as string, 10) } : {}),
       ...(remaining ? { remaining } : {}),
     });
   };
@@ -130,7 +143,6 @@ const CreateBatch = () => {
     setSaving(true);
 
     const { batchId, quantity, pharmacy } = values;
-
     if (batchId && quantity && pharmacy) {
       try {
         await fetch('/api/order', {
@@ -158,8 +170,6 @@ const CreateBatch = () => {
           }),
           headers: { 'Content-Type': 'application/json' },
         });
-
-       
 
         refetchBatchIds();
 
@@ -243,7 +253,7 @@ const CreateBatch = () => {
                       select
                       SelectProps={{ native: true }}
                       variant="outlined"
-                      value={values.pharmacy}
+                      value={values.pharmacy.index}
                     >
                       {pharmacies?.map(({ name }, index) => (
                         <option key={name.replaceAll(' ', '-')} value={index}>
