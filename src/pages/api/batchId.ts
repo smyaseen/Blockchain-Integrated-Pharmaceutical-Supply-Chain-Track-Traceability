@@ -51,7 +51,7 @@ export default async function handler(
             _id: 0,
             ...(distributor
               ? { quantity: 1, sold: 1, tokenId: 1 }
-              : { pharmacy: 1 }),
+              : { pharmacy: 1, tokenId: 1 }),
             transactions: 1,
           },
         })

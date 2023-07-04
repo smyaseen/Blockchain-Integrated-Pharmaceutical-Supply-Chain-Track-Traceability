@@ -55,7 +55,7 @@ const Row = (props: { row: ReturnType<typeof createData> }) => {
           <Button
             variant="text"
             target="_blank"
-            href={`https://goerli.etherscan.io/tx/${batches.transactions[6]}`}
+            href={`https://sepolia.etherscan.io/tx/${batches.transactions[6]}`}
           >
             View Transaction
           </Button>
@@ -83,7 +83,7 @@ const Row = (props: { row: ReturnType<typeof createData> }) => {
                         <Button
                           variant="text"
                           target="_blank"
-                          href={`https://goerli.etherscan.io/tx/${historyRow.hash}`}
+                          href={`https://sepolia.etherscan.io/tx/${historyRow.hash}`}
                         >
                           View Transaction
                         </Button>

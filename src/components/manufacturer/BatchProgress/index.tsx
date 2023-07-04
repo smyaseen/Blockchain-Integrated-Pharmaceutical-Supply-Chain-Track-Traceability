@@ -41,7 +41,7 @@ const getComponent = (batches: any) => {
             variant="contained"
             fullWidth
             target="_blank"
-            href={`https://goerli.etherscan.io/tx/${batches.transactions[i]}`}
+            href={`https://sepolia.etherscan.io/tx/${batches.transactions[i]}`}
           >
             View Transaction
           </Button>
@@ -60,7 +60,7 @@ const getComponent = (batches: any) => {
           <br />
           <QRCode
             size={50}
-            value={`https://goerli.etherscan.io/tx/${batches.transactions[i]}`}
+            value={`https://sepolia.etherscan.io/tx/${batches.transactions[i]}`}
           />
         </TimelineContent>
       </TimelineItem>

@@ -1,6 +1,6 @@
 /* eslint-disable no-unused-expressions */
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   Box,
   Button,
@@ -17,16 +17,18 @@ import {
 import { useSession } from 'next-auth/react';
 
 import { useQuery } from 'react-query';
+import { useAccount, useContractWrite, usePrepareContractWrite } from 'wagmi';
 import {
   ACCESS_CONTROL_CONTRACT_ADDRESS,
   fetchBatchIdsForPharmacy,
 } from '../../../utility/utils';
-import { useAccount, useContractWrite, usePrepareContractWrite } from 'wagmi';
 import AccessControl from '../../../contracts/AccessControl.json';
 import { bytes32Roles, RoleTypes } from '../../../utility/roles';
 
 const CreateBatch = () => {
   const { address } = useAccount();
+
+  const [tokenId, setTokenId] = useState(0);
 
   const [values, setValues] = useState({
     batchId: '',
@@ -55,16 +57,15 @@ const CreateBatch = () => {
     },
   });
 
-  const args = [
-    0,
-    'Sold To Customer(s)',
-    bytes32Roles['pharmacy' as keyof RoleTypes],
-  ];
+  useEffect(() => {
+    setTokenId(
+      batchIds?.find((b) => b.batchId === values.batchId)?.tokenId || 0
+    );
+  }, [values.batchId]);
 
-  const args2 = [
-    address,
-    batchIds?.find((b) => b.batchId === values.batchId)?.tokenId || 0,
-    values.quantity,
+  const args = [
+    tokenId,
+    'Sold To Customer(s)',
     bytes32Roles['pharmacy' as keyof RoleTypes],
   ];
 
@@ -81,7 +82,12 @@ const CreateBatch = () => {
     address: ACCESS_CONTROL_CONTRACT_ADDRESS,
     abi: AccessControl,
     functionName: 'pharmacyCreateOrder',
-    args: args2,
+    args: [
+      address,
+      tokenId,
+      values.quantity || 1,
+      bytes32Roles['pharmacy' as keyof RoleTypes],
+    ],
   });
 
   const { writeAsync: writeCreate } = useContractWrite(configCreate);
@@ -89,7 +95,10 @@ const CreateBatch = () => {
   const handleChange = (name: string, value: string, remaining?: number) => {
     setValues({
       ...values,
-      [name]: value,
+      [name]:
+        name === 'quantity'
+          ? !Number.isNaN(value) && parseInt(value, 10)
+          : value,
       ...(remaining ? { remaining } : {}),
     });
   };

@@ -8,7 +8,7 @@ import { publicProvider } from 'wagmi/providers/public';
 
 import { MetaMaskConnector } from 'wagmi/connectors/metaMask';
 import { WagmiConfig, createClient, configureChains } from 'wagmi';
-import { hardhat, goerli } from '@wagmi/core/chains';
+import { hardhat, sepolia } from '@wagmi/core/chains';
 
 import '@fontsource/roboto/300.css';
 import '@fontsource/roboto/400.css';
@@ -46,12 +46,12 @@ const { chains, provider, webSocketProvider } = configureChains(
     //   },
     // },
     {
-      ...goerli,
-      id: 5,
+      ...sepolia,
+      id: 11155111,
       nativeCurrency: {
-        ...goerli.nativeCurrency,
-        name: 'Goerli 2',
-        symbol: 'GoerliETH',
+        ...sepolia.nativeCurrency,
+        name: 'Sepolia test network',
+        symbol: 'SepoliaETH',
       },
     },
   ],

@@ -294,7 +294,7 @@ const CreateBatch = () => {
                     <>
                       <QRCode
                         size={50}
-                        value={`https://bisc.vercel.app?batchId=${newBatchId}`}
+                        value={`${window.location.origin}?batchId=${newBatchId}`}
                       />
                       <br />
                       <Typography>Batch Id generated: </Typography>
@@ -303,11 +303,11 @@ const CreateBatch = () => {
                         variant="text"
                         onClick={() =>
                           Router.push(
-                            `https://bisc.vercel.app?batchId=${newBatchId}`
+                            `${window.location.origin}?batchId=${newBatchId}`
                           )
                         }
                       >
-                        {`https://bisc.vercel.app?batchId=${newBatchId}`}
+                        {`${window.location.origin}?batchId=${newBatchId}`}
                       </Button>
                     </>
                   )}
