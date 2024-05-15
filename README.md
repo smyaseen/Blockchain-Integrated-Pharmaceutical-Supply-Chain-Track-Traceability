@@ -1,23 +1,22 @@
-You can use this to start your Next.js + MUI + Typescript + EsLint + Prettier + PWA + Jest development faster and easier.
+# Pharmaceutical Industry Track and Traceability
 
-## Getting Started
+- Leveraging blockchain to enhance track and traceability of pharmaceuticals.
+- Eliminating counterfeit drugs, enhancing transparency, ensuring authenticity and integrity.
+- Proof-of-concept (POC) demonstrating capabilities and answering critical questions.
 
-1. First, Clone the project.
-2. (Optional) If you want, You can also change the project name to whatever your like and also add the project name in the `package.json`.
-3. Run this command in the project directory to install dependencies:
+Our primary focus during our Final Year Project (FYP) was on acquiring knowledge. We extensively researched through various resources such as research papers, blogs, articles, and consulted seniors and industry professionals. Furthermore, we aimed to acquire skills through the implementation of in-demand technologies, including:
 
-```bash
-npm i
-# or
-yarn
-```
+- **Smart Contract:** Access Control and ERC-721 with custom Solidity and OpenZepplin for standardized code.
+- **Production Test Nets:** Goerli and Sepolia for Ethereum test net deployment.
+- **Libraries:** wagmi (web3 hooks React) | react-qr-code | MUI 5+ | next-pwa
+- **Wallet:** Metamask for transactions, authentication, and authorization.
+- **Frontend & Backend:** NextJS 13+ with TypeScript 4+
+- **Database:** MongoDB Atlas for indexing results
+- **Local Test Net:** Hardhat
+- **Hosting:** Vercel
 
-4. You can run dev server with the following command:
+![image](https://github.com/smyaseen/Blockchain-Integrated-Pharmaceutical-Supply-Chain-Track-Traceability/assets/37702376/cb4d8237-5a1c-462f-a871-8f5c07b0ff7b)
 
-```bash
-npm run dev
-# or
-yarn dev
-```
+<img width="969" alt="image" src="https://github.com/smyaseen/Blockchain-Integrated-Pharmaceutical-Supply-Chain-Track-Traceability/assets/37702376/e7858936-80e0-42e5-9c22-ccdabb174d78">
 
-5. Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+
