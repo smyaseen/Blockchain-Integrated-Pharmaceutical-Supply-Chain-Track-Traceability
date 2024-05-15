@@ -1,5 +1,7 @@
 # Pharmaceutical Industry Track and Traceability
 
+- Pre Research Report - https://drive.google.com/file/d/1dYaOAc7w-16r9ug63ZHu-SeWzq5X_7CE/view?usp=sharing
+
 - Leveraging blockchain to enhance track and traceability of pharmaceuticals.
 - Eliminating counterfeit drugs, enhancing transparency, ensuring authenticity and integrity.
 - Proof-of-concept (POC) demonstrating capabilities and answering critical questions.
